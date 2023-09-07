@@ -19,4 +19,4 @@ RUN dotnet publish "DevsTutorialCenterAPI.csproj" -c Release -o /app/publish /p:
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RenderSample.dll"]
+ENTRYPOINT ["dotnet", "DevsTutorialCenterAPI.csproj"]
