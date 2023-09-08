@@ -4,9 +4,7 @@ using DevsTutorialCenterAPI.Data.Entities;
 namespace DevsTutorialCenterAPI.Data
 {
 	public static class SeedData
-	{
-		public static IList<string> Roles { get; set; } = new List<string> { "admin", "editor", "decadev" };
-		public static IList<Article> Articles { get; set; } = new List<Article> {
+	{	public static IList<Article> Articles { get; set; } = new List<Article> {
 			new Article
 			{
 				Id = "4c139f50-9138-432f-a26d-36bfe1dda7df",
