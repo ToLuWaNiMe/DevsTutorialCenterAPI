@@ -1,6 +1,6 @@
 ﻿namespace DevsTutorialCenterAPI.Data.Repositories
 {
-    public class Repository
+    public class Repository: IRepository
     {
     }
 }
