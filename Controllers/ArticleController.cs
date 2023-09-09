@@ -1,5 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,11 @@ namespace DevsTutorialCenterAPI.Controllers
     [ApiController]
     public class ArticleController : ControllerBase
     {
-        private readonly IArticleRepository _articleRepository;
+        private readonly IArticleService _articleService;
         private readonly ILogger<ArticleController> _logger;    
-        public ArticleController(IArticleRepository articleRepository, ILogger<ArticleController> logger) 
+        public ArticleController(IArticleService articleService, ILogger<ArticleController> logger) 
         {
-            _articleRepository = articleRepository;
+            _articleService = articleService;
             _logger = logger;
         }
 
@@ -22,7 +23,7 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
-                var articles = await _articleRepository.GetAll();
+                var articles = await _articleService.GetAllArticles();
 
                 if (articles == null)
                 {

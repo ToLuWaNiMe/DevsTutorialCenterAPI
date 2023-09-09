@@ -1,19 +1,23 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevsTutorialCenterAPI.Data.Repositories
+namespace DevsTutorialCenterAPI.Services.Implementations
 {
-    public class ArticleRepository : IArticleRepository
+    public class ArticleService : IArticleService
     {
-        private readonly DevsTutorialCenterAPIContext _context;
-        public ArticleRepository(DevsTutorialCenterAPIContext context) 
+        private readonly IRepository _repository;
+        public ArticleService(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
-        public async Task<IEnumerable<GetAllArticlesDto>> GetAll()
+        public async Task<IEnumerable<GetAllArticlesDto>> GetAllArticles()
         {
-            var articles = await _context.Articles.Select(a => new GetAllArticlesDto
+            var articles = await _repository.GetAllAsync<Article>();
+
+            return articles.Select(a => new GetAllArticlesDto
             {
                 PublicId = a.PublicId,
                 UserId = a.UserId,
@@ -26,9 +30,7 @@ namespace DevsTutorialCenterAPI.Data.Repositories
                 IsRecommended = a.IsRecommended,
                 IsReported = a.IsReported,
                 IsSaved = a.IsSaved
-            }).ToListAsync();
-
-            return articles;
+            }).ToList();
         }
     }
 }
