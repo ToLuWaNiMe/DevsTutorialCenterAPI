@@ -23,17 +23,27 @@ namespace DevsTutorialCenterAPI.Services
         public async Task<ImageUploadResult> AddImageAsync(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
+            try {
 
-            if (file.Length > 0)
-            {
-                using var stream = file.OpenReadStream();
-                var uploadParams = new ImageUploadParams
+                
+
+                if (file.Length > 0)
                 {
-                    File = new FileDescription(file.FileName, stream)
-                };
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            }
+                    using var stream = file.OpenReadStream();
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(file.FileName, stream)
+                    };
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                }
 
+
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
+            
             return uploadResult;
         }
 

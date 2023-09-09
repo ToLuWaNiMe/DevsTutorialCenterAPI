@@ -33,6 +33,19 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(new ResponseDto<object>
+                    {
+
+                        Code = 401,
+                        Message = "Unauthorized",
+                        Data = null,
+                        Error = "User is not authenticated."
+
+                    });
+                } 
                 // Get the currently authenticated user
                 var user = await _userManager.GetUserAsync(User);
 
