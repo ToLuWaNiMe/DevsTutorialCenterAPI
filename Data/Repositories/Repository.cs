@@ -1,8 +1,4 @@
-﻿using DevsTutorialCenterAPI.Data.Repositories.interfaces;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore;
-
-namespace DevsTutorialCenterAPI.Data.Repositories
+﻿namespace DevsTutorialCenterAPI.Data.Repositories
 {
     public class Repository : IRepository
     {

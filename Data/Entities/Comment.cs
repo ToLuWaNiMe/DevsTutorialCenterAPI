@@ -1,11 +1,10 @@
 ﻿using System;
 namespace DevsTutorialCenterAPI.Data.Entities
 {
-	public class Comment
+	public class Comment : BaseEntity
 	{
-		public Comment()
-		{
-		}
+        public string Text { get; set; }
+        
 	}
 }
 

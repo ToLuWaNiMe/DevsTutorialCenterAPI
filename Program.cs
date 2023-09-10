@@ -1,5 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,8 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 );
 builder.Services.AddScoped<IRepository, Repository>();
 
-
+builder.Services.AddScoped<ICommentService , CommentService>();
+builder.Services.AddScoped<IRepository, Repository>();
 
 
 var app = builder.Build();
