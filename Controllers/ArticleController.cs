@@ -10,10 +10,13 @@ namespace DevsTutorialCenterAPI.Controllers
     public class ArticleController : ControllerBase
     {
         private readonly IArticleService _articleService;
-        public ArticleController(IArticleService articleService) 
+        private readonly ILogger<ArticleController> _logger;
+        public ArticleController(IArticleService articleService, ILogger<ArticleController> logger)
         {
             _articleService = articleService;
+            _logger = logger;
         }
+
 
         [HttpGet("single")]
         public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
@@ -37,6 +40,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
         }
