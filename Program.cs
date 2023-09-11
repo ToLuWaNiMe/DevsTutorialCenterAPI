@@ -1,5 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Services.Abstraction;
+using DevsTutorialCenterAPI.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +16,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
 builder.Services.AddScoped<IRepository, Repository>();
-
+builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 
 
 
