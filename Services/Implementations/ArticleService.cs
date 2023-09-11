@@ -24,6 +24,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var articleDto = new GetAllArticlesDto
             {
+                Id = article.Id,
                 PublicId = article.PublicId,
                 UserId = article.UserId,
                 Title = article.Title,

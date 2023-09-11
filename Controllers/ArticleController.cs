@@ -15,19 +15,19 @@ namespace DevsTutorialCenterAPI.Controllers
             _articleService = articleService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllArticlesDto>>>> GetSingleArticle(string articleid)
+        [HttpGet("single")]
+        public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
         {
             try
             {
-                var article = await _articleService.GetSingleArticle(articleid);
+                var article = await _articleService.GetSingleArticle(articleId);
 
                 if (article == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
+                return Ok(new ResponseDto<GetAllArticlesDto>
                 {
                     Data = article,
                     Code = 200,

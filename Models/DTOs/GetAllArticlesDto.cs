@@ -2,6 +2,7 @@
 {
     public class GetAllArticlesDto
     {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Title { get; set; }
         public string Tag { get; set; }
         public string Text { get; set; }
