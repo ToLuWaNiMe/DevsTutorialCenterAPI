@@ -18,7 +18,6 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         public async Task<Comment> CreateCommentAsync(CommentDTO commentDTO)
         {
 
-          //  var user = await _repository.GetByIdAsync<AppUser>(commentDTO.UserId);
 
             var comment = new Comment
             {
