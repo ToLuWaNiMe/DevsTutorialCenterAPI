@@ -34,40 +34,10 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             if (!likesWithArticleId.Any())
             {
-                throw new Exception("Likes Not Found");
+                return new List<LikesByArticleDto>();
             }
 
             return likesWithArticleId;
-        }
-
-
-
-
-        public async Task<bool> LikeArticleAsync(string userId, string articleId)
-        {
-            try
-            {
-
-
-                var newLike = new ArticlesLikes
-                {
-                    ArticleId = articleId,
-                    UserId = userId
-                };
-
-              await _repository.AddAsync<ArticlesLikes>(newLike);
-
-                // Implement logic to add a like for the specified user and article
-                // Return true if the like was successfully added, otherwise false
-                // Remember to handle exceptions appropriately
-
-                // Placeholder, replace with your implementation
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw ;
-            }
         }
     }
 }
