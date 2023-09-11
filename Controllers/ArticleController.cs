@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Services.Abstractions;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSingleArticle(string articleid)
+        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllArticlesDto>>>> GetSingleArticle(string articleid)
         {
             try
             {
@@ -26,13 +27,19 @@ namespace DevsTutorialCenterAPI.Controllers
                     return NotFound();
                 }
 
-                return Ok(
-                    article);
+                return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
+                {
+                    Data = article,
+                    Code = 200,
+                    Message = "OK",
+                    Error = ""
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
         }
+
     }
 }

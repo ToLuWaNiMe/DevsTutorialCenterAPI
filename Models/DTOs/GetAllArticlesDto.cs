@@ -1,6 +1,6 @@
 ﻿namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class GetArticleDto
+    public class GetAllArticlesDto
     {
         public string Title { get; set; }
         public string Tag { get; set; }

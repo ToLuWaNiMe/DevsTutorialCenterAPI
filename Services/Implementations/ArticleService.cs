@@ -13,7 +13,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             _repository = repository;
         }
 
-        public async Task<GetArticleDto> GetSingleArticle(string articleId)
+        public async Task<GetAllArticlesDto> GetSingleArticle(string articleId)
         {
             var article = await _repository.GetByIdAsync<Article>(articleId);
 
@@ -22,7 +22,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception($"Article with ID {articleId} not found.");
             }
 
-            var articleDto = new GetArticleDto
+            var articleDto = new GetAllArticlesDto
             {
                 PublicId = article.PublicId,
                 UserId = article.UserId,

@@ -4,6 +4,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
 {
     public interface IArticleService
     {
-        Task<GetArticleDto> GetSingleArticle(string articleId);
+        Task<GetAllArticlesDto> GetSingleArticle(string articleId);
     }
 }
