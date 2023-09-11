@@ -2,7 +2,7 @@
 {
     public class FilterArticleDto
     {
-        public string ArticleId { get; set; }
+        public string AuthorId { get; set; }
         public string Tag { get; set; }
         public string Page { get; set; }
         public string Size { get; set; }
