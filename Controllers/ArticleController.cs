@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Data.Repositories;
+﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
@@ -18,18 +19,28 @@ namespace DevsTutorialCenterAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet("")]
-        public async Task<IActionResult> GetAllArticles()
+        [HttpGet("all")]
+        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(int pageNum, int pageSize=10)
         {
             try
             {
                 var articles = await _articleService.GetAllArticles();
 
+                var skipAmount = (pageNum - 1) * pageSize;
+
+                var paginatedArticles = articles.Skip(skipAmount).Take(pageSize);
+
                 if (articles == null)
                 {
                     return NotFound();
                 }
-                return Ok(articles);
+                return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
+                {
+                    Data = paginatedArticles,
+                    Code = 200,
+                    Message = "OK",
+                    Error = ""
+                }) ;
             }
             catch (Exception ex)
             {
