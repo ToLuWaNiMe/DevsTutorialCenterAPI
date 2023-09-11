@@ -6,5 +6,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     public interface ICommentService
     {
         Task<Comment> CreateCommentAsync(CommentDTO commentDTO);
+        Task<bool> UpdateCommentAsync(string Id, CommentDTO commentDTO);
     }
 }

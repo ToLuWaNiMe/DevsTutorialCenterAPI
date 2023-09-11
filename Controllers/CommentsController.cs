@@ -21,49 +21,101 @@ namespace DevsTutorialCenterAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CommentDTO commentDTO)
         {
-            if(commentDTO == null) 
+            var response = new ResponseDto<object>();
+
+            if(!ModelState.IsValid) 
             {
-                var response = new ResponseDto<object>
-                {
-                Code = 400,
-                Message = "Error",
-                Data = null,
-                Error = "Comment is so empty."
-                };
+                response.Code = 400;
+                response.Message = "Invalid model state";
+                response.Data = null;
+                response.Error = string.Empty;
+                
                 return BadRequest(response);
             }
 
-            if (string.IsNullOrEmpty(commentDTO.UserId)) 
-            { 
-                return BadRequest("User ID cannot be empty");
-            }
+
 
             try
             {
                
                 var createdComment = await _commentService.CreateCommentAsync(commentDTO);
-                var response = new ResponseDto<object>
-                
+                if(createdComment == null) 
                 {
-                    Code = 200,
-                    Message = "Ok",
-                    Data = new { commentId = createdComment.ToString() },
-                    Error = ""
-                };
-                return Ok(response);
+                    response.Code = 400;
+                    response.Message = "Comment not added";
+                    response.Data = null;
+                    response.Error = "";
+                    return BadRequest(response);
+                }
+
+                response.Code = 200;
+                response.Message = "Ok";
+                response.Data = new { commentId = createdComment.Id };
+                response.Error = "";
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                var response = new ResponseDto<object> 
-                {
-                Code=400,
-                Message= "Error",
-                Data = null,
-                Error="Failed to add comment"
-                };
-                return BadRequest("Failed to add comment.");
+
+
+                response.Code = 500;
+                response.Message = "Error";
+                response.Data = null;
+                response.Error = ex.Message;
+                
+                return BadRequest(response);
             }
-            
+            return Ok(response);
+
+        }
+
+        [HttpPut("update/{commentId}")]
+        public async Task <IActionResult> UpdateComment([FromRoute]string commentId, [FromBody] CommentDTO commentDTO)
+        {
+            var response = new ResponseDto<object>();
+
+            if (!ModelState.IsValid)
+            {
+                response.Code = 400;
+                response.Message = "Invalid model state";
+                response.Data = null;
+                response.Error = string.Empty;
+
+                return BadRequest(response);
+            }
+
+            try
+            {
+
+                var updateComment = await _commentService.UpdateCommentAsync(commentId, commentDTO);
+                if (!updateComment )
+                {
+                    response.Code = 400;
+                    response.Message = "Comment not updated";
+                    response.Data = null;
+                    response.Error = "";
+                    return BadRequest(response);
+                }
+
+                response.Code = 200;
+                response.Message = "Ok";
+                response.Data = "";
+                response.Error = "";
+
+            }
+            catch (Exception ex)
+            {
+
+
+                response.Code = 500;
+                response.Message = "Error";
+                response.Data = null;
+                response.Error = ex.Message;
+
+                return BadRequest(response);
+            }
+            return Ok(response);
+
         }
 
     }
