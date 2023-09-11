@@ -19,6 +19,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             return articles.Select(a => new GetAllArticlesDto
             {
+                Id = a.Id,
                 PublicId = a.PublicId,
                 UserId = a.UserId,
                 Title = a.Title,
