@@ -26,7 +26,8 @@ namespace DevsTutorialCenterAPI.Controllers
                     return NotFound();
                 }
 
-                return Ok(article);
+                return Ok(
+                    article);
             }
             catch (Exception ex)
             {
