@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {

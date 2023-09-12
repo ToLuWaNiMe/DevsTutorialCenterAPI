@@ -4,6 +4,7 @@ using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Services;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
+using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
