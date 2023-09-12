@@ -1,11 +1,10 @@
 ﻿using System;
 namespace DevsTutorialCenterAPI.Data.Entities
 {
-	public class ArticlesLikes
+	public class ArticlesLikes: BaseEntity
 	{
-		public ArticlesLikes()
-		{
-		}
+		public string UserId { get; set; }
+		public string ArticleId { get; set; }
 	}
 }
 
