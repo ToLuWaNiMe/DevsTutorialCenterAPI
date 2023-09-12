@@ -1,6 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             _tagService = tagService;
         }
-        //[Authorize]
+        [Authorize]
         [HttpPost("create-tag")]
         public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync(CreateTagDto createTagDto)
         {

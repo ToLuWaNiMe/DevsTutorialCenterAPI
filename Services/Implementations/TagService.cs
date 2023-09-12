@@ -2,7 +2,7 @@
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Services.Interfaces;
+using DevsTutorialCenterAPI.Services.Abstractions;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
