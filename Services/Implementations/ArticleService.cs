@@ -15,10 +15,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
         public async Task<IEnumerable<GetAllArticlesDto>> GetAllArticles(FilterArticleDto filters)
         {
-            // Get all articles from the repository
             var articles = await _repository.GetAllAsync<Article>();
 
-            // Apply filters based on FilterArticleDto properties
             if (!string.IsNullOrEmpty(filters.AuthorId))
             {
                 articles = articles.Where(a => a.UserId == filters.AuthorId);
@@ -54,9 +52,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 articles = articles.Where(a => a.IsPublished);
             }
 
-            // You can add more filtering based on other properties as needed
 
-            // Project the filtered articles into GetAllArticlesDto
             var result = articles.Select(a => new GetAllArticlesDto
             {
                 Id = a.Id,
