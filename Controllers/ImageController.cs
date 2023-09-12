@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using DevsTutorialCenterAPI.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using CloudinaryDotNet.Actions;
+using DevsTutorialCenterAPI.Data.Entities;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -27,10 +29,10 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
-                // Fetch the article by the provided articleId
+          
                 var article = await _articleService.GetArticleById(requestDto.ArticleId);
 
-                // Check if the article exists
+       
                 if (article == null)
                 {
                     return StatusCode(403, new ResponseDto<object>
@@ -55,10 +57,10 @@ namespace DevsTutorialCenterAPI.Controllers
                     });
                 }
 
-                // Assign the publicId to the article's PublicId property
+                
                 article.PublicId = uploadResult.PublicId;
+                article.ImageUrl = uploadResult.SecureUrl.AbsoluteUri;
 
-                // Update the article in the repository (assuming you have an Update method)
                 await _articleService.UpdateArticleAsync(article);
 
                 return Ok(new ResponseDto<object>
@@ -84,65 +86,6 @@ namespace DevsTutorialCenterAPI.Controllers
                 });
             }
         }
-
-
-        [HttpDelete("{publicId}")]
-        public async Task<IActionResult> DeleteImage(string publicId)
-        {
-            try
-            {
-                // Check if an article with the given public ID exists
-                var article = await _articleService.GetArticleByPublicId(publicId);
-
-                if (article == null)
-                {
-                    return StatusCode(400, new ResponseDto<object>
-                    {
-                        Code = 400,
-                        Message = "Error",
-                        Data = null,
-                        Error = "No article was found with the given public ID."
-                    });
-                }
-
-                // Delete the image by public ID
-                var deleteImageResult = await _imageService.DeleteImageAsync(publicId);
-
-                if (deleteImageResult.Result == "ok")
-                {
-                    return Ok(new ResponseDto<object>
-                    {
-                        Code = 200,
-                        Message = "Ok",
-                        Data = null,
-                        Error = ""
-                    });
-                }
-                else
-                {
-                    return BadRequest(new ResponseDto<object>
-                    {
-                        Code = 400,
-                        Message = "Error",
-                        Data = null,
-                        Error = "Failed to delete the image."
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ResponseDto<object>
-                {
-                    Code = 400,
-                    Message = "Error",
-                    Data = null,
-                    Error = "Failed to delete image: " + ex.Message
-                });
-            }
-        }
-
-
-
 
 
 

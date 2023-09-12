@@ -17,14 +17,7 @@ namespace DevsTutorialCenterAPI.Services
             _repository = repository;
         }
 
-        public async Task<Article> GetArticleByPublicId(string publicId)
-        {
-            var article = await _repository.GetByIdAsync<Article>(publicId);
-
-
-            return article;
-
-        }
+      
 
         public async Task<Article> GetArticleById(string articleId)
         {
