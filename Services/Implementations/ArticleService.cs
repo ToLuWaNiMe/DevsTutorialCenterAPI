@@ -30,7 +30,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 IsRead = a.IsRead,
                 IsRecommended = a.IsRecommended,
                 IsReported = a.IsReported,
-                IsSaved = a.IsSaved
+                IsSaved = a.IsSaved,
+                CreatedOn = a.CreatedOn,
             }).ToList();
         }
     }
