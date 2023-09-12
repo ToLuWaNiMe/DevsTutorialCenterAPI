@@ -13,7 +13,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
         public async Task<bool> DeleteCommentAsync(string Id, string userId)
         {
-            var comment = await _repository.GetByIdAsync<Comments>(Id);
+            var comment = await _repository.GetByIdAsync<Comment>(Id);
 
             if (comment == null)
             {
@@ -25,7 +25,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("You cannot delete this comment.");
             }
 
-            await _repository.DeleteAsync<Comments>(comment);
+            await _repository.DeleteAsync<Comment>(comment);
 
             return true;
         }
