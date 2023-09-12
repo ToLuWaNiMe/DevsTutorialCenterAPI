@@ -35,7 +35,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 IsRead = article.IsRead,
                 IsRecommended = article.IsRecommended,
                 IsReported = article.IsReported,
-                IsSaved = article.IsSaved
+                IsSaved = article.IsSaved,
+                CreatedOn = article.CreatedOn
             };
 
             return articleDto;

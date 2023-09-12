@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("article")]
+    [Route("articles")]
     [ApiController]
     public class ArticleController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
 
-        [HttpGet("single")]
+        [HttpGet("id")]
         public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
         {
             try
@@ -27,7 +27,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
                 if (article == null)
                 {
-                    return NotFound();
+                    return NotFound($"Article with ID {articleId} not found.");
                 }
 
                 return Ok(new ResponseDto<GetAllArticlesDto>
