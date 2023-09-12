@@ -18,7 +18,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
 builder.Services.AddScoped<IRepository, Repository>();
-
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 
 
