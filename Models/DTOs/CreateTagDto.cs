@@ -1,7 +1,11 @@
-﻿namespace DevsTutorialCenterAPI.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DevsTutorialCenterAPI.Models.DTOs
 {
     public class CreateTagDto
     {
-        public string Name { get; set; } 
+        [Required]
+        public string Name { get; set; }
+
     }
 }

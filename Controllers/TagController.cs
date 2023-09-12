@@ -1,13 +1,13 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Services.Interfaces;
+using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[tag]")]
     [ApiController]
     public class TagController : ControllerBase
     {
@@ -19,29 +19,26 @@ namespace DevsTutorialCenterAPI.Controllers
         }
         [Authorize]
         [HttpPost("create-tag")]
-        public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync(CreateTagDto createTagDto)
+        public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
         {
-            if (createTagDto == null)
+            if (ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
                 {
                     Data = null,
                     Code = 500,
-                    Error = "Failed to add tag",
+                    Error = "Validation failed",
                     Message = "Error",
                 });
             }
 
-            var tag = new Tag { CreatedOn = DateTime.UtcNow, Name = createTagDto.Name };
-
-
-            await _tagService.CreateTagAsync(tag);
+            await _tagService.CreateTagAsync(createTagDto);
             return Ok(new ResponseDto<object>
             {
                 Code = 200,
                 Message = "OK",
                 Error = "",
-                Data = tag,
+                Data = createTagDto,
             });
 
 

@@ -14,12 +14,14 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         public TagService(IRepository repository, DevsTutorialCenterAPIContext context)
         {
             _repository = repository;
-            _context = context;
+           _context = context;
         }
 
-        public async Task CreateTagAsync(Tag tag)
+        public async Task CreateTagAsync(CreateTagDto createTagDto)
         {
-            await _repository.AddAsync <Tag>(tag);
+            var tag = new Tag { Name = createTagDto.Name };
+            await _repository.AddAsync(tag);
+            
         }
 
 
@@ -28,9 +30,5 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
 
 
-        //public async Task<IEnumerable<Tag>> GetAllTagAsync()
-        //{
-        //    return await _repository.GetAllAsync<Tag>();
-        //}
     }
 }
