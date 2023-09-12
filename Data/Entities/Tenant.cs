@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DevsTutorialCenterAPI.Data.Entities
 {
-	public class Tenant
+	public class Tenant: BaseEntity
 	{
+		public string Name { get; set; }
+		public string Identity { get; set; }
+		public string Password { get; set; }
 	}
 }
 
