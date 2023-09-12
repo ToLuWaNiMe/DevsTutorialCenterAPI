@@ -37,6 +37,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 Title = newArticle.Title,
                 Tag = newArticle.Tag,
                 IsRecommended = newArticle.IsRecommended,
+                IsTrending = newArticle.IsTrending,
                 UserId = newArticle.UserId,
                 Text = newArticle.Text,
             };
