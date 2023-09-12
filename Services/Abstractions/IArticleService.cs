@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Data.Entities;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
@@ -9,5 +10,8 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
         Task<Article> GetArticleById(string articleId);
 
         Task UpdateArticleAsync(Article article);
+        
+        Task<GetAllArticlesDto> GetSingleArticle(string articleId);
+
     }
 }
