@@ -19,7 +19,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet("all")]
+        [HttpGet(" ")]
         public async Task<ActionResult<ResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(int pageNum, int pageSize=10)
         {
             try
