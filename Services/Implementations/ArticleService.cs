@@ -24,34 +24,40 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             if (!string.IsNullOrEmpty(filters.Tag))
             {
-                articles = articles.Where(a => a.Tag.Contains(filters.Tag));
+                articles = articles.Where(a => a.Tag == (filters.Tag));
             }
 
-            if (filters.IsRecommended)
+            if (filters.IsRecommended is null)
             {
                 articles = articles.Where(a => a.IsRecommended);
             }
 
-            if (filters.IsSaved)
+            if (filters.IsSaved is null)
             {
                 articles = articles.Where(a => a.IsSaved);
             }
 
-            if (filters.IsRead)
+            if (filters.IsRead is null)
             {
                 articles = articles.Where(a => a.IsRead);
             }
 
-            if (filters.IsReported)
+            if (filters.IsReported is null)
             {
                 articles = articles.Where(a => a.IsReported);
             }
 
-            if (filters.IsPublished)
+            if (filters.IsPublished is null)
             {
                 articles = articles.Where(a => a.IsPublished);
             }
 
+            int pageNum = int.Parse(filters.Page);
+            int pageSize = int.Parse(filters.Size);
+
+            var skipAmount = (pageNum - 1) * pageSize;
+
+            
 
             var result = articles.Select(a => new GetAllArticlesDto
             {
@@ -69,7 +75,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 IsSaved = a.IsSaved
             }).ToList();
 
-            return result;
+            var paginatedArticles = result.Skip(skipAmount).Take(pageSize);
+
+            return paginatedArticles;
         }
 
     }
