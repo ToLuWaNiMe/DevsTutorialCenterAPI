@@ -1,8 +1,8 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+using DevsTutorialCenterAPI.Services.Abstractions;
 
-namespace DevsTutorialCenterAPI.Services
+namespace DevsTutorialCenterAPI.Services.Implementation
 {
     public class ImageService : IImageService
     {
@@ -12,20 +12,21 @@ namespace DevsTutorialCenterAPI.Services
         {
             var acc = new Account
             (
-                config["Cloudinary:CloudName"],
-                config["Cloudinary:ApiKey"],
-                config["Cloudinary:ApiSecret"]
+                config["CloudinarySettings:CloudName"],
+                config["CloudinarySettings:ApiKey"],
+                config["CloudinarySettings:ApiSecret"]
             );
 
             _cloudinary = new Cloudinary(acc);
         }
-
+        
         public async Task<ImageUploadResult> AddImageAsync(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
-            try {
+            try
+            {
 
-                
+
 
                 if (file.Length > 0)
                 {
@@ -39,11 +40,11 @@ namespace DevsTutorialCenterAPI.Services
 
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            
+
             return uploadResult;
         }
 
@@ -55,5 +56,6 @@ namespace DevsTutorialCenterAPI.Services
 
             return result;
         }
+       
     }
 }

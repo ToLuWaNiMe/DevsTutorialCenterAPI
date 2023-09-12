@@ -1,31 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Data.Repositories.interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using DevsTutorialCenterAPI.Services.Abstractions;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/images")]
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
-        private readonly IArticleRepository _articleRepository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IArticleService _articleService;
+     
 
-        public ImageController(IImageService imageService, IArticleRepository articleRepository, UserManager<IdentityUser> userManager)
+        public ImageController(IImageService imageService, IArticleService articleService )
         {
             _imageService = imageService;
-            _articleRepository = articleRepository;
-            _userManager = userManager;
+            _articleService = articleService;
+         
         }
 
         [HttpPost]
@@ -33,45 +27,18 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-
-                    return BadRequest(new ResponseDto<object>
-                    {
-
-                        Code = 401,
-                        Message = "Unauthorized",
-                        Data = null,
-                        Error = "User is not authenticated."
-
-                    });
-                } 
-                // Get the currently authenticated user
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
-                {
-                    return Unauthorized(new ResponseDto<object>
-                    {
-                        Code = 401,
-                        Message = "Unauthorized",
-                        Data = null,
-                        Error = "User is not authenticated."
-                    });
-                }
-
                 // Fetch the article by the provided articleId
-                var article = await _articleRepository.GetByArticleId(requestDto.ArticleId);
+                var article = await _articleService.GetArticleById(requestDto.ArticleId);
 
-                // Check if the article exists and if the user owns it
-                if (article == null || article.UserId != user.Id)
+                // Check if the article exists
+                if (article == null)
                 {
                     return StatusCode(403, new ResponseDto<object>
                     {
                         Code = 403,
-                        Message = "Forbidden",
+                        Message = "Error",
                         Data = null,
-                        Error = "You are not authorized to upload an image for this article."
+                        Error = "No article was found with the given id."
                     });
                 }
 
@@ -87,6 +54,12 @@ namespace DevsTutorialCenterAPI.Controllers
                         Error = uploadResult.Error.Message
                     });
                 }
+
+                // Assign the publicId to the article's PublicId property
+                article.PublicId = uploadResult.PublicId;
+
+                // Update the article in the repository (assuming you have an Update method)
+                await _articleService.UpdateArticleAsync(article);
 
                 return Ok(new ResponseDto<object>
                 {
@@ -111,76 +84,68 @@ namespace DevsTutorialCenterAPI.Controllers
                 });
             }
         }
-    
 
 
-            [HttpDelete("{publicId}")]
-            public async Task<IActionResult> DeleteImage(string publicId)
+        [HttpDelete("{publicId}")]
+        public async Task<IActionResult> DeleteImage(string publicId)
+        {
+            try
             {
-                try
+                // Check if an article with the given public ID exists
+                var article = await _articleService.GetArticleByPublicId(publicId);
+
+                if (article == null)
                 {
-                    // Get the currently authenticated user
-                    var user = await _userManager.GetUserAsync(User);
-
-                    if (user == null)
+                    return StatusCode(400, new ResponseDto<object>
                     {
-                        return Unauthorized(new ResponseDto<object>
-                        {
-                            Code = 401,
-                            Message = "Unauthorized",
-                            Data = null,
-                            Error = "User not found."
-                        });
-                    }
-
-                // Check if the user uploaded the image with the given publicId
-                var article = await _articleRepository.GetByPublicId(publicId);
-                if (article == null || article.UserId != user.Id)
-                    {
-                        return Unauthorized(new ResponseDto<object>
-                        {
-                            Code = 401,
-                            Message = "Unauthorized",
-                            Data = null,
-                            Error = "You are not authorized to delete this image."
-                        });
-                    }
-
-                    var deleteResult = await _imageService.DeleteImageAsync(publicId);
-
-                    if (deleteResult.Result == "ok")
-                    {
-                        
-                        return Ok(new ResponseDto<object>
-                        {
-                            Code = 200,
-                            Message = "Ok",
-                            Data = null,
-                            Error = ""
-                        });
-                    }
-                    else
-                    {
-                        return BadRequest(new ResponseDto<object>
-                        {
-                            Code = 400,
-                            Message = "Error",
-                            Data = null,
-                            Error = "Failed to delete image"
-                        });
-                    }
+                        Code = 400,
+                        Message = "Error",
+                        Data = null,
+                        Error = "No article was found with the given public ID."
+                    });
                 }
-                catch (Exception ex)
+
+                // Delete the image by public ID
+                var deleteImageResult = await _imageService.DeleteImageAsync(publicId);
+
+                if (deleteImageResult.Result == "ok")
+                {
+                    return Ok(new ResponseDto<object>
+                    {
+                        Code = 200,
+                        Message = "Ok",
+                        Data = null,
+                        Error = ""
+                    });
+                }
+                else
                 {
                     return BadRequest(new ResponseDto<object>
                     {
                         Code = 400,
                         Message = "Error",
                         Data = null,
-                        Error = "Failed to delete image: " + ex.Message
+                        Error = "Failed to delete the image."
                     });
                 }
             }
-     }
- }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDto<object>
+                {
+                    Code = 400,
+                    Message = "Error",
+                    Data = null,
+                    Error = "Failed to delete image: " + ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+    }
+}
 
