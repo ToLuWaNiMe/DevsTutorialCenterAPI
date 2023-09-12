@@ -18,6 +18,7 @@ namespace DevsTutorialCenterAPI.Data
 		//public DbSet<Like> Likes { get; set; }
 		public DbSet<ArticlesLikes> ArticlesLikes { get; set; }
 		public DbSet<CommentsLikes> CommentsLikes { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }
 
