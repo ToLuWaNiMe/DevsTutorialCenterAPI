@@ -1,5 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _tenantService = tenantService;
         }
 
-
+        [Authorize("Role = admin")]
         [HttpDelete("delete/{Id}")]
         public async Task<IActionResult> DeleteTenant(string Id)
         {
