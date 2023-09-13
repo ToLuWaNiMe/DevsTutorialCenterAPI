@@ -20,21 +20,21 @@ namespace DevsTutorialCenterAPI.Controllers
 
         [HttpGet]
         
-        public async Task<IActionResult> GetCommentsByArticle(string ArticleId)
+        public async Task<IActionResult> GetCommentsByArticle(string articleId)
         {
            
             var response = new ResponseDto<object>();
 
             try
             {
-                var comments = await _commentService.GetCommentsByArticle(ArticleId);
+                var comments = await _commentService.GetCommentsByArticle(articleId);
 
                 var noOfComments = comments.Count();
 
                 if (!comments.Any())
                 {
                     response.Code = (int)HttpStatusCode.NoContent;
-                    response.Message = $"no comments found for {ArticleId}";
+                    response.Message = $"no comments found for {articleId}";
                     response.Data = null;
                     response.Error = "";
 

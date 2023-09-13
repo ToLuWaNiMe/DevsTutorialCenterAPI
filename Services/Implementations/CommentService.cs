@@ -15,11 +15,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
 
 
-        public async Task<IEnumerable<Comment>> GetCommentsByArticle(string ArticleId)
+        public async Task<IEnumerable<Comment>> GetCommentsByArticle(string articleId)
         {
             var comments = await _repository.GetAllAsync<Comment>();
 
-            var articleComments = await comments.Where(c => c.ArticleId == ArticleId).
+            var articleComments = await comments.Where(c => c.ArticleId == articleId).
                                   OrderByDescending(c => c.CreatedOn).ToListAsync();
             return articleComments;
         }
