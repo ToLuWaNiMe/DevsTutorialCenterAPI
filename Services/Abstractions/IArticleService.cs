@@ -6,6 +6,7 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     public interface IArticleService
     {
         Task<GetAllArticlesDto> GetSingleArticle(string articleId);
-        Task<bool> DeleteArticleAsync(GetAllArticlesDto article);
+        Task<bool> DeleteArticleAsync(Article article);
+        Task<Article> GetArticleById(string articleId);
     }
 }

@@ -51,7 +51,7 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
-                var article = await _articleService.GetSingleArticle(id);
+                var article = await _articleService.GetArticleById(id);
                 if (article == null)
                 {
                     return NotFound("Article not found");
