@@ -23,14 +23,20 @@ namespace DevsTutorialCenterAPI.Controllers
             try
             {
                 var articles = await _articleService.GetAllArticles();
+
                 var paginatorResponse = Helper.Paginate(articles, pageNum, pageSize);
 
                 if (paginatorResponse == null)
                 {
                     return NotFound("Invalid entry!");
                 }
-
-                return Ok(paginatorResponse);
+                return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
+                {
+                    Data = paginatorResponse,
+                    Code = 200,
+                    Message = "OK",
+                    Error = ""
+                });
             }
             catch (Exception ex)
             {
