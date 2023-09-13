@@ -18,8 +18,6 @@ namespace DevsTutorialCenterAPI.Data.Repositories
             try
             {
                 // Validate identity and delete the tenant
-
-                // Replace this with actual deletion logic
                 var tenant = await _repository.GetByIdAsync<Tenant>(identity);
 
                 if (tenant != null)
