@@ -18,7 +18,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet]
+        [HttpGet("articleId")]
         public async Task<IActionResult> GetCommentsByArticle(string articleId)
         {
            
