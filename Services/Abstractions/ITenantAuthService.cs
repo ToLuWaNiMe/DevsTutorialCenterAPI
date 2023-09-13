@@ -3,7 +3,7 @@ using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Data.Repositories.interfaces
 {
-    public interface IAuthService
+    public interface ITenantAuthService
     {
         Task<ResponseDto<object>> LoginTenantAsync(LoginDto loginDto);
         string GenerateJWT(string Tenant);

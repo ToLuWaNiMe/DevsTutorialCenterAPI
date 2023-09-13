@@ -10,12 +10,12 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class TenantAuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly ITenantAuthService _authService;
         //private readonly UserManager<AppUser> _userManager;
         //private readonly IMapper _mapper;
-        public AuthController(IAuthService authService)
+        public TenantAuthController(ITenantAuthService authService)
         {
             _authService = authService;
             //_userManager = userManager;

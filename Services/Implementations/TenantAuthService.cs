@@ -9,13 +9,13 @@ using System.Text;
 
 namespace DevsTutorialCenterAPI.Data.Repositories
 {
-    public class AuthService : ITenantAuthService
+    public class TenantAuthService : ITenantAuthService
     {
         private readonly IConfiguration _config;
         private readonly IRepository repository;
         private readonly Helper _passwordHasher;
 
-        public AuthService(IConfiguration config, IRepository repository, Helper passwordHasher)
+        public TenantAuthService(IConfiguration config, IRepository repository, Helper passwordHasher)
         {
             _config = config;
             this.repository = repository;
