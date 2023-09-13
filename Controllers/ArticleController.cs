@@ -2,6 +2,7 @@
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -44,6 +45,52 @@ namespace DevsTutorialCenterAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
         }
+
+        [HttpDelete("delete-article/{id}")]
+        public async Task<IActionResult> DeleteArticle(string id)
+        {
+            try
+            {
+                var article = await _articleService.GetSingleArticle(id);
+                if (article == null)
+                {
+                    return NotFound("Article not found");
+                }
+
+                var result = await _articleService.DeleteArticleAsync(article);
+
+                if (result)
+                {
+                    var response = new ResponseDto<bool>
+                    {
+                        Code = (int)HttpStatusCode.NoContent,
+                        Data = true,
+                        Message = "Article Deleted Successfully",
+                        Error = string.Empty
+                    };
+
+                    return Ok(response); 
+                }
+                else
+                {
+                    var response = new ResponseDto<bool>
+                    {
+                        Code = (int)HttpStatusCode.BadRequest,
+                        Data = false,
+                        Message = "Failed to Delete Article",
+                        Error = string.Empty
+                    };
+
+                    return BadRequest(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+        }
+
 
     }
 }

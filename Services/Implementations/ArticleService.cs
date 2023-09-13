@@ -41,5 +41,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             return articleDto;
         }
+
+        public async Task<bool> DeleteArticleAsync(GetAllArticlesDto article)
+        {
+            await _repository.DeleteAsync(article);
+            return true;
+        }
     }
 }
