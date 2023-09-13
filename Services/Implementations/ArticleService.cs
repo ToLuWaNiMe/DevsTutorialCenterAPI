@@ -20,8 +20,6 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             return articles.Select(a => new GetAllArticlesDto
             {
-                Id = a.Id,
-                PublicId = a.PublicId,
                 UserId = a.UserId,
                 Title = a.Title,
                 Tag = a.Tag,
@@ -47,8 +45,6 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var articleDto = new GetAllArticlesDto
             {
-                Id = article.Id,
-                PublicId = article.PublicId,
                 UserId = article.UserId,
                 Title = article.Title,
                 Tag = article.Tag,
