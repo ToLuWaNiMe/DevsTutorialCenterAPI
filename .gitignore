@@ -406,3 +406,6 @@ ASALocalRun/
 .db-wal
 .db-shm
 .db
+/devstutorialcenter.db
+/devstutorialcenter.db-shm
+/devstutorialcenter.db-wal
