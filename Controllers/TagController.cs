@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("api/tags")]
     [ApiController]
     public class TagController : ControllerBase
     {
@@ -20,23 +20,11 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
 
-        [HttpGet ("getalltags")]
+        [HttpGet("")]
         public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync()
         {
             var tags = await _tagService.GetAllTagAsync();
-            if(!tags.Any())
-            {
-              
-           return NotFound(new ResponseDto<IEnumerable<GetAllTagsDto>>
-           {
-               Code =404,
-               Message = "Not found",
-               Error = "",
-               Data = tags
-           });
-            }
-
-            return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
+             return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
             {
                 Code = 200,
                 Message = "OK",
