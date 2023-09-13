@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[tag]")]
+    [Route("api/[Controller]")]
     [ApiController]
     public class TagController : ControllerBase
     {
@@ -17,11 +17,11 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             _tagService = tagService;
         }
-        [Authorize]
+        //[Authorize]
         [HttpPost("create-tag")]
         public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
                 {
