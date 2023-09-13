@@ -1,9 +1,10 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
     public interface ITagService
     {
-        Task<IEnumerable<Tag>> GetAllTagAsync();
+        Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync();
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[Tag]")]
     [ApiController]
     public class TagController : ControllerBase
     {
@@ -20,11 +20,11 @@ namespace DevsTutorialCenterAPI.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<ResponseDto<IEnumerable<Tag>>>> GetAllTagAsync()
+        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync()
         {
             var tags = await _tagService.GetAllTagAsync();
 
-            return Ok(new ResponseDto<IEnumerable<Tag>>
+            return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
             {
                 Code = 200,
                 Message = "OK",
