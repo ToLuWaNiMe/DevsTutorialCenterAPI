@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<ILikesService, LikesService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 
 builder.Services.AddScoped<ICommentService , CommentService>();
 builder.Services.AddScoped<IRepository, Repository>();
