@@ -38,9 +38,9 @@ namespace DevsTutorialCenterAPI.Data.Repositories
 
 
 
-        public Task<ResponseDto<object>> LoginTenantAsync(string Identity, string password)
+        public Task<ResponseDto<object>> LoginTenantAsync(LoginDto loginDto)
         {
-            if (string.IsNullOrEmpty(Identity) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(loginDto.Identity) || string.IsNullOrEmpty(loginDto.Password))
             {
                 return Task.FromResult (new ResponseDto<object>
                 {
@@ -52,7 +52,7 @@ namespace DevsTutorialCenterAPI.Data.Repositories
             }
 
 
-            var jwtToken = GenerateJWT(Identity);
+            var jwtToken = GenerateJWT(loginDto.Identity);
 
             if (jwtToken != null)
             {

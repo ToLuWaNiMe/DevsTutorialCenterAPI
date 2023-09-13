@@ -24,9 +24,9 @@ namespace DevsTutorialCenterAPI.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginTenant([FromBody] Tenant request)
+        public async Task<IActionResult> LoginTenant([FromBody] LoginDto loginDto)
         {
-            var response = await _authService.LoginTenantAsync(request.Identity, request.Password);
+            var response = await _authService.LoginTenantAsync(loginDto);
             return StatusCode(response.Code, response);
         }
     }

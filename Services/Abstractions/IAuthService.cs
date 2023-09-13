@@ -5,7 +5,7 @@ namespace DevsTutorialCenterAPI.Data.Repositories.interfaces
 {
     public interface IAuthService
     {
-        Task<ResponseDto<object>> LoginTenantAsync(string identity, string password);
+        Task<ResponseDto<object>> LoginTenantAsync(LoginDto loginDto);
         string GenerateJWT(string Tenant);
     }
 }
