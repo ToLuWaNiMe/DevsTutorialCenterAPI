@@ -13,12 +13,12 @@ namespace DevsTutorialCenterAPI.Data.Repositories
             _repository = repository;
         }
 
-        public async Task<ResponseDto<object>> DeleteTenantAsync(string identity)
+        public async Task<ResponseDto<object>> DeleteTenantAsync(string Id)
         {
             try
             {
                 // Validate identity and delete the tenant
-                var tenant = await _repository.GetByIdAsync<Tenant>(identity);
+                var tenant = await _repository.GetByIdAsync<Tenant>(Id);
 
                 if (tenant != null)
                 {

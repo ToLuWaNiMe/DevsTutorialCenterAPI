@@ -17,10 +17,10 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
 
-        [HttpDelete("delete/{identity}")]
-        public async Task<IActionResult> DeleteTenant(string identity)
+        [HttpDelete("delete/{Id}")]
+        public async Task<IActionResult> DeleteTenant(string Id)
         {
-            var response = await _tenantService.DeleteTenantAsync(identity);
+            var response = await _tenantService.DeleteTenantAsync(Id);
             return StatusCode(response.Code, response);
         }
     }
