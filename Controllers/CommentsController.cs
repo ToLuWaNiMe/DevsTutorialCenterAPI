@@ -17,7 +17,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _commentService = commentService;
         }
         
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CommentDTO commentDTO)
         {
@@ -69,7 +69,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("update/{commentId}")]
         public async Task <IActionResult> UpdateComment([FromRoute]string commentId, [FromBody] CommentDTO commentDTO)
         {
