@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+
 namespace DevsTutorialCenterAPI.Models.DTOs
 {
     public class GetAllArticlesDto

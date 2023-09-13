@@ -35,5 +35,34 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 CreatedOn = a.CreatedOn
             }).ToList();
         }
+        
+        public async Task<GetAllArticlesDto> GetSingleArticle(string articleId)
+        {
+            var article = await _repository.GetByIdAsync<Article>(articleId);
+
+            if (article == null)
+            {
+                throw new Exception($"Article with ID {articleId} not found.");
+            }
+
+            var articleDto = new GetAllArticlesDto
+            {
+                Id = article.Id,
+                PublicId = article.PublicId,
+                UserId = article.UserId,
+                Title = article.Title,
+                Tag = article.Tag,
+                Text = article.Text,
+                ImageUrl = article.ImageUrl,
+                IsPublished = article.IsPublished,
+                IsRead = article.IsRead,
+                IsRecommended = article.IsRecommended,
+                IsReported = article.IsReported,
+                IsSaved = article.IsSaved,
+                CreatedOn = article.CreatedOn
+            };
+
+            return articleDto;
+        }
     }
 }
