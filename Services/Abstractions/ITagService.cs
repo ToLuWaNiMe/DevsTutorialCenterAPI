@@ -5,6 +5,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
 {
     public interface ITagService
     {
-        Task CreateTagAsync(CreateTagDto createTagDto);
+        Task<string> CreateTagAsync(CreateTagDto createTagDto);
     }
 }

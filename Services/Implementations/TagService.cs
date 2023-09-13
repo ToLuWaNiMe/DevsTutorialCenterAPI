@@ -17,10 +17,27 @@ namespace DevsTutorialCenterAPI.Services.Implementations
            _context = context;
         }
 
-        public async Task CreateTagAsync(CreateTagDto createTagDto)
+        public async Task<string> CreateTagAsync(CreateTagDto createTagDto)
         {
-            var tag = new Tag { Name = createTagDto.Name };
-            await _repository.AddAsync(tag);
+       
+            try
+            { 
+                   
+                var tag = new Tag { Name = createTagDto.Name };
+              
+                await _repository.AddAsync<Tag>(tag);
+                    return tag.Id;
+               
+
+            }
+
+            catch(Exception ex) 
+            {
+                throw new Exception(ex.Message);
+               
+
+            }
+            
             
         }
 
