@@ -1,13 +1,14 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Interfaces
 {
     public interface ITagService
     {
-        Task<Tag> Delete(Tag tag);
+        Task<TagDto> Delete(string id);
         Task<Tag> GetByIdAsync<T>(string id);
-        Task<Tag> UpdateAsync(string Name, Tag updatedTag);
+        Task<Tag> UpdateAsync(string id, TagDto updatedTag);
 
-        Task<Tag> AddTagAsync(Tag newTag);
+        Task<TagDto> AddTagAsync(TagDto newTag);
     }
 }

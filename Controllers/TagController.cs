@@ -1,5 +1,4 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
-
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,135 +9,131 @@ namespace DevsTutorialCenterAPI.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
-        private readonly ITagService _tagRepository;
+        private readonly ITagService _tagService;
 
-        public TagController(ITagService tagRepository)
+        public TagController(ITagService tagService)
         {
-            _tagRepository = tagRepository;
+            _tagService = tagService;
         }
-
-
 
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto<Tag>> UpdateTag(string id, Tag updatedtag)
+        public async Task<ActionResult<ResponseDto<TagDto>>> UpdateTag(string id, [FromBody] TagDto updatedTag)
         {
-            var tag = await _tagRepository.GetByIdAsync<Tag>(id.ToString());
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(new ResponseDto<TagDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Invalid ID.",
+                    Data = null
+                });
+            }
+
+            if (updatedTag == null)
+            {
+                return BadRequest(new ResponseDto<TagDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Invalid model data.",
+                    Data = null
+                });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDto<TagDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Invalid model state.",
+                    Data = null
+                });
+            }
 
             try
             {
+                var existingTag = await _tagService.UpdateAsync(id, updatedTag);
 
-                if (tag == null)
+                if (existingTag == null)
                 {
-
-                    return new ResponseDto<Tag>
+                    return NotFound(new ResponseDto<TagDto>
                     {
                         Code = StatusCodes.Status404NotFound,
                         Message = "Tag not found.",
-
                         Data = null
-                    };
+                    });
                 }
 
-                await _tagRepository.UpdateAsync(id, updatedtag);
-                return new ResponseDto<Tag>
+                // You can choose to return the updated tag here if needed
+                var updatedTagDto = new TagDto
                 {
-                    Code = StatusCodes.Status204NoContent,
-                    Message = "Tag deleted successfully.",
-                    Data = tag
+                    Id = existingTag.Id,
+                    Name = existingTag.Name,
+                    // Map other properties as needed
                 };
+
+                return Ok(new ResponseDto<TagDto>
+                {
+                    Code = StatusCodes.Status200OK,
+                    Message = "Tag updated successfully.",
+                    Data = updatedTagDto
+                });
             }
-
-
             catch (Exception ex)
             {
-
-                return new ResponseDto<Tag>
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto<TagDto>
                 {
                     Code = StatusCodes.Status500InternalServerError,
                     Error = ex.Message,
-                    Message = ex.Message,
+                    Message = "Error updating the tag.",
                     Data = null
-                };
+                });
             }
-
-
-
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto<Tag>> DeleteTag(string id)
+        public async Task<ActionResult<ResponseDto<TagDto>>> DeleteTag(string id)
         {
             try
             {
-                var tag = await _tagRepository.GetByIdAsync<Tag>(id.ToString());
+                var existingTag = await _tagService.GetByIdAsync<Tag>(id);
 
-                if (tag == null)
+                if (existingTag == null)
                 {
-
-                    return new ResponseDto<Tag>
+                    return NotFound(new ResponseDto<TagDto>
                     {
                         Code = StatusCodes.Status404NotFound,
                         Message = "Tag not found.",
-
                         Data = null
-                    };
+                    });
                 }
 
-                await _tagRepository.Delete(tag);
-
-
-                return new ResponseDto<Tag>
+                if (!ModelState.IsValid)
                 {
-                    Code = StatusCodes.Status204NoContent,
-                    Message = "Tag deleted successfully.",
-                    Data = tag
-                };
+                    return BadRequest(new ResponseDto<TagDto>
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Invalid model state.",
+                        Data = null
+                    });
+                }
+
+                await _tagService.Delete(id);
+
+                return Ok("Tag Deleted");
             }
             catch (Exception ex)
             {
-
-                return new ResponseDto<Tag>
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto<TagDto>
                 {
                     Code = StatusCodes.Status500InternalServerError,
                     Error = ex.Message,
-                    Message = ex.Message,
+                    Message = "Error deleting the tag.",
                     Data = null
-                };
+                });
             }
         }
 
-
-
-
-        [HttpPost]
-        public async Task<ActionResult<ResponseDto<Tag>>> AddTag(Tag newTag)
-        {
-            try
-            {
-
-
-
-                await _tagRepository.AddTagAsync(newTag);
-
-                return new ResponseDto<Tag>
-                {
-                    Code = StatusCodes.Status201Created,
-                    Message = "Tag added successfully.",
-                    Data = newTag
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto<Tag>
-                {
-                    Code = StatusCodes.Status500InternalServerError,
-                    Error = ex.Message,
-                    Message = "Error adding the tag.",
-                    Data = null
-                };
-            }
-        }
 
     }
 }

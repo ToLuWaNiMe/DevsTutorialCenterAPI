@@ -1,5 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
@@ -14,17 +15,28 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
 
 
-        public async Task<Tag> Delete(Tag tag)
+        public async Task<TagDto> Delete(string id)
         {
-            if (tag == null)
-                throw new ArgumentNullException(nameof(tag));
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
 
+            // Find the existing tag by ID
+            var existingTag = await _repository.GetByIdAsync<Tag>(id);
 
-            await _repository.DeleteAsync(tag);
+            if (existingTag == null)
+                throw new InvalidOperationException($"Tag with ID {id} not found.");
 
+            // Delete the existing tag from the repository
+            await _repository.DeleteAsync(existingTag);
 
-            return tag;
+            // Return the deleted tag DTO if needed
+            return new TagDto
+            {
+                Id = existingTag.Id,
+                // Map other properties as needed
+            };
         }
+
 
         public async Task<Tag> GetByIdAsync<T>(string id)
         {
@@ -34,7 +46,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return await _repository.GetByIdAsync<Tag>(id);
         }
 
-        public async Task<Tag> UpdateAsync(string id, Tag updatedTag)
+        public async Task<Tag> UpdateAsync(string id, TagDto updatedTag)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -47,28 +59,43 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             if (existingTag == null)
                 throw new InvalidOperationException($"Tag with ID {id} not found.");
 
-
             existingTag.Name = updatedTag.Name;
-            existingTag.UpdatedOn = updatedTag.UpdatedOn;
-            existingTag.CreatedOn = updatedTag.CreatedOn;
-
-
-
 
             await _repository.UpdateAsync(existingTag);
 
             return existingTag;
         }
 
-        public async Task<Tag> AddTagAsync(Tag newTag)
+
+        public async Task<TagDto> AddTagAsync(TagDto newTagDto)
         {
-            if (newTag == null)
-                throw new ArgumentNullException(nameof(newTag));
+            if (newTagDto == null)
+                throw new ArgumentNullException(nameof(newTagDto));
 
-            await _repository.AddAsync(newTag);
 
-            return newTag;
+            var newTagEntity = new Tag
+            {
+
+                Name = newTagDto.Name,
+
+            };
+
+
+            await _repository.AddAsync(newTagEntity);
+
+
+            var addedTagDto = new TagDto
+            {
+
+                Id = newTagEntity.Id,
+                Name = newTagEntity.Name,
+
+            };
+
+            return addedTagDto;
         }
+
+
 
     }
 
