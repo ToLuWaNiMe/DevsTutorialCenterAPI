@@ -17,7 +17,7 @@ namespace DevsTutorialCenterAPI.Controllers
        {
            _commentService = commentService;
        }
-       // DELETE endpoint for deleting a comment
+        // DELETE endpoint for deleting a comment
        [Authorize]
        [HttpDelete("{commentId}")]
        public async Task<IActionResult> DeleteComment(string commentId)
