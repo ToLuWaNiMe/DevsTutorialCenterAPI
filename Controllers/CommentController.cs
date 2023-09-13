@@ -7,7 +7,7 @@ using System.Net;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/comments")]
     [ApiController]
     public class CommentController : ControllerBase
     {
@@ -19,7 +19,6 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
         [HttpGet]
-        
         public async Task<IActionResult> GetCommentsByArticle(string articleId)
         {
            
