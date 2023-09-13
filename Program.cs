@@ -19,7 +19,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 );
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
-builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddScoped<ITenantService, AuthService>();
 builder.Services.AddScoped<Helper>();
 
 
