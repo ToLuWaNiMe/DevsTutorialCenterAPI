@@ -19,6 +19,8 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 );
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
+
 
 
 
