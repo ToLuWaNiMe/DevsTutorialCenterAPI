@@ -1,6 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -18,7 +19,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _articleService = articleService;
         }
 
-
+        [Authorize]
         [HttpPost("create-article")]
         public async Task<IActionResult> CreateArticle([FromBody]CreateArticleDto model)
         {
