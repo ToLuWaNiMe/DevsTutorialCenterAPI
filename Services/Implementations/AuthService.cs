@@ -51,6 +51,7 @@ namespace DevsTutorialCenterAPI.Data.Repositories
                 });
             }
 
+
             var jwtToken = GenerateJWT(Identity);
 
             if (jwtToken != null)

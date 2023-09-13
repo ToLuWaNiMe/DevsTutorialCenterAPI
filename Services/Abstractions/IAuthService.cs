@@ -7,7 +7,5 @@ namespace DevsTutorialCenterAPI.Data.Repositories.interfaces
     {
         Task<ResponseDto<object>> LoginTenantAsync(string identity, string password);
         string GenerateJWT(string Tenant);
-        //Task<ResponseDto<object>> LoginTenantAsync(string identity, string password);
-        //Task<ResponseDto<object>> DeleteTenantAsync(string identity);
     }
 }
