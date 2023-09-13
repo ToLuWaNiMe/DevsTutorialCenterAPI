@@ -17,7 +17,7 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             _tagService = tagService;
         }
-       // [Authorize]
+        [Authorize]
         [HttpPost("create-tag")]
         public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
         {
