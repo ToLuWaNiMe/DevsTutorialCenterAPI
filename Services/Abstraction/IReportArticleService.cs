@@ -5,7 +5,7 @@ namespace DevsTutorialCenterAPI.Services.Abstraction
 {
     public interface IReportArticleService
     {
-        Task<ResponseDto<ReportArticleRequestDto>> ReportArticleAsync(string articleId, ReportArticleRequestDto request);
+        Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId);
     }
 }
   

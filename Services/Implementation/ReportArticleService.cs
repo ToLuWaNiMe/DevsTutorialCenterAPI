@@ -18,45 +18,51 @@ namespace DevsTutorialCenterAPI.Services.Implementation
             _repository = repository;
         }
 
-        public async Task<ResponseDto<ReportArticleRequestDto>> ReportArticleAsync(string articleId, ReportArticleRequestDto request)
+        public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)
         {
+            
             try
             {
-                // Find the article by its ID
+
                 var article = await _repository.GetByIdAsync<Article>(articleId);
 
                 if (article == null)
                 {
-                    return new ResponseDto<ReportArticleRequestDto>
-                    {
-                        Code = 400,
-                        Message = "Error",
-                        Error = "Article not found."
-                    };
+                    throw new Exception("This article cannot be found");
                 }
 
-                // Implement the reporting logic here
-                article.IsReported = request.IsReported;
-                
 
-                // Update the article in the repository
-               await  _repository.UpdateAsync(article);
-
-                return new ResponseDto<ReportArticleRequestDto>
+                if (article.IsReported == true)
                 {
-                    Code = 200,
-                    Message = "Ok",
-                    Data = request
+                    throw new Exception("This article has already been reported");
+                }
+
+                
+                var reportedarticle = new ReportArticle() 
+                {
+                    ReportText = request.ReportText,
+                    ArticleId = article.Id,
+                    ReportedBy = request.ReportedBy
+                
                 };
+
+                await _repository.AddAsync<ReportArticle>(reportedarticle);
+
+                article.IsReported = true;
+
+                await _repository.UpdateAsync<Article>(article);
+
+                return reportedarticle;
+
+                // add new article report to db
+                // update isReported property of article in db
+
+
+
             }
             catch (Exception ex)
             {
-                return new ResponseDto<ReportArticleRequestDto>
-                {
-                    Code = 400,
-                    Message = "Error",
-                    Error = ex.Message
-                };
+               throw new Exception(ex.ToString());
             }
         }
     }

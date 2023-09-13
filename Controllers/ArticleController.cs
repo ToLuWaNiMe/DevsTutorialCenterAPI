@@ -1,5 +1,4 @@
-﻿
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstraction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -7,32 +6,62 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-       // [Authorize]
-        [ApiController]
-        [Route("api/articles")]
-        public class ArticleController : ControllerBase
+    // [Authorize]
+    [ApiController]
+    [Route("api/articles")]
+    public class ArticleController : ControllerBase
+    {
+        private readonly IReportArticleService _reportArticleService;
+
+        public ArticleController(IReportArticleService reportArticleService)
         {
-            private readonly IReportArticleService _reportArticleService;
+            _reportArticleService = reportArticleService;
+        }
 
-            public ArticleController(IReportArticleService reportArticleService)
+        [HttpPost("report-article")]
+        public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request, string articleId)
+        {
+            // validate to check if model is valid
+            if(!ModelState.IsValid)
             {
-                _reportArticleService = reportArticleService;
+                return BadRequest(new ResponseDto<object>
+                {
+                    Data = null,
+                    Message = "Validation failed",
+                    Code = 500,
+
+
+                }) ;   
             }
 
-            [HttpPatch("report")]
-            public async Task<IActionResult> ReportArticle(string articleId,[FromForm] ReportArticleRequestDto request)
-            {
-                var response = await _reportArticleService.ReportArticleAsync(articleId, request);
 
-                if (response.Code == 200)
-                {
-                    return Ok(response);
-                }
-                else
-                {
-                    return BadRequest(response);
-                }
-            }
+
+            var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
+
+            return Ok(new ResponseDto<object>
+            {
+                Data = response,
+                Code = 200,
+                Message = "Ok",
+                Error = ""
+            });
+
+            
         }
     }
+}
 
+/*
+        -  Add a new entity for ReportArticle
+            - Id
+            - text
+            - articleId
+            - reportedBy
+
+        -  Add it to Dbcontext
+        -  run a migration to add it to the database
+        -  Your dto should be of this shape
+            - text
+            - articleId
+            - reportedBy
+ */

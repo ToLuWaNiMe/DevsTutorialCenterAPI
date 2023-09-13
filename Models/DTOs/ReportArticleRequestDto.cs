@@ -2,8 +2,9 @@
 {
     public class ReportArticleRequestDto
     {
-
-        public bool IsReported { get; set; }
+        public string ReportText { get; set; }
+        
+        public string ReportedBy { get; set; }
     }
 }
-
+/*   */
