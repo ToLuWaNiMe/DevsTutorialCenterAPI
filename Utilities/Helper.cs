@@ -12,7 +12,7 @@ namespace DevsTutorialCenterAPI.Utilities
 
             if (pageNum <= 0 || pageNum > totalPages)
             {
-                return null;
+                pageNum = totalPages;
             }
 
             var skipAmount = (pageNum - 1) * pageSize;
@@ -25,7 +25,8 @@ namespace DevsTutorialCenterAPI.Utilities
                 CurrentPage = pageNum,
                 NumberOfPages = totalPages,
                 TotalCount = totalCount,
-                PreviousPage = pageNum > 1 ? pageNum - 1 : -1, // Set to -1 for the first page
+                PreviousPage = pageNum > 1 ? pageNum - 1 : null,
+                NextPage = totalPages == pageNum ? null : pageNum + 1
             };
         }
     }

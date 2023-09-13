@@ -15,21 +15,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         {
             _repository = repository;
         }
-        public async Task<IEnumerable<GetAllArticlesDto>> GetAllArticles()
-        {
-            var articles = await _repository.GetAllAsync<Article>();
-
-            return articles.Select(a => new GetAllArticlesDto
-            {
-                UserId = a.UserId,
-                Title = a.Title,
-                Tag = a.Tag,
-                Text = a.Text,
-                ImageUrl = a.ImageUrl,
-                CreatedOn = a.CreatedOn
-            }).ToList();
-        }
-
+        
         public async Task<GetAllArticlesDto> GetSingleArticle(string articleId)
         {
             var article = await _repository.GetByIdAsync<Article>(articleId);
@@ -71,7 +57,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             if (tagFilter)
             {
-                articles = articles.Where(a => a.Tag == (filters.Tag));
+                articles = articles.Where(a => a.Tag == filters.Tag.ToUpper());
             }
 
             if (isRecommendedFilter)
@@ -109,8 +95,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 ImageUrl = a.ImageUrl,
             });
 
-            int pageNum = int.Parse(filters.Page);
-            int pageSize = int.Parse(filters.Size);
+            int pageNum = filters.Page ?? 1;
+            int pageSize = filters.Size ?? 10;
 
             var skipAmount = (pageNum - 1) * pageSize;
 
