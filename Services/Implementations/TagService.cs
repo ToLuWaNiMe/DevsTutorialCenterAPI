@@ -21,12 +21,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         public async Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync()
         {
             IQueryable<Tag> tags = await _repository.GetAllAsync<Tag>();
-            //if (!tags.Any())
-            //{
-            //    return Enumerable.Empty<GetAllTagsDto>();
-            //}
-
-                var tagsDto = await tags
+           
+            var tagsDto = await tags
                 .Select(tag => new GetAllTagsDto
                 {
                     Id = tag.Id,

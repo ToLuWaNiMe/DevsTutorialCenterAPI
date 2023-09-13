@@ -24,6 +24,7 @@ namespace DevsTutorialCenterAPI.Controllers
         public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync()
         {
             var tags = await _tagService.GetAllTagAsync();
+
              return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
             {
                 Code = 200,
