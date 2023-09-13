@@ -2,6 +2,7 @@
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
@@ -31,7 +32,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 IsRecommended = a.IsRecommended,
                 IsReported = a.IsReported,
                 IsSaved = a.IsSaved,
-                CreatedOn = a.CreatedOn,
+                CreatedOn = a.CreatedOn
             }).ToList();
         }
     }

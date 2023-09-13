@@ -1,4 +1,5 @@
-﻿namespace DevsTutorialCenterAPI.Models.DTOs
+﻿using Humanizer;
+namespace DevsTutorialCenterAPI.Models.DTOs
 {
     public class GetAllArticlesDto
     {
@@ -14,6 +15,12 @@
         public bool IsReported { get; set; }
         public bool IsPublished { get; set; }
         public string UserId { get; set; }
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow.AddDays(-2);
+
+
+        public string GetFormattedCreatedOn()
+        {
+            return CreatedOn.Humanize();
+        }
     }
 }

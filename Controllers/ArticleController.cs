@@ -1,8 +1,6 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Data.Repositories;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using Microsoft.AspNetCore.Http;
+using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
@@ -20,36 +18,27 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
         [HttpGet(" ")]
-        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(int pageNum, int pageSize=10)
+        public async Task<ActionResult<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(int pageNum, int pageSize = 10)
         {
             try
             {
                 var articles = await _articleService.GetAllArticles();
+                var paginatorResponse = Helper.Paginate(articles, pageNum, pageSize);
 
-                var skipAmount = (pageNum - 1) * pageSize;
-
-                var paginatedArticles = articles.Skip(skipAmount).Take(pageSize);
-
-                if (articles == null)
+                if (paginatorResponse == null)
                 {
-                    return NotFound();
+                    return NotFound("Invalid entry!");
                 }
-                return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
-                {
-                    Data = paginatedArticles,
-                    Code = 200,
-                    Message = "OK",
-                    Error = ""
-                }) ;
+
+                return Ok(paginatorResponse);
             }
             catch (Exception ex)
             {
-               _logger.LogError($"Error: {ex.Message}");
+                _logger.LogError($"Error: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
-            
-
-
         }
+
+
     }
 }
