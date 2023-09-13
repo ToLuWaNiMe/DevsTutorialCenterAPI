@@ -1,5 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
 
 
-        public async Task<IEnumerable<Comment>> GetCommentsByArticle(string articleId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsByArticle(string articleId)
         {
-            var comments = await _repository.GetAllAsync<Comment>();
+            var comments = await _repository.GetAllAsync<CommentDto>();
 
             var articleComments = await comments.Where(c => c.ArticleId == articleId).
                                   OrderByDescending(c => c.CreatedOn).ToListAsync();

@@ -27,23 +27,14 @@ namespace DevsTutorialCenterAPI.Controllers
             try
             {
                 var comments = await _commentService.GetCommentsByArticle(articleId);
-
-                var noOfComments = comments.Count();
-
-                if (!comments.Any())
-                {
-                    response.Code = (int)HttpStatusCode.NoContent;
-                    response.Message = $"no comments found for {articleId}";
-                    response.Data = null;
-                    response.Error = "";
-
-                    return BadRequest(response);
-                }
+      
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = $"{noOfComments} Comments found";
+                response.Message = $"Comments found";
                 response.Data = comments;
                 response.Error = "";
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -55,7 +46,6 @@ namespace DevsTutorialCenterAPI.Controllers
                 return BadRequest(response);
             }
 
-            return Ok(response);
         }
 
     }
