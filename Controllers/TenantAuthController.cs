@@ -10,9 +10,9 @@ namespace DevsTutorialCenterAPI.Controllers
     [ApiController]
     public class TenantController : ControllerBase
     {
-        private readonly ITenantService _tenantService;
+        private readonly ITenantAuthService _tenantService;
 
-        public TenantController(ITenantService tenantService)
+        public TenantController(ITenantAuthService tenantService)
         {
             _tenantService = tenantService;
         }

@@ -3,7 +3,7 @@ using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
-    public interface ITenantService
+    public interface ITenantAuthService
     {
         Task<object> RegisterTenantAsync(RegisterTenantDto registerTenantDto);
     }

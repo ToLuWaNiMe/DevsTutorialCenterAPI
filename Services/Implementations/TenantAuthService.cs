@@ -5,13 +5,13 @@ using DevsTutorialCenterAPI.Services.Abstractions;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
-    public class TenantService : ITenantService
+    public class TenantAuthService : ITenantAuthService
     {
         private readonly IRepository _repository;
         //private readonly IConfiguration _config;
         private readonly Helper _passwordHasher;
 
-        public TenantService(IRepository repository, IConfiguration config, Helper passwordHasher)
+        public TenantAuthService(IRepository repository, IConfiguration config, Helper passwordHasher)
         {
             _repository = repository;
             //_config = config;
