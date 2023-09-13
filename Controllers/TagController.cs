@@ -1,10 +1,12 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class TagController : ControllerBase
@@ -64,7 +66,7 @@ namespace DevsTutorialCenterAPI.Controllers
                     });
                 }
 
-                // You can choose to return the updated tag here if needed
+                // You can choose to return the updated tag here if neede
                 var updatedTagDto = new TagDto
                 {
                     Id = existingTag.Id,
