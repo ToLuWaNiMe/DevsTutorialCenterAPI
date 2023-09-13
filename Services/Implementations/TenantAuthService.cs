@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DevsTutorialCenterAPI.Data.Repositories
 {
-    public class AuthService : IAuthService
+    public class AuthService : ITenantAuthService
     {
         private readonly IConfiguration _config;
         private readonly IRepository repository;
