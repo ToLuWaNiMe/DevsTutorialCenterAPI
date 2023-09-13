@@ -19,9 +19,9 @@ namespace DevsTutorialCenterAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet(" ")]
-        public async Task<ActionResult<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(
-            int pageNum, int pageSize = 10)
+
+        [HttpGet("")]
+        public async Task<ActionResult<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>> GetAllArticles(int pageNum, int pageSize = 10)
         {
             try
             {
@@ -33,36 +33,47 @@ namespace DevsTutorialCenterAPI.Controllers
                 {
                     return NotFound("Invalid entry!");
                 }
-
                 return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
-                    {
-                        Data = paginatorResponse,
-                    }
-                    [HttpGet("id")]
-
-                public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
                 {
-                    try
-                    {
-                        var article = await _articleService.GetSingleArticle(articleId);
-
-                        if (article == null)
-                        {
-                            return NotFound($"Article with ID {articleId} not found.");
-                        }
-
-                        return Ok(new ResponseDto<GetAllArticlesDto>
-                        {
-                            Data = article,
-                            Code = 200,
-                            Message = "OK",
-                            Error = ""
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"Error: {ex.Message}");
-                        return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-                    }
-                }
+                    Data = paginatorResponse,
+                    Code = 200,
+                    Message = "OK",
+                    Error = ""
+                });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+        }
+
+
+        [HttpGet("{articleId}")]
+        public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
+        {
+            try
+            {
+                var article = await _articleService.GetSingleArticle(articleId);
+
+                if (article == null)
+                {
+                    return NotFound($"Article with ID {articleId} not found.");
+                }
+
+                return Ok(new ResponseDto<GetAllArticlesDto>
+                {
+                    Data = article,
+                    Code = 200,
+                    Message = "OK",
+                    Error = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+        }
+    }
+}
