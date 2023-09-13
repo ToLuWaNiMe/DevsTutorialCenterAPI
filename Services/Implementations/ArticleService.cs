@@ -2,84 +2,33 @@
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Utilities;
+using Humanizer;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
     public class ArticleService : IArticleService
     {
         private readonly IRepository _repository;
-        public ArticleService(IRepository repository) 
+        public ArticleService(IRepository repository)
         {
-           _repository = repository;
+            _repository = repository;
         }
-
-        public async Task<IEnumerable<GetAllArticlesDto>> GetAllArticles(FilterArticleDto filters)
+        public async Task<IEnumerable<GetAllArticlesDto>> GetAllArticles()
         {
             var articles = await _repository.GetAllAsync<Article>();
 
-            if (!string.IsNullOrEmpty(filters.AuthorId))
+            return articles.Select(a => new GetAllArticlesDto
             {
-                articles = articles.Where(a => a.UserId == filters.AuthorId);
-            }
-
-            if (!string.IsNullOrEmpty(filters.Tag))
-            {
-                articles = articles.Where(a => a.Tag == (filters.Tag));
-            }
-
-            if (filters.IsRecommended is null)
-            {
-                articles = articles.Where(a => a.IsRecommended);
-            }
-
-            if (filters.IsSaved is null)
-            {
-                articles = articles.Where(a => a.IsSaved);
-            }
-
-            if (filters.IsRead is null)
-            {
-                articles = articles.Where(a => a.IsRead);
-            }
-
-            if (filters.IsReported is null)
-            {
-                articles = articles.Where(a => a.IsReported);
-            }
-
-            if (filters.IsPublished is null)
-            {
-                articles = articles.Where(a => a.IsPublished);
-            }
-
-            int pageNum = int.Parse(filters.Page);
-            int pageSize = int.Parse(filters.Size);
-
-            var skipAmount = (pageNum - 1) * pageSize;
-
-            
-
-            var result = articles.Select(a => new GetAllArticlesDto
-            {
-                Id = a.Id,
-                PublicId = a.PublicId,
                 UserId = a.UserId,
                 Title = a.Title,
                 Tag = a.Tag,
                 Text = a.Text,
                 ImageUrl = a.ImageUrl,
-                IsPublished = a.IsPublished,
-                IsRead = a.IsRead,
-                IsRecommended = a.IsRecommended,
-                IsReported = a.IsReported,
-                IsSaved = a.IsSaved
+                CreatedOn = a.CreatedOn
             }).ToList();
-
-            var paginatedArticles = result.Skip(skipAmount).Take(pageSize);
-
-            return paginatedArticles;
         }
-
 
         public async Task<GetAllArticlesDto> GetSingleArticle(string articleId)
         {
@@ -92,22 +41,86 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var articleDto = new GetAllArticlesDto
             {
-                Id = article.Id,
-                PublicId = article.PublicId,
                 UserId = article.UserId,
                 Title = article.Title,
                 Tag = article.Tag,
                 Text = article.Text,
                 ImageUrl = article.ImageUrl,
-                IsPublished = article.IsPublished,
-                IsRead = article.IsRead,
-                IsRecommended = article.IsRecommended,
-                IsReported = article.IsReported,
-                IsSaved = article.IsSaved,
                 CreatedOn = article.CreatedOn
             };
 
             return articleDto;
         }
+
+        public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
+        {
+            var authorIdFilter = !string.IsNullOrEmpty(filters.AuthorId);
+            var tagFilter = !string.IsNullOrEmpty(filters.Tag);
+            var isRecommendedFilter = filters.IsRecommended != null;
+            var isSavedFilter = filters.IsSaved != null;
+            var isReadFilter = filters.IsRead != null;
+            var isReportedFilter = filters.IsReported != null;
+            var isPublishedFilter = filters.IsPublished != null;
+
+            var articles = await _repository.GetAllAsync<Article>();
+
+            if (authorIdFilter)
+            {
+                articles = articles.Where(a => a.UserId == filters.AuthorId);
+            }
+
+            if (tagFilter)
+            {
+                articles = articles.Where(a => a.Tag == (filters.Tag));
+            }
+
+            if (isRecommendedFilter)
+            {
+                articles = articles.Where(a => a.IsRecommended);
+            }
+
+            if (isSavedFilter)
+            {
+                articles = articles.Where(a => a.IsSaved);
+            }
+
+            if (isReadFilter)
+            {
+                articles = articles.Where(a => a.IsRead);
+            }
+
+            if (isReportedFilter)
+            {
+                articles = articles.Where(a => a.IsReported);
+            }
+
+            if (isPublishedFilter)
+            {
+                articles = articles.Where(a => a.IsPublished);
+            }
+
+            var articlesDto = articles.Select(a => new GetAllArticlesDto
+            {
+                Id = a.Id,
+                UserId = a.UserId,
+                Title = a.Title,
+                Tag = a.Tag,
+                Text = a.Text,
+                ImageUrl = a.ImageUrl,
+            });
+
+            int pageNum = int.Parse(filters.Page);
+            int pageSize = int.Parse(filters.Size);
+
+            var skipAmount = (pageNum - 1) * pageSize;
+
+            
+
+            // Use the Helper class's Paginator method to paginate the result
+            var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
+
+            return paginatorResponse;
+        }
     }
 }
+
