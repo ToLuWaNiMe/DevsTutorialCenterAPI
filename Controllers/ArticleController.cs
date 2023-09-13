@@ -18,8 +18,8 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
 
-        [HttpGet("id")]
-        public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
+        [HttpGet("{articleId}")]
+        public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace DevsTutorialCenterAPI.Controllers
                     return NotFound($"Article with ID {articleId} not found.");
                 }
 
-                return Ok(new ResponseDto<GetAllArticlesDto>
+                return Ok(new ResponseDto<GetSingleArticleDto>
                 {
                     Data = article,
                     Code = 200,
