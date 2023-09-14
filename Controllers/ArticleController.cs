@@ -46,18 +46,12 @@ namespace DevsTutorialCenterAPI.Controllers
             }
         }
 
-        [HttpDelete("delete-article/{id}")]
-        public async Task<IActionResult> DeleteArticle(string id)
+        [HttpDelete("delete-article")]
+        public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
             {
-                var article = await _articleService.GetArticleById(id);
-                if (article == null)
-                {
-                    return NotFound("Article not found");
-                }
-
-                var result = await _articleService.DeleteArticleAsync(article);
+                var result = await _articleService.DeleteArticleAsync(articleId);
 
                 if (result)
                 {
