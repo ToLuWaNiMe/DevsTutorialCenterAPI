@@ -41,5 +41,35 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             return articleDto;
         }
+
+
+        public async Task<bool> SetArticleReportStatus(string articleId, string status)
+        {
+            if (status != "approved" && status != "declined")
+            {
+                throw new Exception("Invalid status provided");
+            }
+
+            var article = await _repository.GetByIdAsync<Article>(articleId);
+
+            if (article == null)
+            {
+                throw new Exception("Article not found");
+            }
+
+            if (status == "approved")
+            {
+                article.IsReported = false;
+            }
+
+            else if(status == "declined")
+            {
+                article.IsReported= true;
+            }
+
+            await _repository.UpdateAsync(article);
+
+            return true;
+        }
     }
 }
