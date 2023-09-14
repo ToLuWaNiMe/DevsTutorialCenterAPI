@@ -48,11 +48,5 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             await _repository.DeleteAsync(article);
             return true;
         }
-
-        //public async Task<Article> GetArticleById(string articleId)
-        //{
-        //    var article = await _repository.GetByIdAsync<Article>(articleId);
-        //    return article;
-        //}
     }
 }
