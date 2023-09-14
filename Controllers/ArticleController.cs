@@ -64,16 +64,15 @@ namespace DevsTutorialCenterAPI.Controllers
                         error = ""
                     });
                 }
-                else
+                
+                return BadRequest(new ResponseObject
                 {
-                    return BadRequest(new ResponseObject
-                    {
-                        code = 400,
-                        message = "Error",
-                        data = null,
-                        error = "Failed to set report status"
-                    });
-                }
+                     code = 400,
+                     message = "Error",
+                     data = null,
+                     error = "Failed to set report status"
+                });
+                
             }
             catch (ArgumentException ex)
             {
