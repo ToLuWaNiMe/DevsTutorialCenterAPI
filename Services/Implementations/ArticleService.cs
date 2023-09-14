@@ -100,9 +100,6 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var skipAmount = (pageNum - 1) * pageSize;
 
-            
-
-            // Use the Helper class's Paginator method to paginate the result
             var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
 
             return paginatorResponse;
