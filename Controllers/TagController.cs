@@ -1,6 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Helpers;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
@@ -17,7 +18,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _tagService = tagService;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<ResponseDto<TagDto>>> UpdateTag([FromRoute] string id, [FromBody] TagDto updatedTag)
         {
@@ -47,7 +48,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseDto<TagDto>>> DeleteTag(string id)
         {
@@ -58,7 +59,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 return BadRequest(new ResponseDto<TagDto>
                 {
                     Code = StatusCodes.Status400BadRequest,
-                    Message = "Invalid model state.",
+                    Message = "Failed to delete tag",
                     Error = validationErrors.ToString(),
                     Data = null
                 });
