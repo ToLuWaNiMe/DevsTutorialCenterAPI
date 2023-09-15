@@ -5,10 +5,10 @@ namespace DevsTutorialCenterAPI.Services.Interfaces
 {
     public interface ITagService
     {
-        Task<TagDto> Delete(string id);
+        Task Delete(string id);
         Task<Tag> GetByIdAsync<T>(string id);
-        Task<Tag> UpdateAsync(string id, TagDto updatedTag);
+        Task<TagDto> UpdateAsync(string id, TagDto updatedTag);
 
-        Task<TagDto> AddTagAsync(TagDto newTag);
+
     }
 }
