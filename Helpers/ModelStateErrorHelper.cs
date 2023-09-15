@@ -4,9 +4,12 @@ namespace DevsTutorialCenterAPI.Helpers
 {
     public static class ModelStateErrorHelper
     {
-        public static IEnumerable<string> GetErrors(ModelStateDictionary modelState)
+        public static string GetErrors(ModelStateDictionary modelState)
         {
-            return modelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+
+            var errorList = modelState.SelectMany(x => x.Value.Errors.Select(xx => xx.ErrorMessage));
+            return string.Join(" ", errorList);
+
         }
     }
 }

@@ -7,7 +7,7 @@ namespace DevsTutorialCenterAPI.Services.Interfaces
     {
         Task Delete(string id);
         Task<Tag> GetByIdAsync<T>(string id);
-        Task<TagDto> UpdateAsync(string id, TagDto updatedTag);
+        Task<UpdateTagDto> UpdateAsync(string id, UpdateTagDto updatedTag);
 
 
     }

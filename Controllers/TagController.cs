@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevsTutorialCenterAPI.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("api/[tags]")]
     [ApiController]
     public class TagController : ControllerBase
     {
@@ -18,9 +18,9 @@ namespace DevsTutorialCenterAPI.Controllers
             _tagService = tagService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseDto<TagDto>>> UpdateTag([FromRoute] string id, [FromBody] TagDto updatedTag)
+        public async Task<ActionResult<ResponseDto<UpdateTagDto>>> UpdateTag([FromRoute] string id, [FromBody] UpdateTagDto updatedTag)
         {
 
 
@@ -28,7 +28,7 @@ namespace DevsTutorialCenterAPI.Controllers
             {
                 var validationErrors = ModelStateErrorHelper.GetErrors(ModelState);
 
-                return BadRequest(new ResponseDto<TagDto>
+                return BadRequest(new ResponseDto<UpdateTagDto>
                 {
                     Code = StatusCodes.Status400BadRequest,
                     Message = "Invalid model state.",
@@ -39,7 +39,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
             var existingTag = await _tagService.UpdateAsync(id, updatedTag);
 
-            return Ok(new ResponseDto<TagDto>
+            return Ok(new ResponseDto<UpdateTagDto>
             {
                 Code = StatusCodes.Status200OK,
                 Message = "Tag updated successfully.",
@@ -48,26 +48,14 @@ namespace DevsTutorialCenterAPI.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseDto<TagDto>>> DeleteTag(string id)
+        public async Task<ActionResult<ResponseDto<UpdateTagDto>>> DeleteTag([FromRoute] string id)
         {
-
-            if (!ModelState.IsValid)
-            {
-                var validationErrors = ModelStateErrorHelper.GetErrors(ModelState);
-                return BadRequest(new ResponseDto<TagDto>
-                {
-                    Code = StatusCodes.Status400BadRequest,
-                    Message = "Failed to delete tag",
-                    Error = validationErrors.ToString(),
-                    Data = null
-                });
-            }
 
             await _tagService.Delete(id);
 
-            var response = new ResponseDto<TagDto>
+            var response = new ResponseDto<UpdateTagDto>
             {
                 Code = StatusCodes.Status200OK,
                 Message = "Tag deleted successfully.",

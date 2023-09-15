@@ -43,7 +43,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
 
 
-        public async Task<TagDto> UpdateAsync(string id, TagDto updatedTagDto)
+        public async Task<UpdateTagDto> UpdateAsync(string id, UpdateTagDto updatedTagDto)
         {
 
             var existingTag = await _repository.GetByIdAsync<Tag>(id);
@@ -54,12 +54,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             existingTag.Name = updatedTagDto.Name;
 
             await _repository.UpdateAsync(existingTag);
-
-
-            return new TagDto
+            return new UpdateTagDto
             {
                 Name = existingTag.Name,
-
             };
         }
 
