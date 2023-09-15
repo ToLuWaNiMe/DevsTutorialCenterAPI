@@ -30,7 +30,7 @@ namespace DevsTutorialCenterAPI.Controllers
       
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = $"Comments found";
+                response.Message = "Comments found";
                 response.Data = comments;
                 response.Error = "";
 
