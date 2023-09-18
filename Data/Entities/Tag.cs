@@ -1,8 +1,8 @@
 ﻿namespace DevsTutorialCenterAPI.Data.Entities
 {
-    public class Tag : BaseEntity
+    public class Tag
     {
-
-        public string Name { get; set; }
+        public string Name{ get; set; }
+     
     }
 }

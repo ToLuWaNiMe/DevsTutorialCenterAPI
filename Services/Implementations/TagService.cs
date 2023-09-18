@@ -26,7 +26,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 var tag = new Tag { Name = createTagDto.Name };
               
                 await _repository.AddAsync<Tag>(tag);
-                    return tag.Id;
+                    return tag.Name;
                
 
             }
