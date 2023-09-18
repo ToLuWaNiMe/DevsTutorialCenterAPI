@@ -20,35 +20,42 @@ namespace DevsTutorialCenterAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseDto<object>>> RegisterTenant([FromBody] RegisterTenantDto registerTenantDto)
         {
-            if(!ModelState.IsValid)
+            try
             {
-                return BadRequest (new ResponseDto<object>{
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseDto<object>
+                    {
+
+                        Data = null,
+                        Code = 400,
+                        Error = "Validation Failed",
+                        Message = "Error"
+                    });
+                }
+                var response = await _tenantService.RegisterTenantAsync(registerTenantDto);
+
+                return Ok(new ResponseDto<object>
+                {
+
+                    Data = response,
+                    Code = 200,
+                    Error = "",
+                    Message = "OK"
+                });
+            }
+            catch (Exception ex)
+            {
+                //log error here ex.message
+                return BadRequest(new ResponseDto<object>
+                {
 
                     Data = null,
-                    Code = 500,
-                    Error = "Validation Failed",
+                    Code = 400,
+                    Error = "Failed to register tenant",
                     Message = "Error"
-                }); 
-            }
-            var response = await _tenantService.RegisterTenantAsync(registerTenantDto);
-            
-            return Ok(new ResponseDto<object>
-            {
-
-                Data = response,
-                Code = 200,
-                Error = "",
-                Message = "OK"
-            });
-
-            return BadRequest(new ResponseDto<object>
-            {
-
-                Data = null,
-                Code = 400,
-                Error = "Failed to register tenant",
-                Message = "Error"
-            });
+                });
+            } 
         }
     }
 }

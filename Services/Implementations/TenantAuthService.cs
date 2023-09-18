@@ -19,27 +19,22 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
 
 
-        public async Task<object> RegisterTenantAsync(RegisterTenantDto registerTenantDto)
+        public async Task<Tenant> RegisterTenantAsync(RegisterTenantDto registerTenantDto)
         {
-            try
+           
+            var newTenant = new Tenant()
             {
-                    var newTenant = new Tenant()
-                    {
-                        Name = registerTenantDto.Name,
-                        Identity = registerTenantDto.Identity,
-                        Password = _passwordHasher.HashPassword(registerTenantDto.Password),
-                    };
-                    // Hash the password before storing it
+                Name = registerTenantDto.Name,
+                Identity = registerTenantDto.Identity,
+                Password = _passwordHasher.HashPassword(registerTenantDto.Password),
+            };
+            // Hash the password before storing it
                     
 
-                    await _repository.AddAsync<Tenant>(newTenant);
+            await _repository.AddAsync<Tenant>(newTenant);
 
-                    return newTenant;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return newTenant;
+            
         }
     }
 }

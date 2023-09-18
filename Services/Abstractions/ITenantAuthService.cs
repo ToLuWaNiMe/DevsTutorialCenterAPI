@@ -5,6 +5,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
 {
     public interface ITenantAuthService
     {
-        Task<object> RegisterTenantAsync(RegisterTenantDto registerTenantDto);
+        Task<Tenant> RegisterTenantAsync(RegisterTenantDto registerTenantDto);
     }
 }
