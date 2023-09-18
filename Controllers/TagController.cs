@@ -1,7 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Helpers;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Services.Interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -60,14 +59,6 @@ namespace DevsTutorialCenterAPI.Controllers
                 Message = "Error",
             });
 
-            var response = new ResponseDto<UpdateTagDto>
-            {
-                Code = StatusCodes.Status200OK,
-                Message = "Tag deleted successfully.",
-                Data = null
-            };
-
-            return Ok(response);
 
         }
 
