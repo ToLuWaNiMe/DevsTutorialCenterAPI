@@ -17,14 +17,16 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         }
 
 
+        public async Task Delete(string id)
+        {
 
         public async Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync()
         {
             IQueryable<Tag> tags = await _repository.GetAllAsync<Tag>();
-           
+
             var tagsDto = await tags
                 .Select(tag => new GetAllTagsDto
-                {
+        {
                     Id = tag.Id,
                     Name = tag.Name,
                 })
@@ -32,5 +34,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             return tagsDto;
         }
+
+
+
+
+
+
     }
+
 }
