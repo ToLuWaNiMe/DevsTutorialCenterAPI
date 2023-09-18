@@ -2,23 +2,18 @@
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
     public class TagService : ITagService
     {
-        private readonly IRepository _repository;
+        private readonly IRepository  _repository;
 
         public TagService(IRepository repository)
         {
             _repository = repository;
         }
-
-
-        public async Task Delete(string id)
-        {
 
         public async Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync()
         {
@@ -26,20 +21,13 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var tagsDto = await tags
                 .Select(tag => new GetAllTagsDto
-        {
+                {
                     Id = tag.Id,
-                    Name = tag.Name,
+                    Name =tag.Name,
                 })
                 .ToListAsync();
 
             return tagsDto;
         }
-
-
-
-
-
-
     }
-
 }

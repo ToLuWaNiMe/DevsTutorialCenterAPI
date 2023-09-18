@@ -3,7 +3,6 @@ using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementations;
-using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +24,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<Helper>();
-builder.Services.AddScoped<ITagService, TagService>();
+
 
 
 
