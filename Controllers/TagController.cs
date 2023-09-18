@@ -1,5 +1,7 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Helpers;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Services.Interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +19,13 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             _tagService = tagService;
         }
-       [Authorize]
+
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
         {
+
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
@@ -38,24 +43,35 @@ namespace DevsTutorialCenterAPI.Controllers
             {
 
                 return Ok(new ResponseDto<object>
-                {
+            {
                     Code = 200,
                     Message = "OK",
                     Error = "",
                     Data = new { TagId = response },
-                });
-            }
+            });
+
+        }
 
              return BadRequest(new ResponseDto<object>
-            {
+        {
                 Data = null,
                 Code = 400,
                 Error = "failed to add tag",
                 Message = "Error",
             });
 
+            var response = new ResponseDto<UpdateTagDto>
+            {
+                Code = StatusCodes.Status200OK,
+                Message = "Tag deleted successfully.",
+                Data = null
+            };
 
+            return Ok(response);
 
         }
+
+
+
     }
 }
