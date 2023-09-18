@@ -22,6 +22,8 @@ builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ITagService, TagService>();
 
+builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
+builder.Services.AddScoped<Helper>();
 
 
 
