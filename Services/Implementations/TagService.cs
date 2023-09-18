@@ -3,6 +3,7 @@ using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {

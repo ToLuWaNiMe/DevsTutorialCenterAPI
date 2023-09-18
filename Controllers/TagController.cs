@@ -2,6 +2,7 @@
 using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -19,7 +20,7 @@ namespace DevsTutorialCenterAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync(IEnumerable<GetAllTagsDto> tags)
         {
-            var tags = await _tagService.GetAllTagAsync();
+            var tag = await _tagService.GetAllTagAsync();
 
             return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
             {
@@ -28,7 +29,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 Error = "",
                 Data = tags,
             });
-
+                
 
         }
     }
