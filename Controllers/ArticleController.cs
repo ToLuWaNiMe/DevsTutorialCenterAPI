@@ -137,42 +137,33 @@ public class ArticleController : ControllerBase
 
             if (result)
             {
-                return Ok(new ResponseObject
+                return Ok(new ResponseDto<object>
                 {
-                    code = 200,
-                    message = "Ok",
-                    data = "",
-                    error = ""
+                    Data = result,
+                    Code = 200,
+                    Message = "Ok",
+                    Error = ""
                 });
             }
 
-            return BadRequest(new ResponseObject
+            return BadRequest(new ResponseDto<object>
             {
-                code = 400,
-                message = "Error",
-                data = null,
-                error = "Failed to set report status"
+                Data = result,
+                Code = 400,
+                Message = "Status failed",
+                Error = "Set report status failed"
             });
 
         }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new ResponseObject
-            {
-                code = 400,
-                message = "Error",
-                data = null,
-                error = ex.Message
-            });
-        }
+        
         catch (Exception ex)
         {
-            return BadRequest(new ResponseObject
+            return BadRequest(new ResponseDto<object>
             {
-                code = 400,
-                message = "Error",
-                data = null,
-                error = ex.Message
+                Data = null,
+                Code = 400,
+                Message = "Status failed",
+                Error = ex.Message
             });
         }
     }
