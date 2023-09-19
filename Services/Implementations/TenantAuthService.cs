@@ -72,5 +72,23 @@ namespace DevsTutorialCenterAPI.Data.Repositories
                 Error = "Invalid credentials"
             });
         }
+        
+        public async Task<Tenant> RegisterTenantAsync(RegisterTenantDto registerTenantDto)
+        {
+           
+            var newTenant = new Tenant()
+            {
+                Name = registerTenantDto.Name,
+                Identity = registerTenantDto.Identity,
+                Password = Helper.HashPassword(registerTenantDto.Password),
+            };
+            // Hash the password before storing it
+                    
+
+            await _repository.AddAsync<Tenant>(newTenant);
+
+            return newTenant;
+            
+        }
     }
 }
