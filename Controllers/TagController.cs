@@ -1,12 +1,13 @@
 ﻿using DevsTutorialCenterAPI.Helpers;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Services.Interfaces;
+using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-
     [Route("api/tags")]
     [ApiController]
     public class TagController : ControllerBase
@@ -19,11 +20,48 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseDto<UpdateTagDto>>> UpdateTag([FromRoute] string id, [FromBody] UpdateTagDto updatedTag)
+        [HttpPost]
+        public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDto<object>
+                {
+                    Data = null,
+                    Code = 400,
+                    Error = "ModelState.GetError()",
+                    Message = "Error",
+                });
+            }
 
 
+            var response = await _tagService.CreateTagAsync(createTagDto);
+            if (!string.IsNullOrEmpty(response))
+            {
+                return Ok(new ResponseDto<object>
+                {
+                    Code = 200,
+                    Message = "OK",
+                    Error = "",
+                    Data = new { TagId = response },
+                });
+            }
+
+            return BadRequest(new ResponseDto<object>
+            {
+                Data = null,
+                Code = 400,
+                Error = "failed to add tag",
+                Message = "Error",
+            });
+        }
+
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseDto<UpdateTagDto>>> UpdateTag([FromRoute] string id,
+            [FromBody] UpdateTagDto updatedTag)
+        {
             if (!ModelState.IsValid)
             {
                 var validationErrors = ModelStateErrorHelper.GetErrors(ModelState);
@@ -45,14 +83,12 @@ namespace DevsTutorialCenterAPI.Controllers
                 Message = "Tag updated successfully.",
                 Data = existingTag
             });
-
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseDto<UpdateTagDto>>> DeleteTag([FromRoute] string id)
         {
-
             await _tagService.Delete(id);
 
             var response = new ResponseDto<UpdateTagDto>
@@ -63,10 +99,6 @@ namespace DevsTutorialCenterAPI.Controllers
             };
 
             return Ok(response);
-
         }
-
-
-
     }
 }
