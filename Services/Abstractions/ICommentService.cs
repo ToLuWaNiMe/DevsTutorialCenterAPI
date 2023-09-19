@@ -7,5 +7,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     {
         Task<Comment> CreateCommentAsync(CommentDTO commentDTO);
         Task<bool> UpdateCommentAsync(string Id, CommentDTO commentDTO);
+       Task<bool> DeleteCommentAsync(string Id);
     }
 }

@@ -1,7 +1,11 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+using DevsTutorialCenterAPI.Services.Abstraction;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
+using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +22,13 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
+builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 
-builder.Services.AddScoped<ICommentService , CommentService>();
-builder.Services.AddScoped<IRepository, Repository>();
 
 
 var app = builder.Build();
