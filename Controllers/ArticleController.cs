@@ -73,7 +73,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
         }
 
-        [HttpPost("report-article")]
+        [HttpPost("{articleId}/report-article")]
         public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request, string articleId)
         {
             if (!ModelState.IsValid)
