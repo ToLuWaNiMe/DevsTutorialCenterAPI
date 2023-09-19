@@ -88,6 +88,46 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
 
+        [HttpDelete("{publicId}")]
+        public async Task<IActionResult> DeleteImage(string publicId)
+        {
+            try
+            {
+                var deletionResult = await _imageService.DeleteImageAsync(publicId);
+
+                if (deletionResult.Result == "ok")
+                {
+                    return Ok(new ResponseDto<object>
+                    {
+                        Code = 200,
+                        Message = "Ok",
+                        Data = "",
+                        Error = ""
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ResponseDto<object>
+                    {
+                        Code = 400,
+                        Message = "Error",
+                        Data = null,
+                        Error = "Failed to delete image from Cloudinary."
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDto<object>
+                {
+                    Code = 400,
+                    Message = "Error",
+                    Data = null,
+                    Error = "Failed to delete image: " + ex.Message
+                });
+            }
+        }
+
 
     }
 }
