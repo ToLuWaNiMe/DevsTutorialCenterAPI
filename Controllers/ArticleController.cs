@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DevsTutorialCenterAPI.Data.Entities;
 using System.Net;
+using DevsTutorialCenterAPI.Services.Abstraction;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -13,6 +14,7 @@ namespace DevsTutorialCenterAPI.Controllers
     [Route("api/articles")]
     public class ArticleController : ControllerBase
     {
+        private readonly IReportArticleService _reportArticleService;
         private readonly IArticleService _articleService;
         private readonly ILogger<ArticleController> _logger;
 
