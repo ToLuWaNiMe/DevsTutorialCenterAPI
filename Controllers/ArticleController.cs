@@ -1,144 +1,128 @@
-﻿using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Services.Abstractions;
-using DevsTutorialCenterAPI.Utilities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using DevsTutorialCenterAPI.Data.Entities;
-using System.Net;
+﻿using System.Net;
+using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstraction;
+using DevsTutorialCenterAPI.Services.Abstractions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace DevsTutorialCenterAPI.Controllers
+namespace DevsTutorialCenterAPI.Controllers;
+
+[ApiController]
+[Route("api/articles")]
+public class ArticleController : ControllerBase
 {
-    [ApiController]
-    [Route("api/articles")]
-    public class ArticleController : ControllerBase
+    private readonly IArticleService _articleService;
+    private readonly ILogger<ArticleController> _logger;
+    private readonly IReportArticleService _reportArticleService;
+
+    public ArticleController(IReportArticleService reportArticleService, IArticleService articleService,
+        ILogger<ArticleController> logger)
     {
-        private readonly IReportArticleService _reportArticleService;
-        private readonly IArticleService _articleService;
-        private readonly ILogger<ArticleController> _logger;
+        _articleService = articleService;
+        _logger = logger;
+        _reportArticleService = reportArticleService;
+    }
 
-        public ArticleController(IReportArticleService reportArticleService, IArticleService articleService, ILogger<ArticleController> logger)
+    [Authorize]
+    [HttpPost("")]
+    public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var createdArticle = await _articleService.CreateArticleAsync(model);
+        if (createdArticle != null)
         {
-            _articleService = articleService;
-            _logger = logger;
-            _reportArticleService = reportArticleService;
+            var response = new ResponseDto<CreateArticleDto>
+            {
+                Code = (int)HttpStatusCode.OK,
+                Data = createdArticle,
+                Message = "Article Created Successfully",
+                Error = string.Empty
+            };
+
+            return Ok(response);
         }
-
-        [Authorize]
-        [HttpPost("")]
-        public async Task<IActionResult> CreateArticle([FromBody]CreateArticleDto model)
+        else
         {
-            if (!ModelState.IsValid)
+            var response = new ResponseDto<CreateArticleDto>
             {
-                return BadRequest(ModelState);
-            }
+                Code = (int)HttpStatusCode.BadRequest,
+                Data = null,
+                Message = "Failed to create new Article",
+                Error = string.Empty
+            };
 
-            var createdArticle = await _articleService.CreateArticleAsync(model);
-            if (createdArticle != null) 
-            {
-                var response = new ResponseDto<CreateArticleDto>
-                {
-                    Code = (int)HttpStatusCode.OK,
-                    Data = createdArticle,
-                    Message = "Article Created Successfully",
-                    Error = string.Empty
-                };
-
-                return Ok(response);
-            }
-            else
-            {
-                var response = new ResponseDto<CreateArticleDto>
-                {
-                    Code = (int)HttpStatusCode.BadRequest,
-                    Data = null,
-                    Message = "Failed to create new Article",
-                    Error = string.Empty
-                };
-               
-                return BadRequest(response);
-            }
-
+            return BadRequest(response);
         }
-        
-        [HttpGet("")]
-        public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
+    }
+
+    [HttpGet("")]
+    public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
+    {
+        try
         {
-            try
+            var articles = await _articleService.GetAllArticles(filters);
+
+            return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
             {
-                var articles = await _articleService.GetAllArticles(filters);
-
-                return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
-                {
-                    Data = articles,
-                    Code = 200,
-                    Message = "OK",
-                    Error = ""
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-            }
-        }
-
-        [HttpGet("{articleId}")]
-        public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
-        {
-            try
-            {
-                var article = await _articleService.GetSingleArticle(articleId);
-
-                if (article == null)
-                {
-                    return NotFound($"Article with ID {articleId} not found.");
-                }
-
-                return Ok(new ResponseDto<GetSingleArticleDto>
-                {
-                    Data = article,
-                    Code = 200,
-                    Message = "OK",
-                    Error = ""
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-            }
-        }
-
-        [HttpPost("{articleId}/report-article")]
-        public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request, string articleId)
-        {
-            if (!ModelState.IsValid)
-            {
-
-                return BadRequest(new ResponseDto<object>
-                {
-                    Data = null,
-                    Message = "Validation failed",
-                    Code = 500,
-                });
-
-                
-
-            }
-
-
-            var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
-
-            return Ok(new ResponseDto<object>
-            {
-                Data = response,
+                Data = articles,
                 Code = 200,
-                Message = "Ok",
+                Message = "OK",
                 Error = ""
             });
         }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
 
+    [HttpGet("{articleId}")]
+    public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
+    {
+        try
+        {
+            var article = await _articleService.GetSingleArticle(articleId);
+
+            if (article == null) return NotFound($"Article with ID {articleId} not found.");
+
+            return Ok(new ResponseDto<GetSingleArticleDto>
+            {
+                Data = article,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+    [HttpPost("{articleId}/report-article")]
+    public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request,
+        string articleId)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ResponseDto<object>
+            {
+                Data = null,
+                Message = "Validation failed",
+                Code = 500
+            });
+
+
+        var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
+
+        return Ok(new ResponseDto<object>
+        {
+            Data = response,
+            Code = 200,
+            Message = "Ok",
+            Error = ""
+        });
     }
 }

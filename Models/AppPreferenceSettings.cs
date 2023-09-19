@@ -1,77 +1,71 @@
-﻿using System;
-namespace DevsTutorialCenterAPI.Models
+﻿namespace DevsTutorialCenterAPI.Models;
+
+public class AppPreferenceSettings
 {
-	public class AppPreferenceSettings
-	{
-		public List<SettingsObj> GeneralSettings { get; set; } = new List<SettingsObj>
+    public List<SettingsObj> GeneralSettings { get; set; } = new()
+    {
+        new()
         {
-            
-            new SettingsObj
+            Category = "Communication Settings",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Communication Settings",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Email Notification", true }
-                }
-            },
+                { "Email Notification", true }
+            }
+        },
 
-            new SettingsObj
+        new()
+        {
+            Category = "Theme and Appearance",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Theme and Appearance",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Theme Selection", true },
-                    { "Customization", true }
-                }
-            },
+                { "Theme Selection", true },
+                { "Customization", true }
+            }
+        },
 
-            new SettingsObj
+        new()
+        {
+            Category = "Security Settings",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Security Settings",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Two-Factor Authentication", false },
-                    { "Password Update", true }
-                }
-            },
+                { "Two-Factor Authentication", false },
+                { "Password Update", true }
+            }
+        },
 
-            new SettingsObj
+        new()
+        {
+            Category = "Privacy Settings",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Privacy Settings",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Profile Visibility", true },
-                    { "Email Privacy", false }
-                }
-            },
+                { "Profile Visibility", true },
+                { "Email Privacy", false }
+            }
+        },
 
-            new SettingsObj
+        new()
+        {
+            Category = "Content Management",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Content Management",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Categories and Tags", false },
-                    { "Featured Posts", true }
-                }
-            },
+                { "Categories and Tags", false },
+                { "Featured Posts", true }
+            }
+        },
 
-            new SettingsObj
+        new()
+        {
+            Category = "Account Deactivation",
+            SubCategory = new Dictionary<string, bool>
             {
-                Category = "Account Deactivation",
-                SubCategory = new Dictionary<string, bool>
-                {
-                    { "Deactivate Account", true }
-                }
-            },
-
-        };
-
-	}
-
-	public class SettingsObj
-	{
-        public string Category { get; set; } = "";
-        public Dictionary<string, bool> SubCategory { get; set; } =  new Dictionary<string, bool>();
-    }
+                { "Deactivate Account", true }
+            }
+        }
+    };
 }
 
+public class SettingsObj
+{
+    public string Category { get; set; } = "";
+    public Dictionary<string, bool> SubCategory { get; set; } = new();
+}

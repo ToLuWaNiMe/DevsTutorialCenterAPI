@@ -1,11 +1,15 @@
-﻿using DevsTutorialCenterAPI.Data;
+﻿using System.Text;
+using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using DevsTutorialCenterAPI.Services.Abstraction;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +21,34 @@ builder.Services.AddScoped<ICommentsLikesService, CommentsLikesService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Fast api",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
+
+
 builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
@@ -32,7 +63,23 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 
-
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Key").Value);
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateLifetime = true,
+        ValidateAudience = false,
+        ValidateIssuer = false
+    };
+});
 
 
 var app = builder.Build();
@@ -53,4 +100,3 @@ Seeder.SeedeMe(app);
 app.MapControllers();
 
 app.Run();
-

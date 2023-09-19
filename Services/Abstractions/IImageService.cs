@@ -1,12 +1,10 @@
 ﻿using CloudinaryDotNet.Actions;
 
-namespace DevsTutorialCenterAPI.Services.Abstractions
+namespace DevsTutorialCenterAPI.Services.Abstractions;
+
+public interface IImageService
 {
-    public interface IImageService
-    {
+    Task<ImageUploadResult> AddImageAsync(IFormFile file);
 
-        Task<ImageUploadResult> AddImageAsync(IFormFile file);
-
-        Task<DeletionResult> DeleteImageAsync(string publicUrl);
-    }
+    Task<DeletionResult> DeleteImageAsync(string publicUrl);
 }

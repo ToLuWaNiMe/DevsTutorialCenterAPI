@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstractions
+namespace DevsTutorialCenterAPI.Services.Abstractions;
+
+public interface ICommentsLikesService
 {
-    public interface ICommentsLikesService
-    {
-        Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId);
-
-    }
+    Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId);
 }
