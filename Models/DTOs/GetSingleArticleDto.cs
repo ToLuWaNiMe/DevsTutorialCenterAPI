@@ -2,7 +2,7 @@
 
 namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class GetAllArticlesDto
+    public class GetSingleArticleDto
     {
         public string Id { get; set; }
         public string Title { get; set; }

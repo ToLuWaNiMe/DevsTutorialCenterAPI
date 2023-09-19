@@ -53,7 +53,7 @@ namespace DevsTutorialCenterAPI.Controllers
                     return NotFound($"Article with ID {articleId} not found.");
                 }
 
-                return Ok(new ResponseDto<GetAllArticlesDto>
+                return Ok(new ResponseDto<GetSingleArticleDto>
                 {
                     Data = article,
                     Code = 200,
@@ -67,5 +67,6 @@ namespace DevsTutorialCenterAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
         }
+
     }
 }
