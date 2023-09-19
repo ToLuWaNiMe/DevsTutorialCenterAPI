@@ -1,16 +1,14 @@
-﻿using System;
-using DevsTutorialCenterAPI.Data.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DevsTutorialCenterAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Data
 {
-	public class DevsTutorialCenterAPIContext: DbContext
-	{
-		public DevsTutorialCenterAPIContext(DbContextOptions<DevsTutorialCenterAPIContext> options):
-			base(options)
-		{
-		}
+    public class DevsTutorialCenterAPIContext : DbContext
+    {
+        public DevsTutorialCenterAPIContext(DbContextOptions<DevsTutorialCenterAPIContext> options) :
+            base(options)
+        {
+        }
 
 		public DbSet<Article> Articles { get; set; }
 		public DbSet<Tenant> Tenants { get; set; }
