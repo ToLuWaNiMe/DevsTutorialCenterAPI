@@ -43,6 +43,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<bool>("IsSaved")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsTrending")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("PublicId")
                         .HasColumnType("TEXT");
 
@@ -64,6 +67,31 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ReportArticle", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportText")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportedArticles");
                 });
 
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ArticlesLikes", b =>
@@ -133,6 +161,25 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommentsLikes");
+                });
+
+            modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.Tag", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.Tenant", b =>
