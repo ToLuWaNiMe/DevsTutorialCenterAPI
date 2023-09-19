@@ -15,7 +15,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             _repository = repository;
         }
 
-        public async Task<Comment> CreateCommentAsync(CommentDTO commentDTO)
+        public async Task<Comment> CreateCommentAsync(CommentDto commentDTO)
         {
             var comment = new Comment
             {
@@ -27,7 +27,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return comment;
         }
 
-        public async Task<bool> UpdateCommentAsync(string Id, CommentDTO commentDTO)
+        public async Task<bool> UpdateCommentAsync(string Id, CommentDto commentDTO)
         {
             var comment = await _repository.GetByIdAsync<Comment>(Id);
 
