@@ -130,4 +130,12 @@ public class ArticleService : IArticleService
 
         return paginatorResponse;
     }
+
+    public async Task<bool> DeleteArticleAsync(string articleId)
+    {
+        var article = await _repository.GetByIdAsync<Article>(articleId);
+        
+        await _repository.DeleteAsync(article);
+         return true;
+    }
 }
