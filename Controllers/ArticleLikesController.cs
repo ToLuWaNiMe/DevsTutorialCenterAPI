@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DevsTutorialCenterAPI.Controllers
 {
    
-    [Route("api/[controller]")]
+    [Route("api/article-likes")]
     [ApiController]
     public class ArticleLikesController : ControllerBase
     {
