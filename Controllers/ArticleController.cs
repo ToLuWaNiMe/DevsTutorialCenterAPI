@@ -3,23 +3,28 @@ using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Services.Abstraction;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("articles")]
     [ApiController]
+    [Route("api/articles")]
     public class ArticleController : ControllerBase
     {
         private readonly IArticleService _articleService;
         private readonly ILogger<ArticleController> _logger;
+        
+        private readonly IReportArticleService _reportArticleService;
 
-        public ArticleController(IArticleService articleService, ILogger<ArticleController> logger)
+        public ArticleController(IReportArticleService reportArticleService, IArticleService articleService, ILogger<ArticleController> logger)
         {
             _articleService = articleService;
             _logger = logger;
+            _reportArticleService = reportArticleService;
         }
-
-         [HttpGet("get-all-articles")]
+        
+        [HttpGet("")]
         public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
         {
             try
@@ -49,7 +54,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 var article = await _articleService.GetSingleArticle(articleId);
 
                 if (article == null)
-                {
+                { 
                     return NotFound($"Article with ID {articleId} not found.");
                 }
 
@@ -66,6 +71,35 @@ namespace DevsTutorialCenterAPI.Controllers
                 _logger.LogError($"Error: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
+        }
+
+        [HttpPost("report-article")]
+        public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request, string articleId)
+        {
+            if (!ModelState.IsValid)
+            {
+
+                return BadRequest(new ResponseDto<object>
+                {
+                    Data = null,
+                    Message = "Validation failed",
+                    Code = 500,
+                });
+
+                
+
+            }
+
+
+            var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
+
+            return Ok(new ResponseDto<object>
+            {
+                Data = response,
+                Code = 200,
+                Message = "Ok",
+                Error = ""
+            });
         }
 
     }

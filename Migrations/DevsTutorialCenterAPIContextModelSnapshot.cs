@@ -66,6 +66,31 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.ToTable("Articles");
                 });
 
+            modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ReportArticle", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportText")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportedArticles");
+                });
+
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ArticlesLikes", b =>
                 {
                     b.Property<string>("Id")
