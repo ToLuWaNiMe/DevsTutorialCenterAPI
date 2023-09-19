@@ -1,4 +1,4 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
@@ -8,5 +8,7 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
         Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters);
         Task<GetSingleArticleDto> GetSingleArticle(string articleId);
         Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model);
+        Task<Article> GetArticleById(string articleId);
+        Task UpdateArticleAsync(Article article);
     }
 }

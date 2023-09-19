@@ -1,20 +1,43 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
-using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using DevsTutorialCenterAPI.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
     public class ArticleService : IArticleService
     {
         private readonly IRepository _repository;
+
         public ArticleService(IRepository repository)
         {
             _repository = repository;
         }
+
+      
+
+        public async Task<Article> GetArticleById(string articleId)
+        {
+            return await _repository.GetByIdAsync<Article>(articleId);
+        }
+
+        public async Task UpdateArticleAsync(Article article)
+        {
+            if (article == null)
+            {
+                throw new ArgumentNullException(nameof(article));
+            }
+
+            await _repository.UpdateAsync(article);
+        }
+
 
         public async Task<GetSingleArticleDto> GetSingleArticle(string articleId)
         {

@@ -1,10 +1,8 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
-using DevsTutorialCenterAPI.Services.Abstraction;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
-using DevsTutorialCenterAPI.Services.Implementations;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +20,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
 );
+
+
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
