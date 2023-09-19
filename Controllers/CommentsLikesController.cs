@@ -1,62 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevsTutorialCenterAPI.Controllers
+namespace DevsTutorialCenterAPI.Controllers;
+
+[Route("api/comment-likes")]
+[ApiController]
+public class CommentsLikesController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CommentsLikesController : ControllerBase
+    private readonly ICommentsLikesService _commentsLikesService;
+
+    public CommentsLikesController(ICommentsLikesService commentsLikesService)
     {
-        private readonly ICommentsLikesService _commentsLikesService;
+        _commentsLikesService = commentsLikesService;
+    }
 
-        public CommentsLikesController(ICommentsLikesService commentsLikesService)
+    // [Authorize]
+    [HttpGet("{commentId}")]
+    public async Task<IActionResult> GetLikesByCommentId([FromRoute] string commentId)
+    {
+        try
         {
-            _commentsLikesService = commentsLikesService;
-        }
+            var likes = await _commentsLikesService.GetLikesByCommentsAsync(commentId);
 
-        // [Authorize]
-        [HttpGet("{commentId}/likes")]
-        public async Task<IActionResult> GetLikesByCommentId([FromRoute] string commentId)
-        {
-            try
+            var response = new ResponseDto<List<LikesByCommentsDto>>();
+
+            if (likes.Count == 0)
             {
-                List<LikesByCommentsDto> likes = await _commentsLikesService.GetLikesByCommentsAsync(commentId);
-
-                var response = new ResponseDto<List<LikesByCommentsDto>>();
-
-                if (likes.Count == 0)
-                {
-                    response.Code = 404;
-                    response.Message = "Not Found";
-                    response.Data = likes;
-                    response.Error = "Likes not found for the specified comment.";
-                    return NotFound(response);
-                }
-
-                response.Code = 200;
-                response.Message = "OK";
+                response.Code = 404;
+                response.Message = "Not Found";
                 response.Data = likes;
-                response.Error = "";
-
-                return Ok(response);
+                response.Error = "Likes not found for the specified comment.";
+                return NotFound(response);
             }
-            catch (Exception ex)
+
+            response.Code = 200;
+            response.Message = "OK";
+            response.Data = likes;
+            response.Error = "";
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            var errorResponse = new ResponseDto<object>
             {
-                var errorResponse = new ResponseDto<object>
-                {
-                    Code = 500,
-                    Message = "Internal Server Error",
-                    Data = null,
-                    Error = ex.Message
-                };
+                Code = 500,
+                Message = "Internal Server Error",
+                Data = null,
+                Error = ex.Message
+            };
 
-                return StatusCode(500, errorResponse);
-            }
+            return StatusCode(500, errorResponse);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Data.Repositories.interfaces
+namespace DevsTutorialCenterAPI.Data.Repositories.interfaces;
+
+public interface ITenantService
 {
-    public interface ITenantService
-    {
-        Task<ResponseDto<object>> DeleteTenantAsync(string Id);
-    }
+    Task<ResponseDto<object>> DeleteTenantAsync(string Id);
 }

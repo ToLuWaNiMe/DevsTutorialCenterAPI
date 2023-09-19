@@ -1,13 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿namespace DevsTutorialCenterAPI.Data.Entities;
 
-namespace DevsTutorialCenterAPI.Data.Entities
+public class Tenant : BaseEntity
 {
-	public class Tenant: BaseEntity
-	{
-		public string Name { get; set; }
-		public string Identity { get; set; }
-		public string Password { get; set; }
-	}
+    public string Name { get; set; }
+    public string Identity { get; set; }
+    public string Password { get; set; }
 }
-

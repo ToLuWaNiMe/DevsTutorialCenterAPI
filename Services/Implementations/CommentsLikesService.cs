@@ -1,43 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevsTutorialCenterAPI.Services.Implementations
+namespace DevsTutorialCenterAPI.Services.Implementations;
+
+public class CommentsLikesService : ICommentsLikesService
 {
-    public class CommentsLikesService : ICommentsLikesService
+    private readonly IRepository _repository;
+
+    public CommentsLikesService(IRepository repository)
     {
-        private readonly IRepository _repository;
+        _repository = repository;
+    }
 
-        public CommentsLikesService(IRepository repository)
+    public async Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId)
+    {
+        try
         {
-            _repository = repository;
+            var likesQuery = await _repository.GetAllAsync<CommentsLikes>();
+            var likes = await likesQuery
+                .Where(like => like.CommentId == commentId)
+                .Select(like => new LikesByCommentsDto
+                {
+                    UserId = like.UserId,
+                    CommentId = like.CommentId
+                })
+                .ToListAsync();
+
+            return likes;
         }
-        public async Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId)
+        catch (Exception ex)
         {
-            try
-            {
-                var likesQuery = await _repository.GetAllAsync<CommentsLikes>();
-                var likes = await likesQuery
-                    .Where(like => like.CommentId == commentId)
-                    .Select(like => new LikesByCommentsDto
-                    {
-                        UserId = like.UserId,
-                        CommentId = like.CommentId,
-                    })
-                    .ToListAsync();
-
-                return likes;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Failed to retrieve likes by comments.", ex);
-            }
+            throw new Exception("Failed to retrieve likes by comments.", ex);
         }
     }
 }

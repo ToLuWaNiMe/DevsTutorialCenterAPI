@@ -1,9 +1,7 @@
-﻿
-namespace DevsTutorialCenterAPI.Models.DTOs
+﻿namespace DevsTutorialCenterAPI.Models.DTOs;
+
+public class ImageUploadRequestDto
 {
-    public class ImageUploadRequestDto
-    {
-        public IFormFile Photo { get; set; }
-        public string ArticleId { get; set; }
-    }
+    public IFormFile Photo { get; set; }
+    public string ArticleId { get; set; }
 }

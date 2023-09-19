@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DevsTutorialCenterAPI.Models.DTOs
-{
-    public class UpdateTagDto
+namespace DevsTutorialCenterAPI.Models.DTOs;
 
-    {
-        [Required]
-        public string Name { get; set; }
-    }
+public class UpdateTagDto
+{
+    [Required] public string Name { get; set; }
 }

@@ -1,28 +1,25 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+﻿using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevsTutorialCenterAPI.Controllers
+namespace DevsTutorialCenterAPI.Controllers;
+
+[Route("api/tenant")]
+[ApiController]
+public class TenantController : ControllerBase
 {
-    [Route("api/tenant")]
-    [ApiController]
-    public class TenantController : ControllerBase
+    private readonly ITenantService _tenantService;
+
+    public TenantController(ITenantService tenantService)
     {
-        private readonly ITenantService _tenantService;
+        _tenantService = tenantService;
+    }
 
-        public TenantController(ITenantService tenantService)
-        {
-            _tenantService = tenantService;
-        }
-
-        [Authorize("Role = admin")]
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteTenant(string id)
-        {
-            var response = await _tenantService.DeleteTenantAsync(id);
-            return StatusCode(response.Code, response);
-        }
+    [Authorize("Role = admin")]
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteTenant(string id)
+    {
+        var response = await _tenantService.DeleteTenantAsync(id);
+        return StatusCode(response.Code, response);
     }
 }

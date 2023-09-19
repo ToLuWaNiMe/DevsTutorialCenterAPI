@@ -1,12 +1,8 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstraction
+namespace DevsTutorialCenterAPI.Services.Abstraction;
+
+public interface IReportArticleService
 {
-    public interface IReportArticleService
-    {
-        Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId);
-    }
+    Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId);
 }
-  
-
