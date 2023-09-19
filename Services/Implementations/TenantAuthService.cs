@@ -2,20 +2,17 @@
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Utilities;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
     public class TenantAuthService : ITenantAuthService
     {
         private readonly IRepository _repository;
-        //private readonly IConfiguration _config;
-        private readonly Helper _passwordHasher;
 
-        public TenantAuthService(IRepository repository, IConfiguration config, Helper passwordHasher)
+        public TenantAuthService(IRepository repository)
         {
             _repository = repository;
-            //_config = config;
-            _passwordHasher = passwordHasher; // Inject PasswordHasher
         }
 
 
@@ -26,7 +23,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 Name = registerTenantDto.Name,
                 Identity = registerTenantDto.Identity,
-                Password = _passwordHasher.HashPassword(registerTenantDto.Password),
+                Password = Helper.HashPassword(registerTenantDto.Password),
             };
             // Hash the password before storing it
                     
