@@ -1,12 +1,8 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstractions
+namespace DevsTutorialCenterAPI.Services.Abstractions;
+
+public interface ILikesService
 {
-    public interface ILikesService
-    {
-        Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId);
-       
-
-    }
+    Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId);
 }

@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevsTutorialCenterAPI.Migrations
 {
     [DbContext(typeof(DevsTutorialCenterAPIContext))]
-    [Migration("20230911161143_DTC-42")]
-    partial class DTC42
+    [Migration("20230919185928_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
 
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.Article", b =>
                 {
@@ -43,6 +43,9 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsSaved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsTrending")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PublicId")
@@ -135,6 +138,31 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommentsLikes");
+                });
+
+            modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ReportArticle", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportText")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportedArticles");
                 });
 
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.Tenant", b =>

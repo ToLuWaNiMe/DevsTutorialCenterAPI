@@ -1,11 +1,14 @@
-﻿using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstractions
+namespace DevsTutorialCenterAPI.Services.Abstractions;
+
+public interface IArticleService
 {
-    public interface IArticleService
-    {
-        Task<GetAllArticlesDto> GetSingleArticle(string articleId);
-
-        Task<bool> SetArticleReportStatus(string articleId, string status);
-    }
+    Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters);
+    Task<GetSingleArticleDto> GetSingleArticle(string articleId);
+    Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model);
+    Task<Article> GetArticleById(string articleId);
+    Task UpdateArticleAsync(Article article);
+    Task<bool> SetArticleReportStatus(string articleId, string status);
 }
