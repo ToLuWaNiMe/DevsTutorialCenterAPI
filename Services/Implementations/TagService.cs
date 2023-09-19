@@ -3,6 +3,9 @@ using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Abstractions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
@@ -40,7 +43,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             if (existingTag == null)
                 throw new InvalidOperationException($"Tag with ID {id} not found.");
-            
+
+
             await _repository.DeleteAsync(existingTag);
         }
 
@@ -68,6 +72,22 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 Name = existingTag.Name,
             };
+        }
+
+
+        public async Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync()
+        {
+            IQueryable<Tag> tags = await _repository.GetAllAsync<Tag>();
+
+            var tagsDto = await tags
+                .Select(tag => new GetAllTagsDto
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                })
+                .ToListAsync();
+
+            return tagsDto;
         }
     }
 }

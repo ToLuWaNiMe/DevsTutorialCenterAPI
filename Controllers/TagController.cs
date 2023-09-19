@@ -1,10 +1,11 @@
-﻿using DevsTutorialCenterAPI.Helpers;
+using DevsTutorialCenterAPI.Helpers;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -17,6 +18,21 @@ namespace DevsTutorialCenterAPI.Controllers
         public TagController(ITagService tagService)
         {
             _tagService = tagService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync(
+            IEnumerable<GetAllTagsDto> tags)
+        {
+            var tag = await _tagService.GetAllTagAsync();
+
+            return Ok(new ResponseDto<IEnumerable<GetAllTagsDto>>
+            {
+                Code = 200,
+                Message = "OK",
+                Error = "",
+                Data = tags,
+            });
         }
 
         [Authorize]
@@ -55,7 +71,6 @@ namespace DevsTutorialCenterAPI.Controllers
                 Message = "Error",
             });
         }
-
 
         [Authorize]
         [HttpPut("{id}")]

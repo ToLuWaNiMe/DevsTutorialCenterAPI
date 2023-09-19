@@ -34,6 +34,7 @@ builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 
 
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
