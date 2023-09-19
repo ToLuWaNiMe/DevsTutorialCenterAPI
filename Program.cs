@@ -25,9 +25,6 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
-builder.Services.AddScoped<Helper>();
-
-
 
 
 var app = builder.Build();
