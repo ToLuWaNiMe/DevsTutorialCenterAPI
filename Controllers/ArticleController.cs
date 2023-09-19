@@ -113,7 +113,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-
+    [Authorize]
     [HttpDelete("")]
         public async Task<IActionResult> DeleteArticle(string articleId)
         {
