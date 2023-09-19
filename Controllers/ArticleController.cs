@@ -1,10 +1,11 @@
 ﻿using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Services.Abstraction;
+using System.Net;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
@@ -14,14 +15,49 @@ namespace DevsTutorialCenterAPI.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly ILogger<ArticleController> _logger;
-        
-        private readonly IReportArticleService _reportArticleService;
 
         public ArticleController(IReportArticleService reportArticleService, IArticleService articleService, ILogger<ArticleController> logger)
         {
             _articleService = articleService;
             _logger = logger;
             _reportArticleService = reportArticleService;
+        }
+
+        [Authorize]
+        [HttpPost("")]
+        public async Task<IActionResult> CreateArticle([FromBody]CreateArticleDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdArticle = await _articleService.CreateArticleAsync(model);
+            if (createdArticle != null) 
+            {
+                var response = new ResponseDto<CreateArticleDto>
+                {
+                    Code = (int)HttpStatusCode.OK,
+                    Data = createdArticle,
+                    Message = "Article Created Successfully",
+                    Error = string.Empty
+                };
+
+                return Ok(response);
+            }
+            else
+            {
+                var response = new ResponseDto<CreateArticleDto>
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Data = null,
+                    Message = "Failed to create new Article",
+                    Error = string.Empty
+                };
+               
+                return BadRequest(response);
+            }
+
         }
         
         [HttpGet("")]
@@ -54,7 +90,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 var article = await _articleService.GetSingleArticle(articleId);
 
                 if (article == null)
-                { 
+                {
                     return NotFound($"Article with ID {articleId} not found.");
                 }
 

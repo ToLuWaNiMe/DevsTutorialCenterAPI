@@ -9,7 +9,8 @@ namespace DevsTutorialCenterAPI.Data.Entities
 		public string ImageUrl { get; set; }
 		public string PublicId { get; set; }
 		public bool IsRecommended { get; set; }
-		public bool IsSaved { get; set; }
+        public bool IsTrending { get; set; }
+        public bool IsSaved { get; set; }
 		public bool IsRead { get; set; }
 		public bool IsReported { get; set; }
 		public bool IsPublished { get; set; }
