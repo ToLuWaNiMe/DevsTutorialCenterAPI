@@ -125,53 +125,55 @@ public class ArticleController : ControllerBase
         });
 
 
-        [HttpPatch("{articleId}/report-status")]
-        public async Task<IActionResult> SetReportStatus(string articleId, [FromQuery] string status)
-        {
-            try
-            {
-                var result = await _articleService.SetArticleReportStatus(articleId, status.ToLower());
+       
+    }
 
-                if (result)
-                {
-                    return Ok(new ResponseObject
-                    {
-                        code = 200,
-                        message = "Ok",
-                        data = "",
-                        error = ""
-                    });
-                }
-                
-                return BadRequest(new ResponseObject
-                {
-                     code = 400,
-                     message = "Error",
-                     data = null,
-                     error = "Failed to set report status"
-                });
-                
-            }
-            catch (ArgumentException ex)
+    [HttpPatch("{articleId}/report-status")]
+    public async Task<IActionResult> SetReportStatus(string articleId, [FromQuery] string status)
+    {
+        try
+        {
+            var result = await _articleService.SetArticleReportStatus(articleId, status.ToLower());
+
+            if (result)
             {
-                return BadRequest(new ResponseObject
+                return Ok(new ResponseObject
                 {
-                    code = 400,
-                    message = "Error",
-                    data = null,
-                    error = ex.Message  
+                    code = 200,
+                    message = "Ok",
+                    data = "",
+                    error = ""
                 });
             }
-            catch (Exception ex)
+
+            return BadRequest(new ResponseObject
             {
-                return BadRequest(new ResponseObject
-                {
-                    code = 400,
-                    message = "Error",
-                    data = null,
-                    error = ex.Message  
-                });
-            }
+                code = 400,
+                message = "Error",
+                data = null,
+                error = "Failed to set report status"
+            });
+
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ResponseObject
+            {
+                code = 400,
+                message = "Error",
+                data = null,
+                error = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ResponseObject
+            {
+                code = 400,
+                message = "Error",
+                data = null,
+                error = ex.Message
+            });
         }
     }
 }

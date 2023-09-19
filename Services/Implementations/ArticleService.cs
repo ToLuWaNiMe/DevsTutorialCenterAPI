@@ -130,8 +130,7 @@ public class ArticleService : IArticleService
         var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
 
         return paginatorResponse;
-            return articleDto;
-        }
+    }
 
 
         public async Task<bool> SetArticleReportStatus(string articleId, string status)
@@ -170,9 +169,9 @@ public class ArticleService : IArticleService
                 article.IsReported= false;
             }
 
-            await _repository.UpdateAsync(article);
+            await _repository.UpdateAsync<Article>(article);
 
             return true;
         }
-    }
+    
 }
