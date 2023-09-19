@@ -3,7 +3,6 @@ using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
@@ -101,22 +100,9 @@ public class ArticleController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
         }
     }
-                return Ok(new ResponseDto<GetAllArticlesDto>
-                {
-                    Data = article,
-                    Code = 200,
-                    Message = "OK",
-                    Error = ""
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-            }
-        }
 
-        [HttpDelete("delete-article")]
+
+    [HttpDelete("")]
         public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
