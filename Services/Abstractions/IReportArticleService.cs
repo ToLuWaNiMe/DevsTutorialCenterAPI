@@ -1,6 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstraction;
+namespace DevsTutorialCenterAPI.Services.Abstractions;
 
 public interface IReportArticleService
 {

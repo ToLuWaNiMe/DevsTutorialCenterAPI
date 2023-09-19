@@ -2,7 +2,6 @@
 using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
-using DevsTutorialCenterAPI.Services.Abstraction;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
