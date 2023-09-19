@@ -19,7 +19,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _logger = logger;
         }
 
-         [HttpGet("")]
+         [HttpGet("get-all-articles")]
         public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
         {
             try

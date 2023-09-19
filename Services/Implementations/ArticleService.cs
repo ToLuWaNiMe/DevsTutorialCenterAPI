@@ -40,49 +40,50 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
         public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
         {
-            var authorIdFilter = !string.IsNullOrEmpty(filters.AuthorId);
-            var tagFilter = !string.IsNullOrEmpty(filters.Tag);
-            var isRecommendedFilter = filters.IsRecommended != null;
-            var isSavedFilter = filters.IsSaved != null;
-            var isReadFilter = filters.IsRead != null;
-            var isReportedFilter = filters.IsReported != null;
-            var isPublishedFilter = filters.IsPublished != null;
+
+            var authorIdFilter = new List<Article>();
+            var tagFilter = new List<Article>();
+            var isRecommendedFilter = new List<Article>();
+            var isSavedFilter = new List<Article>();
+            var isReadFilter = new List<Article>();
+            var isReportedFilter = new List<Article>();
+            var isPublishedFilter = new List<Article>();
 
             var articles = await _repository.GetAllAsync<Article>();
 
-            if (authorIdFilter)
+            if (!string.IsNullOrEmpty(filters.AuthorId))
             {
-                articles = articles.Where(a => a.UserId == filters.AuthorId);
+                authorIdFilter = articles.Where(a => a.UserId == filters.AuthorId).ToList();
             }
 
-            if (tagFilter)
+            if (!string.IsNullOrEmpty(filters.Tag))
             {
-                articles = articles.Where(a => a.Tag == filters.Tag.ToUpper());
+                tagFilter = articles.Where(a => a.Tag == filters.Tag.ToUpper()).ToList();
             }
 
-            if (isRecommendedFilter)
+            if (filters.IsRecommended)
             {
-                articles = articles.Where(a => a.IsRecommended);
+                isRecommendedFilter = articles.Where(a => a.IsRecommended).ToList();
             }
 
-            if (isSavedFilter)
+            if (filters.IsSaved)
             {
-                articles = articles.Where(a => a.IsSaved);
+                isSavedFilter = articles.Where(a => a.IsSaved).ToList();
             }
 
-            if (isReadFilter)
+            if (filters.IsRead)
             {
-                articles = articles.Where(a => a.IsRead);
+                isReadFilter = articles.Where(a => a.IsRead).ToList();
             }
 
-            if (isReportedFilter)
+            if (filters.IsReported)
             {
-                articles = articles.Where(a => a.IsReported);
+                isReportedFilter = articles.Where(a => a.IsReported).ToList();
             }
 
-            if (isPublishedFilter)
+            if (filters.IsPublished)
             {
-                articles = articles.Where(a => a.IsPublished);
+                isPublishedFilter = articles.Where(a => a.IsPublished).ToList();
             }
 
             var articlesDto = articles.Select(a => new GetAllArticlesDto
