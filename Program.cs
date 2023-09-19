@@ -1,7 +1,9 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+using DevsTutorialCenterAPI.Services.Abstraction;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +27,6 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
-
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 
 
