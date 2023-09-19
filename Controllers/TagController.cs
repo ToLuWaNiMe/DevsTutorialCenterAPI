@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevsTutorialCenterAPI.Controllers
 {
 
-    [Route("api/[tags]")]
+    [Route("api/tags")]
     [ApiController]
     public class TagController : ControllerBase
     {
