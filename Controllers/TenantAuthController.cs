@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
-    public class TenantController : ControllerBase
+    public class TenantAuthController : ControllerBase
     {
         private readonly ITenantAuthService _tenantService;
 
-        public TenantController(ITenantAuthService tenantService)
+        public TenantAuthController(ITenantAuthService tenantService)
         {
             _tenantService = tenantService;
         }

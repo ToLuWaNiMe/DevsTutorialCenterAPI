@@ -2,10 +2,10 @@
 
 namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class UpdateTagDto
-
+    public class CreateTagDto
     {
         [Required]
         public string Name { get; set; }
+
     }
 }

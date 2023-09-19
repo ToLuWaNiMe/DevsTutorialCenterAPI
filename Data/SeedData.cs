@@ -12,7 +12,7 @@ namespace DevsTutorialCenterAPI.Data
 				Tag = "NODE",
 				Text = "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
 				ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
-				PublicId = "",
+				PublicId = "ilopkbxemhpzrlgy1cpt",
 				IsRecommended = true,
 				IsPublished = true,
 				IsSaved = false,
@@ -27,7 +27,7 @@ namespace DevsTutorialCenterAPI.Data
                 Tag = ".NET",
                 Text = "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
                 ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
-                PublicId = "",
+                PublicId = "evzoq4t9inkkn4gl6aqe",
                 IsRecommended = true,
                 IsPublished = true,
                 IsSaved = false,
@@ -96,6 +96,16 @@ namespace DevsTutorialCenterAPI.Data
                 UserId = "92d57368-0133-4fa6-b85c-2c5dd03cd802"
             }
         };
+        //public static IList<Comment> Comments { get; set; } = new List<Comment>
+        //{
+        //    new Comment
+        //    {
+        //        Text = "This is a good write up",
+        //        UserId = "8839CC6B-12E8-4E92-BF2D-1CE683236B57",
+        //        ArticleId = "AA8B4DDD-6D50-44DC-B7AE-2949351256C8"
+        //    }
+        //};
+
     }
 }
 
