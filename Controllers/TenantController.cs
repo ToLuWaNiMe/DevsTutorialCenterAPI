@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tenant")]
     [ApiController]
     public class TenantController : ControllerBase
     {
@@ -18,10 +18,10 @@ namespace DevsTutorialCenterAPI.Controllers
         }
 
         [Authorize("Role = admin")]
-        [HttpDelete("delete/{Id}")]
-        public async Task<IActionResult> DeleteTenant(string Id)
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteTenant(string id)
         {
-            var response = await _tenantService.DeleteTenantAsync(Id);
+            var response = await _tenantService.DeleteTenantAsync(id);
             return StatusCode(response.Code, response);
         }
     }

@@ -2,7 +2,7 @@
 
 namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class TagDto
+    public class UpdateTagDto
 
     {
         [Required]
