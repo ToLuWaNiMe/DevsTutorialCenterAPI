@@ -5,6 +5,7 @@ namespace DevsTutorialCenterAPI.Models.Enums
 	{
 		public ArticlePublishStatus()
 		{
+			
 		}
 	}
 }

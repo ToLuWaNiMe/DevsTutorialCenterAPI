@@ -52,7 +52,7 @@ namespace DevsTutorialCenterAPI.Controllers
         {
             try
             {
-                var result = await _articleService.SetArticleReportStatus(articleId, status);
+                var result = await _articleService.SetArticleReportStatus(articleId, status.ToLower());
 
                 if (result)
                 {

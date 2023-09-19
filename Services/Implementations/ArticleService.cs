@@ -1,6 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
@@ -45,7 +46,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
         public async Task<bool> SetArticleReportStatus(string articleId, string status)
         {
-            if (status != "approved" && status != "declined")
+            if (status != ArticleStatusReportEnum.Approved.ToString().ToLower() && status != ArticleStatusReportEnum.Declined.ToString().ToLower())
             {
                 throw new Exception("Invalid status provided");
             }
@@ -57,14 +58,26 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article not found");
             }
 
-            if (status == "approved")
+            if(article.IsReported && status == ArticleStatusReportEnum.Approved.ToString().ToLower())
             {
-                article.IsReported = false;
+                throw new Exception("Article already approved");
             }
 
-            else if(status == "declined")
+            if (!article.IsReported && status == ArticleStatusReportEnum.Declined.ToString().ToLower())
             {
-                article.IsReported= true;
+                throw new Exception("Article already declined");
+            }
+
+
+            if (status == ArticleStatusReportEnum.Approved.ToString().ToLower())
+            {
+                article.IsReported = true;
+            }
+
+
+            else if (status == ArticleStatusReportEnum.Declined.ToString().ToLower())
+            {
+                article.IsReported= false;
             }
 
             await _repository.UpdateAsync(article);
