@@ -29,7 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Models\DTOs\" />
     <Folder Include="Data\Entities\" />
     <Folder Include="Models\Enums\" />
   </ItemGroup>

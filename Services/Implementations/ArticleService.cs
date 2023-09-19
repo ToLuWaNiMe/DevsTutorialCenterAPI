@@ -2,9 +2,9 @@
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using DevsTutorialCenterAPI.Utilities;
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
+using DevsTutorialCenterAPI.Utilities;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
@@ -47,50 +47,49 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
         public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
         {
-
-            var authorIdFilter = new List<Article>();
-            var tagFilter = new List<Article>();
-            var isRecommendedFilter = new List<Article>();
-            var isSavedFilter = new List<Article>();
-            var isReadFilter = new List<Article>();
-            var isReportedFilter = new List<Article>();
-            var isPublishedFilter = new List<Article>();
+            var authorIdFilter = !string.IsNullOrEmpty(filters.AuthorId);
+            var tagFilter = !string.IsNullOrEmpty(filters.Tag);
+            var isRecommendedFilter = filters.IsRecommended != null;
+            var isSavedFilter = filters.IsSaved != null;
+            var isReadFilter = filters.IsRead != null;
+            var isReportedFilter = filters.IsReported != null;
+            var isPublishedFilter = filters.IsPublished != null;
 
             var articles = await _repository.GetAllAsync<Article>();
 
-            if (!string.IsNullOrEmpty(filters.AuthorId))
+            if (authorIdFilter)
             {
-                authorIdFilter = articles.Where(a => a.UserId == filters.AuthorId).ToList();
+                articles = articles.Where(a => a.UserId == filters.AuthorId);
             }
 
-            if (!string.IsNullOrEmpty(filters.Tag))
+            if (tagFilter)
             {
-                tagFilter = articles.Where(a => a.Tag == filters.Tag.ToUpper()).ToList();
+                articles = articles.Where(a => a.Tag == filters.Tag.ToUpper());
             }
 
-            if (filters.IsRecommended)
+            if (isRecommendedFilter)
             {
-                isRecommendedFilter = articles.Where(a => a.IsRecommended).ToList();
+                articles = articles.Where(a => a.IsRecommended);
             }
 
-            if (filters.IsSaved)
+            if (isSavedFilter)
             {
-                isSavedFilter = articles.Where(a => a.IsSaved).ToList();
+                articles = articles.Where(a => a.IsSaved);
             }
 
-            if (filters.IsRead)
+            if (isReadFilter)
             {
-                isReadFilter = articles.Where(a => a.IsRead).ToList();
+                articles = articles.Where(a => a.IsRead);
             }
 
-            if (filters.IsReported)
+            if (isReportedFilter)
             {
-                isReportedFilter = articles.Where(a => a.IsReported).ToList();
+                articles = articles.Where(a => a.IsReported);
             }
 
-            if (filters.IsPublished)
+            if (isPublishedFilter)
             {
-                isPublishedFilter = articles.Where(a => a.IsPublished).ToList();
+                articles = articles.Where(a => a.IsPublished);
             }
 
             var articlesDto = articles.Select(a => new GetAllArticlesDto
