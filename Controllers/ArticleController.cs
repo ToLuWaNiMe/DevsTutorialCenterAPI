@@ -27,18 +27,8 @@ public class ArticleController : ControllerBase
     [HttpPost("")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
-        if (!ModelState.IsValid)
-        {
-            var modelStateErrors = ModelState.GetError();
-            var response = new ResponseDto<string>
-            {
-                Code = (int)HttpStatusCode.BadRequest,
-                Data = modelStateErrors,
-                Message = "Validation Failed",
-                Error = "One or more validation errors occurred."
-            };
-            return BadRequest(response);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
 
         var createdArticle = await _articleService.CreateArticleAsync(model);
         if (createdArticle != null)
