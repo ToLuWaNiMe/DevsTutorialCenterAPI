@@ -15,27 +15,28 @@ public class CommentService : ICommentService
         _repository = repository;
     }
 
-    public async Task<Comment> CreateCommentAsync(CommentDto commentDTO)
+    public async Task<Comment> CreateCommentAsync(CreateCommentDto commentDto)
     {
         var comment = new Comment
         {
-            Text = commentDTO.Text,
-            UserId = commentDTO.UserId
+            Text = commentDto.Text,
+            UserId = commentDto.UserId,
+            ArticleId = commentDto.ArticleId,
         };
 
         await _repository.AddAsync(comment);
         return comment;
     }
 
-    public async Task<bool> UpdateCommentAsync(string Id, CommentDto commentDTO)
+    public async Task<bool> UpdateCommentAsync(string id, CommentDto commentDto)
     {
-        var comment = await _repository.GetByIdAsync<Comment>(Id);
+        var comment = await _repository.GetByIdAsync<Comment>(id);
 
         if (comment == null) throw new Exception("Comment not found");
 
-        if (comment.UserId != commentDTO.UserId) throw new Exception("You cannot edit this comment.");
+        if (comment.UserId != commentDto.UserId) throw new Exception("You cannot edit this comment.");
 
-        comment.Text = commentDTO.Text;
+        comment.Text = commentDto.Text;
 
         await _repository.UpdateAsync(comment);
 

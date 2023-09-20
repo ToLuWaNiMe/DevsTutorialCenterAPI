@@ -19,7 +19,7 @@ public class CommentController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateComment([FromBody] CommentDto commentDto)
+    public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto commentDto)
     {
         var response = new ResponseDto<object>();
 
