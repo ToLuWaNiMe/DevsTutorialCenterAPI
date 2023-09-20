@@ -5,10 +5,35 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DevsTutorialCenterAPI.Migrations
 {
-    public partial class DTC42 : Migration
+    public partial class NewMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    Tag = table.Column<string>(type: "TEXT", nullable: true),
+                    Text = table.Column<string>(type: "TEXT", nullable: true),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
+                    IsRecommended = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsTrending = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsSaved = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsRead = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsReported = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsPublished = table.Column<bool>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ArticlesLikes",
                 columns: table => new
@@ -56,6 +81,22 @@ namespace DevsTutorialCenterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReportedArticles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    ArticleId = table.Column<string>(type: "TEXT", nullable: true),
+                    ReportedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    ReportText = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReportedArticles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tenants",
                 columns: table => new
                 {
@@ -75,6 +116,9 @@ namespace DevsTutorialCenterAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Articles");
+
+            migrationBuilder.DropTable(
                 name: "ArticlesLikes");
 
             migrationBuilder.DropTable(
@@ -82,6 +126,9 @@ namespace DevsTutorialCenterAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "CommentsLikes");
+
+            migrationBuilder.DropTable(
+                name: "ReportedArticles");
 
             migrationBuilder.DropTable(
                 name: "Tenants");

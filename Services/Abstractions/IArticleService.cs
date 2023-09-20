@@ -10,5 +10,6 @@ public interface IArticleService
     Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model);
     Task<Article> GetArticleById(string articleId);
     Task UpdateArticleAsync(Article article);
+    Task<bool> SetArticleReportStatus(string articleId, string status);
     Task<bool> DeleteArticleAsync(string articleId);
 }
