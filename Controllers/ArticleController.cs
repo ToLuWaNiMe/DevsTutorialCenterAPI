@@ -123,5 +123,48 @@ public class ArticleController : ControllerBase
             Message = "Ok",
             Error = ""
         });
+
+
+       
+    }
+
+    [HttpPatch("{articleId}/report-status")]
+    public async Task<IActionResult> SetReportStatus(string articleId, [FromQuery] string status)
+    {
+        try
+        {
+            var result = await _articleService.SetArticleReportStatus(articleId, status.ToLower());
+
+            if (result)
+            {
+                return Ok(new ResponseDto<object>
+                {
+                    Data = result,
+                    Code = 200,
+                    Message = "Ok",
+                    Error = ""
+                });
+            }
+
+            return BadRequest(new ResponseDto<object>
+            {
+                Data = result,
+                Code = 400,
+                Message = "Status failed",
+                Error = "Set report status failed"
+            });
+
+        }
+        
+        catch (Exception ex)
+        {
+            return BadRequest(new ResponseDto<object>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Status failed",
+                Error = ex.Message
+            });
+        }
     }
 }
