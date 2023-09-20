@@ -104,7 +104,7 @@ public class ArticleController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("")]
+    [HttpDelete("delete-article/{Id}")]
         public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
