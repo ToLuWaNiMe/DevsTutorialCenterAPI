@@ -94,7 +94,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-//Seeder.SeedeMe(app);
+Seeder.SeedeMe(app);
 
 app.MapControllers();
 
