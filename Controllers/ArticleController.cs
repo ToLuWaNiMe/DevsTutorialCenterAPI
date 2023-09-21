@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ public class ArticleController : ControllerBase
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
+        
 
         var createdArticle = await _articleService.CreateArticleAsync(model);
         if (createdArticle != null)
@@ -100,6 +102,47 @@ public class ArticleController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
         }
     }
+
+    [Authorize]
+    [HttpDelete("delete-article/{Id}")]
+        public async Task<IActionResult> DeleteArticle(string articleId)
+        {
+            try
+            {
+                var result = await _articleService.DeleteArticleAsync(articleId);
+
+                if (result)
+                {
+                    var response = new ResponseDto<bool>
+                    {
+                        Code = (int)HttpStatusCode.NoContent,
+                        Data = true,
+                        Message = "Article Deleted Successfully",
+                        Error = string.Empty
+                    };
+
+                    return Ok(response); 
+                }
+                else
+                {
+                    var response = new ResponseDto<bool>
+                    {
+                        Code = (int)HttpStatusCode.BadRequest,
+                        Data = false,
+                        Message = "Failed to Delete Article",
+                        Error = string.Empty
+                    };
+
+                    return BadRequest(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+        }
+
 
     [HttpPost("{articleId}/report-article")]
     public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request,

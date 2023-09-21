@@ -174,4 +174,12 @@ public class ArticleService : IArticleService
             return true;
         }
     
+
+    public async Task<bool> DeleteArticleAsync(string articleId)
+    {
+        var article = await _repository.GetByIdAsync<Article>(articleId);
+        
+        await _repository.DeleteAsync(article);
+         return true;
+    }
 }
