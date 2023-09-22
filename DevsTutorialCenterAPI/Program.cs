@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen(options =>
 
 
 builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
-    option => option.UseSqlite(builder.Configuration.GetConnectionString("default"))
+    option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb"))
 );
 
 
