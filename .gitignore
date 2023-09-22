@@ -403,7 +403,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-*.db-wal
-*.db-shm
-*.db
-/devstutorialcenter.db
+DevsTutorialCenterAPI/devstutorialcenter.db
+DevsTutorialCenterAPI/devstutorialcenter.db-shm
+DevsTutorialCenterAPI/devstutorialcenter.db-wal
