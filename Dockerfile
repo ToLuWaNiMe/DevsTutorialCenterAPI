@@ -1,17 +1,30 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+ 
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["DevsTutorialCenterAPI.csproj", "."]
+RUN dotnet restore "./DevsTutorialCenterAPI.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "DevsTutorialCenterAPI.csproj" -c Release -o /app/build
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+ 
+
+FROM build AS publish
+RUN dotnet publish "DevsTutorialCenterAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+ 
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
-#ENTRYPOINT ["dotnet", "RenderSample.dll"]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet RenderSample.dll
+COPY --from=publish /app/publish .
+
+ 
+
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet DevsTutorialCenterAPI.dll
+#ENTRYPOINT ["dotnet", "DevsTutorialCenterAPI.dll"]
