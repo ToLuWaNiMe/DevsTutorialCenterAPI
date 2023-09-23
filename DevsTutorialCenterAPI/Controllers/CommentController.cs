@@ -8,6 +8,7 @@ namespace DevsTutorialCenterAPI.Controllers;
 
 [ApiController]
 [Route("api/comments")]
+[Authorize]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
@@ -17,7 +18,6 @@ public class CommentController : ControllerBase
         _commentService = commentService;
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto commentDto)
     {
@@ -64,7 +64,6 @@ public class CommentController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
     [HttpPut("{commentId}")]
     public async Task<IActionResult> UpdateComment([FromRoute] string commentId, [FromBody] CommentDto commentDto)
     {
@@ -110,7 +109,6 @@ public class CommentController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
     [HttpDelete("{commentId}")]
     public async Task<IActionResult> DeleteComment(string commentId)
     {
@@ -174,7 +172,7 @@ public class CommentController : ControllerBase
         }
     }
 
-    [HttpGet("{commentId}")]
+    [HttpGet("{commentId}/get-likes")]
     public async Task<IActionResult> GetLikesByCommentId([FromRoute] string commentId)
     {
         try

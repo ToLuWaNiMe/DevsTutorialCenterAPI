@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
@@ -24,8 +25,8 @@ public class ArticleController : ControllerBase
         _reportArticleService = reportArticleService;
     }
 
-    [Authorize]
-    [HttpPost("")]
+
+    [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -58,7 +59,8 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [HttpGet("")]
+    [AllowAnonymous]
+    [HttpGet("get-all-articles")]
     public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
     {
         try
@@ -80,6 +82,7 @@ public class ArticleController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("{articleId}")]
     public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
     {
@@ -104,9 +107,9 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [Authorize]
+
     [HttpDelete("delete-article/{Id}")]
-        public async Task<IActionResult> DeleteArticle(string articleId)
+    public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
             {
@@ -172,6 +175,7 @@ public class ArticleController : ControllerBase
        
     }
 
+
     [HttpPatch("{articleId}/report-status")]
     public async Task<IActionResult> SetReportStatus(string articleId, [FromQuery] string status)
     {
@@ -212,8 +216,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpGet("{articleId}")]
+    [HttpGet("{articleId}/get-likes")]
     public async Task<IActionResult> GetLikesByArticleAsync([FromRoute] string articleId)
     {
         var response = new ResponseDto<List<LikesByArticleDto>>();

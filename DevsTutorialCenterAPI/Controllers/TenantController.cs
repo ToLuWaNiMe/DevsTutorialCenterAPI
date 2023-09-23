@@ -15,7 +15,7 @@ public class TenantController : ControllerBase
         _tenantService = tenantService;
     }
 
-    [Authorize("Role = admin")]
+    [Authorize(Roles = "admin")]
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteTenant(string id)
     {
