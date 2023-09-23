@@ -72,4 +72,26 @@ public class CommentService : ICommentService
 
         return articleComments;
     }
+
+    public async Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId)
+    {
+        try
+        {
+            var likesQuery = await _repository.GetAllAsync<CommentsLikes>();
+            var likes = await likesQuery
+                .Where(like => like.CommentId == commentId)
+                .Select(like => new LikesByCommentsDto
+                {
+                    UserId = like.UserId,
+                    CommentId = like.CommentId
+                })
+                .ToListAsync();
+
+            return likes;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to retrieve likes by comments.", ex);
+        }
+    }
 }

@@ -9,4 +9,5 @@ public interface ICommentService
     Task<Comment> CreateCommentAsync(CreateCommentDto commentDTO);
     Task<bool> UpdateCommentAsync(string Id, CommentDto commentDTO);
     Task<bool> DeleteCommentAsync(string Id);
+    Task<List<LikesByCommentsDto>> GetLikesByCommentsAsync(string commentId);
 }

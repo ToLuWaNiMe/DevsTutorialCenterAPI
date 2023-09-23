@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Implementations;
 using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -209,5 +210,40 @@ public class ArticleController : ControllerBase
                 Error = ex.Message
             });
         }
+    }
+
+    [Authorize]
+    [HttpGet("{articleId}")]
+    public async Task<IActionResult> GetLikesByArticleAsync([FromRoute] string articleId)
+    {
+        var response = new ResponseDto<List<LikesByArticleDto>>();
+
+        try
+        {
+            var likes = await _articleService.GetLikesByArticleAsync(articleId);
+            if (!likes.Any())
+            {
+                response.Code = 404;
+                response.Message = "Not Found";
+                response.Data = likes;
+                response.Error = " ";
+                return NotFound(response);
+            }
+
+            response.Code = 200;
+            response.Message = "OK";
+            response.Data = likes;
+            response.Error = " ";
+        }
+        catch (Exception ex)
+        {
+            response.Code = 500;
+            response.Message = "Internal Server Error";
+            response.Data = null;
+            response.Error = ex.Message;
+            return BadRequest(response);
+        }
+
+        return Ok(response);
     }
 }

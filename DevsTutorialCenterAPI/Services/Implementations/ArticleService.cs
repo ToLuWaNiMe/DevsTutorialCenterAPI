@@ -182,4 +182,24 @@ public class ArticleService : IArticleService
         await _repository.DeleteAsync(article);
          return true;
     }
+
+    public async Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId)
+    {
+        // Retrieve likes by article ID using the repository
+        var likes = await _repository.GetAllAsync<ArticlesLikes>();
+
+        // Filter the likes by the specified articleId
+        var likesWithArticleId = likes
+            .Where(like => like.ArticleId == articleId)
+            .Select(like => new LikesByArticleDto
+            {
+                UserId = like.UserId,
+                ArticleId = like.ArticleId
+            })
+            .ToList();
+
+        if (!likesWithArticleId.Any()) return new List<LikesByArticleDto>();
+
+        return likesWithArticleId;
+    }
 }
