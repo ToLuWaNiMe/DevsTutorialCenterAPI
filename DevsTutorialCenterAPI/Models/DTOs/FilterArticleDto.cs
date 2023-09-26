@@ -11,4 +11,5 @@ public class FilterArticleDto
     public bool? IsRead { get; set; }
     public bool? IsReported { get; set; }
     public bool? IsPublished { get; set; }
+    public bool? IsTrending { get; set; }
 }

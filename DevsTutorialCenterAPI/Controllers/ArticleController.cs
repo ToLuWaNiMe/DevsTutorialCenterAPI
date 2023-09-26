@@ -25,7 +25,6 @@ public class ArticleController : ControllerBase
         _reportArticleService = reportArticleService;
     }
 
-
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
