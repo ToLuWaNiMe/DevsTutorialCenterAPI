@@ -95,6 +95,8 @@ public class ArticleService : IArticleService
         var isReadFilter = filters.IsRead != null;
         var isReportedFilter = filters.IsReported != null;
         var isPublishedFilter = filters.IsPublished != null;
+        var isTrendingFilter = filters.IsTrending != null;
+
 
         var articles = await _repository.GetAllAsync<Article>();
 
@@ -111,6 +113,7 @@ public class ArticleService : IArticleService
         if (isReportedFilter) articles = articles.Where(a => a.IsReported);
 
         if (isPublishedFilter) articles = articles.Where(a => a.IsPublished);
+        if (isTrendingFilter) articles = articles.Where(a => a.IsTrending);
 
         var articlesDto = articles.Select(a => new GetAllArticlesDto
         {
