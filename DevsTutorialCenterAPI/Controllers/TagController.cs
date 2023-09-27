@@ -17,9 +17,8 @@ public class TagController : ControllerBase
         _tagService = tagService;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync(
-        IEnumerable<GetAllTagsDto> tags)
+    [HttpGet("get-all-tag")]
+    public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync()
     {
         var tag = await _tagService.GetAllTagAsync();
 
@@ -28,7 +27,7 @@ public class TagController : ControllerBase
             Code = 200,
             Message = "OK",
             Error = "",
-            Data = tags
+            Data = tag
         });
     }
 

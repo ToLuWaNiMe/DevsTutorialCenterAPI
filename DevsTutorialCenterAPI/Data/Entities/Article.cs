@@ -7,14 +7,14 @@ public class Article : BaseEntity
     public string Text { get; set; }
     public string ImageUrl { get; set; }
     public string PublicId { get; set; }
-    public bool IsRecommended { get; set; }
-    public bool IsTrending { get; set; }
-    public bool IsPending { get; set; }
-    public bool IsDraft { get; set; }
-    public bool IsSaved { get; set; }
-    public bool IsRead { get; set; }
-    public bool IsReported { get; set; }
-    public bool IsPublished { get; set; }
+    public bool IsRecommended { get; set; } = false;
+    public bool IsTrending { get; set; } = false;
+    public bool IsPending { get; set; } = false;
+    public bool IsDraft { get; set; } = false;
+    public bool IsSaved { get; set; } = false;
+    public bool IsRead { get; set; } = false;
+    public bool IsReported { get; set; } = false;
+    public bool IsPublished { get; set; } = false;
     public DateTime PublishedOn { get; set; }
     public string UserId { get; set; }
 
