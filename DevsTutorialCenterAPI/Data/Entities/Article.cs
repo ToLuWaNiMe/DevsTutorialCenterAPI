@@ -1,4 +1,7 @@
-﻿namespace DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Utilities;
+using Humanizer;
+
+namespace DevsTutorialCenterAPI.Data.Entities;
 
 public class Article : BaseEntity
 {
@@ -16,6 +19,17 @@ public class Article : BaseEntity
     public bool IsReported { get; set; } = false;
     public bool IsPublished { get; set; } = false;
     public DateTime PublishedOn { get; set; }
+    public int ReadTime { get; set; } 
     public string UserId { get; set; }
+
+    public string GetFormattedCreatedOn()
+    {
+        return CreatedOn.Humanize();
+    }
+    public string GetFormattedPublishedOn()
+    {
+        return PublishedOn.Humanize();
+    }
+
 
 }

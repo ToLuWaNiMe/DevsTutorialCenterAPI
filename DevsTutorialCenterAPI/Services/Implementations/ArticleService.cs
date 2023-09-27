@@ -4,6 +4,7 @@ using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Utilities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DevsTutorialCenterAPI.Services.Implementations;
 
@@ -50,7 +51,8 @@ public class ArticleService : IArticleService
             IsRecommended = article.IsRecommended,
             IsReported = article.IsReported,
             IsSaved = article.IsSaved,
-            CreatedOn = article.CreatedOn
+            CreatedOn = article.CreatedOn,
+            ReadTime = article.ReadTime
         };
 
         return articleDto;
@@ -61,6 +63,7 @@ public class ArticleService : IArticleService
         string[] allowedTags = { "JAVA", ".NET", "NODE" };
         if (!allowedTags.Contains(model.Tag, StringComparer.OrdinalIgnoreCase))
             throw new ArgumentException("Invalid tag. Tag must either one of: JAVA, .NET, NODE.");
+        var readtimeresult = Helper.CalculateReadingTime(model.Text);
         var newArticle = new Article
         {
             Title = model.Title,
@@ -78,8 +81,10 @@ public class ArticleService : IArticleService
             PublicId = model.PublicId,
             PublishedOn = model.PublishedOn,
             CreatedOn = model.CreatedOn,
-            UserId = model.UserId
+            UserId = model.UserId,
+            ReadTime = readtimeresult
         };
+        
 
         await _repository.AddAsync(newArticle);
 
@@ -101,6 +106,7 @@ public class ArticleService : IArticleService
             PublishedOn = newArticle.PublishedOn,
             IsReported = newArticle.IsReported,
             UserId = newArticle.UserId,
+            ReadTime = newArticle.ReadTime
         };
 
         return newArticleData;
@@ -116,6 +122,9 @@ public class ArticleService : IArticleService
         var isReportedFilter = filters.IsReported != null;
         var isPublishedFilter = filters.IsPublished != null;
         var isTrendingFilter = filters.IsTrending != null;
+        var isDraftFilter = filters.IsDraft != null;
+        var isPendingFilter = filters.IsPending != null;
+
 
 
         var articles = await _repository.GetAllAsync<Article>();
@@ -134,6 +143,8 @@ public class ArticleService : IArticleService
 
         if (isPublishedFilter) articles = articles.Where(a => a.IsPublished);
         if (isTrendingFilter) articles = articles.Where(a => a.IsTrending);
+        if (isDraftFilter) articles = articles.Where(a => a.IsDraft);
+        if (isPendingFilter) articles = articles.Where(a => a.IsPending);
 
         var articlesDto = articles.Select(a => new GetAllArticlesDto
         {
@@ -142,7 +153,9 @@ public class ArticleService : IArticleService
             Title = a.Title,
             Tag = a.Tag,
             Text = a.Text,
-            ImageUrl = a.ImageUrl
+            ImageUrl = a.ImageUrl,
+            CreatedOn = a.CreatedOn,
+           
         });
 
         var pageNum = filters.Page ?? 1;

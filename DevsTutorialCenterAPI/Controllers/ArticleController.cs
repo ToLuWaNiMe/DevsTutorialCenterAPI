@@ -78,7 +78,7 @@ public class ArticleController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError($"Error: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
         }
     }
 

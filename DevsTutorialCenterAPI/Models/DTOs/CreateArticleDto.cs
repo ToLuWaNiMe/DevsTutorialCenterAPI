@@ -19,5 +19,6 @@ public class CreateArticleDto
     public bool IsPublished { get; set; } 
     public DateTime PublishedOn { get; set; }
     public DateTime CreatedOn { get; set; }
+    public int ReadTime { get; set; }
     public string UserId { get; set; }
 }
