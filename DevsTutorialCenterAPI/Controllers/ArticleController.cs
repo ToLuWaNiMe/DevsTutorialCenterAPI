@@ -25,7 +25,7 @@ public class ArticleController : ControllerBase
         _reportArticleService = reportArticleService;
     }
 
-    [AllowAnonymous]
+   
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
@@ -78,7 +78,7 @@ public class ArticleController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError($"Error: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
         }
     }
 

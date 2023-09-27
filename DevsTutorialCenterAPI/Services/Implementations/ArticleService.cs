@@ -155,6 +155,8 @@ public class ArticleService : IArticleService
             Text = a.Text,
             ImageUrl = a.ImageUrl,
             CreatedOn = a.CreatedOn,
+            ReadTime = a.ReadTime,
+            PublishedOn = a.PublishedOn,
            
         });
 
