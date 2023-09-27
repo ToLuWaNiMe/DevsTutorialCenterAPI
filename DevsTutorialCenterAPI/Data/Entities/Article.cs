@@ -9,9 +9,13 @@ public class Article : BaseEntity
     public string PublicId { get; set; }
     public bool IsRecommended { get; set; }
     public bool IsTrending { get; set; }
+    public bool IsPending { get; set; }
+    public bool IsDraft { get; set; }
     public bool IsSaved { get; set; }
     public bool IsRead { get; set; }
     public bool IsReported { get; set; }
     public bool IsPublished { get; set; }
+    public DateTime PublishedOn { get; set; }
     public string UserId { get; set; }
+
 }

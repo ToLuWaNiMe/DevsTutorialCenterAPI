@@ -66,8 +66,18 @@ public class ArticleService : IArticleService
             Title = model.Title,
             Tag = model.Tag,
             Text = model.Text,
+            ImageUrl = model.ImageUrl,
             IsRecommended = model.IsRecommended,
             IsTrending = model.IsTrending,
+            IsPublished = model.IsPublished,
+            IsRead = model.IsRead,
+            IsDraft = model.IsDraft,
+            IsSaved = model.IsSaved,
+            IsPending = model.IsPending,
+            IsReported = model.IsReported,
+            PublicId = model.PublicId,
+            PublishedOn = model.PublishedOn,
+            CreatedOn = model.CreatedOn,
             UserId = model.UserId
         };
 
@@ -77,10 +87,20 @@ public class ArticleService : IArticleService
         {
             Title = newArticle.Title,
             Tag = newArticle.Tag,
+            Text = newArticle.Text,
+            ImageUrl= newArticle.ImageUrl,
             IsRecommended = newArticle.IsRecommended,
             IsTrending = newArticle.IsTrending,
+            IsPublished = newArticle.IsPublished,
+            IsRead = newArticle.IsRead,
+            IsDraft = newArticle.IsDraft,
+            IsSaved = newArticle.IsSaved,
+            IsPending = newArticle.IsPending,
+            PublicId = newArticle.PublicId,
+            CreatedOn = newArticle.CreatedOn,
+            PublishedOn = newArticle.PublishedOn,
+            IsReported = newArticle.IsReported,
             UserId = newArticle.UserId,
-            Text = newArticle.Text
         };
 
         return newArticleData;
