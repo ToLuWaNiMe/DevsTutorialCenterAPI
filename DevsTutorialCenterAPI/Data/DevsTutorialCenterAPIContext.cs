@@ -15,6 +15,7 @@ public class DevsTutorialCenterAPIContext : DbContext
     public DbSet<Comment> Comments { get; set; }
 
     public DbSet<ReportArticle> ReportedArticles { get; set; }
+    public DbSet<Tag> Tags { get; set; }
 
     //public DbSet<Tenant> Tenants { get; set; }
     //public DbSet<Comment> Comments { get; set; }

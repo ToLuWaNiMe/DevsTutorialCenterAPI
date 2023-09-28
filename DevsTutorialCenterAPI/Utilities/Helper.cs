@@ -1,4 +1,5 @@
 ﻿using DevsTutorialCenterAPI.Models.DTOs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DevsTutorialCenterAPI.Utilities;
 
@@ -36,4 +37,22 @@ public static class Helper
     {
         return BCrypt.Net.BCrypt.Verify(inputPassword, hashedPassword);
     }
+
+    public static int CalculateReadingTime(string text)
+    {
+        // Assuming an average reading speed of 200 words per minute
+        const int WordsPerMinute = 200;
+       
+
+        // Calculate the number of words in the text (you may need a more accurate word count algorithm)
+        int wordCount = text.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
+
+        // Calculate the reading time in minutes
+     return (int)Math.Ceiling((double)wordCount / WordsPerMinute);
+
+    }
+
+  
+
+    
 }

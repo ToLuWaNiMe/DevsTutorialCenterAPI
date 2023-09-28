@@ -16,6 +16,7 @@ public class GetSingleArticleDto
     public bool IsReported { get; set; }
     public bool IsSaved { get; set; }
     public string UserId { get; set; }
+    public int ReadTime { get; set; }
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow.AddDays(-2);
 
 
