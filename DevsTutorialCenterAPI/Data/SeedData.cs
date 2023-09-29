@@ -13,7 +13,7 @@ public static class SeedData
             Tag = "NODE",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "ilopkbxemhpzrlgy1cpt",
             IsRecommended = true,
             IsPublished = true,
@@ -29,7 +29,7 @@ public static class SeedData
             Tag = ".NET",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "evzoq4t9inkkn4gl6aqe",
             IsRecommended = true,
             IsPublished = true,
@@ -45,7 +45,7 @@ public static class SeedData
             Tag = "JAVA",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "",
             IsRecommended = true,
             IsPublished = true,
@@ -61,7 +61,7 @@ public static class SeedData
             Tag = ".NET",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "",
             IsRecommended = true,
             IsPublished = true,
@@ -77,7 +77,7 @@ public static class SeedData
             Tag = "JAVA",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "",
             IsRecommended = true,
             IsPublished = true,
@@ -93,7 +93,7 @@ public static class SeedData
             Tag = "NODE",
             Text =
                 "Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
-            ImageUrl = "https://asset.cloudinary.com/dj8irij6m/ed0257f6d79d22dc09d2d44742fe62a6",
+            ImageUrl = "https://res.cloudinary.com/dj8irij6m/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1694085406/Sq016/Card_Dummy_Image.jpg?_s=public-apps",
             PublicId = "",
             IsRecommended = true,
             IsPublished = true,
