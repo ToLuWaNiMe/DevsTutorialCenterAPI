@@ -12,12 +12,10 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class ArticleService : IArticleService
 {
     private readonly IRepository _repository;
-    private readonly DevsTutorialCenterAPIContext _context;
 
-    public ArticleService(IRepository repository, DevsTutorialCenterAPIContext context)
+    public ArticleService(IRepository repository)
     {
         _repository = repository;
-        _context = context;
     }
 
 
@@ -247,10 +245,11 @@ public class ArticleService : IArticleService
     public async Task<AuthorsStatsDto> GetAuthorStatsAsync(FetchAuthorsStatsDto fetchAuthorsStatsDto)
     {
         var authorStats = new List<AuthorStatsDto>();
-        
+
         foreach (var authorId in fetchAuthorsStatsDto.AuthorIdList)
         {
-            var query = _context.Articles.Where(a => a.UserId == authorId);
+            var query = await _repository.GetAllAsync<Article>();
+            query = query.Where(a => a.UserId == authorId);
             
             var authorStat = new AuthorStatsDto
             {
