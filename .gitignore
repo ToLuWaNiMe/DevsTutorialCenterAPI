@@ -406,3 +406,5 @@ ASALocalRun/
 DevsTutorialCenterAPI/devstutorialcenter.db
 DevsTutorialCenterAPI/devstutorialcenter.db-shm
 DevsTutorialCenterAPI/devstutorialcenter.db-wal
+
+DevsTutorialCenterAPI/appsettings.Development.json
