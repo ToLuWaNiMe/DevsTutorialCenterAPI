@@ -249,4 +249,25 @@ public class ArticleController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost("fetch-authors-stats")]
+    public async Task<IActionResult> GetAuthorsStats([FromBody] FetchAuthorsStatsDto fetchAuthorsStatsDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ResponseDto<object>
+            {
+                Error = ModelState.GetError(),
+                Message = "author list empty",
+                Code = 400,
+            });
+
+        var result = await _articleService.GetAuthorStatsAsync(fetchAuthorsStatsDto);
+
+        return Ok(new ResponseDto<AuthorsStatsDto>
+        {
+            Code = 200,
+            Data = result,
+            Message = "Successful"
+        });
+    }
 }

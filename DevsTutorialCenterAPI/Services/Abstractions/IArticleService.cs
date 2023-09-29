@@ -13,4 +13,5 @@ public interface IArticleService
     Task<bool> SetArticleReportStatus(string articleId, string status);
     Task<bool> DeleteArticleAsync(string articleId);
     Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId);
+    Task<AuthorsStatsDto> GetAuthorStatsAsync(FetchAuthorsStatsDto fetchAuthorsStatsDto);
 }

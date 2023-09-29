@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Data;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Models.Enums;
@@ -11,10 +12,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class ArticleService : IArticleService
 {
     private readonly IRepository _repository;
+    private readonly DevsTutorialCenterAPIContext _context;
 
-    public ArticleService(IRepository repository)
+    public ArticleService(IRepository repository, DevsTutorialCenterAPIContext context)
     {
         _repository = repository;
+        _context = context;
     }
 
 
@@ -239,5 +242,29 @@ public class ArticleService : IArticleService
         if (!likesWithArticleId.Any()) return new List<LikesByArticleDto>();
 
         return likesWithArticleId;
+    }
+
+    public async Task<AuthorsStatsDto> GetAuthorStatsAsync(FetchAuthorsStatsDto fetchAuthorsStatsDto)
+    {
+        var authorStats = new List<AuthorStatsDto>();
+        
+        foreach (var authorId in fetchAuthorsStatsDto.AuthorIdList)
+        {
+            var query = _context.Articles.Where(a => a.UserId == authorId);
+            
+            var authorStat = new AuthorStatsDto
+            {
+                AuthorId = authorId,
+                TotalNumOfArticles = query.Count(),
+                TotalReportedArticles = query.Where(a => a.IsReported).Count()
+            };
+            
+            authorStats.Add(authorStat);
+        }
+
+        return new AuthorsStatsDto
+        {
+            AuthorStatsDtos = authorStats
+        };
     }
 }
