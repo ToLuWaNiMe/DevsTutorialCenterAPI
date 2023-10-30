@@ -7,7 +7,7 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [ApiController]
     [Route("api/images")]
-    [Authorize]
+  //  [Authorize]
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
