@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevsTutorialCenterAPI.Migrations
 {
     [DbContext(typeof(DevsTutorialCenterAPIContext))]
-    [Migration("20231031150818_ThirdMigration")]
-    partial class ThirdMigration
+    [Migration("20231031152001_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
