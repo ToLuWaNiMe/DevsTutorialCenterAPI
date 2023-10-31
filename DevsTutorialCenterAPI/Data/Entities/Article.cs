@@ -19,7 +19,9 @@ public class Article : BaseEntity
     public bool IsReported { get; set; } = false;
     public bool IsPublished { get; set; } = false;
     public DateTime PublishedOn { get; set; }
-    public int ReadTime { get; set; } 
+    public DateTime? DeletedAt { get; set; }
+    public int ReadTime { get; set; }
+
     public string UserId { get; set; }
 
     public string GetFormattedCreatedOn()
