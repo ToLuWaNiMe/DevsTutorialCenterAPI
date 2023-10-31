@@ -1,11 +1,14 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using DevsTutorialCenterAPI.Data;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -49,6 +52,9 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb"))
 );
 
+builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
+
+    .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IRepository, Repository>();

@@ -6,5 +6,5 @@ public class Comment : BaseEntity
     public string UserId { get; set; }
     public string ArticleId { get; set; }
 
-    public DateTime DeletedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }

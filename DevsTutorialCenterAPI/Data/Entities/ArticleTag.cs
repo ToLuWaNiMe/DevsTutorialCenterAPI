@@ -4,5 +4,7 @@ public class ArticleTag : BaseEntity
 {
     public string Name { get; set; }
 
-    public DateTime DeletedAt { get; set; }
+    public Article Article { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
 }
