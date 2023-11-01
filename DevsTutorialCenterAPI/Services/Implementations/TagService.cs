@@ -22,7 +22,7 @@ public class TagService : ITagService
     {
         try
         {
-            var tag = new Tag { Name = createTagDto.Name };
+            var tag = new ArticleTag { Name = createTagDto.Name };
 
             await _repository.AddAsync(tag);
             return tag.Id;
@@ -37,7 +37,7 @@ public class TagService : ITagService
 
     public async Task Delete(string id)
     {
-        var existingTag = await _repository.GetByIdAsync<Tag>(id);
+        var existingTag = await _repository.GetByIdAsync<ArticleTag>(id);
 
         if (existingTag == null)
             throw new InvalidOperationException($"Tag with ID {id} not found.");
@@ -47,18 +47,18 @@ public class TagService : ITagService
     }
 
 
-    public async Task<Tag> GetByIdAsync<T>(string id)
+    public async Task<ArticleTag> GetByIdAsync<T>(string id)
     {
         if (string.IsNullOrEmpty(id))
             throw new ArgumentNullException(nameof(id));
 
-        return await _repository.GetByIdAsync<Tag>(id);
+        return await _repository.GetByIdAsync<ArticleTag>(id);
     }
 
 
     public async Task<UpdateTagDto> UpdateAsync(string id, UpdateTagDto updatedTagDto)
     {
-        var existingTag = await _repository.GetByIdAsync<Tag>(id);
+        var existingTag = await _repository.GetByIdAsync<ArticleTag>(id);
 
         if (existingTag == null)
             throw new InvalidOperationException($"Tag with ID {id} not found.");
@@ -75,7 +75,7 @@ public class TagService : ITagService
 
     public async Task<IEnumerable<GetAllTagsDto>> GetAllTagAsync()
     {
-        var tags = await _repository.GetAllAsync<Tag>();
+        var tags = await _repository.GetAllAsync<ArticleTag>();
 
         var tagsDto = await tags
             .Select(tag => new GetAllTagsDto

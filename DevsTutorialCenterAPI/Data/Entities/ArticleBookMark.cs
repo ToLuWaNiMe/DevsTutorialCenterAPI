@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevsTutorialCenterAPI.Data.Entities;
 
-public class ArticlesLikes : BaseEntity
+public class ArticleBookMark : BaseEntity
 {
     public string UserId { get; set; }
 
