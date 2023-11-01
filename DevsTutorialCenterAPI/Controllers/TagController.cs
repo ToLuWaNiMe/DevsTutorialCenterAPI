@@ -36,7 +36,6 @@ public class TagController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            // Invalid input data
             return BadRequest(new ResponseDto<object>
             {
                 Data = null,
@@ -55,8 +54,7 @@ public class TagController : ControllerBase
             Error = "",
             Message = "Ok",
 
-        } 
-        );
+        } );
 
     }
 
