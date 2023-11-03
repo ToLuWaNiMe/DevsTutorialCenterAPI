@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
