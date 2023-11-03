@@ -25,4 +25,5 @@ public class DevsTutorialCenterAPIContext : IdentityDbContext<AppUser>
 
     public DbSet<ArticlesLikes> ArticlesLikes { get; set; }
     public DbSet<CommentsLikes> CommentsLikes { get; set; }
+
 }

@@ -1,4 +1,8 @@
-﻿namespace DevsTutorialCenterAPI.Data.Repositories;
+﻿using DevsTutorialCenterAPI.Data.Entities;
+using System.Linq; // For LINQ operations
+using Microsoft.EntityFrameworkCore; // For Entity Framework Core
+
+namespace DevsTutorialCenterAPI.Data.Repositories;
 
 public class Repository : IRepository
 {
@@ -58,4 +62,5 @@ public class Repository : IRepository
         _context.Set<T>().Update(entity);
         await _context.SaveChangesAsync();
     }
+
 }

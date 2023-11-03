@@ -12,10 +12,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class ArticleService : IArticleService
 {
     private readonly IRepository _repository;
+    private readonly IArticleApprovalService _articleApprovalService;
 
-    public ArticleService(IRepository repository)
+    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService)
     {
         _repository = repository;
+        _articleApprovalService = articleApprovalService;
     }
 
 
@@ -70,44 +72,24 @@ public class ArticleService : IArticleService
             Title = model.Title,
             Tag = model.Tag,
             Text = model.Text,
-            ImageUrl = model.ImageUrl,
-            IsRecommended = model.IsRecommended,
-            IsTrending = model.IsTrending,
-            IsPublished = model.IsPublished,
-            IsRead = model.IsRead,
-            IsDraft = model.IsDraft,
-            IsSaved = model.IsSaved,
-            IsPending = model.IsPending,
-            IsReported = model.IsReported,
-            PublicId = model.PublicId,
-            PublishedOn = model.PublishedOn,
-            CreatedOn = model.CreatedOn,
-            UserId = model.UserId,
-            ReadTime = readtimeresult
+            ImageUrl = model.ImageUrl
         };
         
 
-        await _repository.AddAsync(newArticle);
+        await _repository.AddAsync<Article>(newArticle);
+        var articleApproval = new ArticleApproval
+        {
+            ArticleId = newArticle.Id
+        };
+
+        await _articleApprovalService.ApproveAsync(articleApproval);
 
         var newArticleData = new CreateArticleDto
         {
             Title = newArticle.Title,
             Tag = newArticle.Tag,
             Text = newArticle.Text,
-            ImageUrl= newArticle.ImageUrl,
-            IsRecommended = newArticle.IsRecommended,
-            IsTrending = newArticle.IsTrending,
-            IsPublished = newArticle.IsPublished,
-            IsRead = newArticle.IsRead,
-            IsDraft = newArticle.IsDraft,
-            IsSaved = newArticle.IsSaved,
-            IsPending = newArticle.IsPending,
-            PublicId = newArticle.PublicId,
-            CreatedOn = newArticle.CreatedOn,
-            PublishedOn = newArticle.PublishedOn,
-            IsReported = newArticle.IsReported,
-            UserId = newArticle.UserId,
-            ReadTime = newArticle.ReadTime
+            ImageUrl= newArticle.ImageUrl
         };
 
         return newArticleData;
@@ -266,4 +248,5 @@ public class ArticleService : IArticleService
             AuthorStatsDtos = authorStats
         };
     }
+
 }

@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementations;
 using DevsTutorialCenterAPI.Utilities;
@@ -8,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
@@ -25,38 +27,30 @@ public class ArticleController : ControllerBase
         _reportArticleService = reportArticleService;
     }
 
-   
+
+    
+
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        
+
+        if (string.IsNullOrWhiteSpace(model.Tag))
+        {
+            ModelState.AddModelError("Tag", "Article must have at least one tag.");
+            return BadRequest(ModelState);
+        }
 
         var createdArticle = await _articleService.CreateArticleAsync(model);
-        if (createdArticle != null)
-        {
-            var response = new ResponseDto<CreateArticleDto>
-            {
-                Code = (int)HttpStatusCode.OK,
-                Data = createdArticle,
-                Message = "Article Created Successfully",
-                Error = string.Empty
-            };
 
-            return Ok(response);
-        }
-        else
+        return Ok(new ResponseDto<CreateArticleDto>
         {
-            var response = new ResponseDto<CreateArticleDto>
-            {
-                Code = (int)HttpStatusCode.BadRequest,
-                Data = null,
-                Message = "Failed to create new Article",
-                Error = string.Empty
-            };
+            Data = createdArticle,
+            Code = 200,
+            Message = "OK",
+            Error = ""
+        });
 
-            return BadRequest(response);
-        }
     }
 
     [AllowAnonymous]
