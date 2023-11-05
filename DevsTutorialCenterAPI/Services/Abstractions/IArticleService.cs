@@ -6,7 +6,7 @@ namespace DevsTutorialCenterAPI.Services.Abstractions;
 public interface IArticleService
 {
     Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters);
-    Task<GetSingleArticleDto> GetSingleArticle(string articleId);
+    Task<GetSingleArticleDto> GetSingleArticle(string articleId, string userId);
     Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model);
     Task<Article> GetArticleById(string articleId);
     Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle);

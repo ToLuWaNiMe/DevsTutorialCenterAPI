@@ -57,11 +57,17 @@ public class ArticleService : IArticleService
     }
 
 
-    public async Task<GetSingleArticleDto> GetSingleArticle(string articleId)
+    public async Task<GetSingleArticleDto> GetSingleArticle(string articleId, string userId)
     {
         var article = await _repository.GetByIdAsync<Article>(articleId);
 
         if (article == null) throw new Exception($"Article with ID {articleId} not found.");
+
+        var user = await _repository.GetByIdAsync<AppUser>(userId);
+
+        if (user == null) throw new Exception($"User with ID {userId} not found.");
+
+        await LogArticleReadAsync(article.Id, user.Id);
 
         var articleDto = new GetSingleArticleDto
         {
@@ -81,8 +87,11 @@ public class ArticleService : IArticleService
             ReadTime = article.ReadTime
         };
 
+
+
         return articleDto;
     }
+
 
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {

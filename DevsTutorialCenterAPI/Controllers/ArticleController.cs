@@ -76,29 +76,43 @@ public class ArticleController : ControllerBase
         }
     }
 
+
+    //DONE
     [AllowAnonymous]
     [HttpGet("{articleId}")]
-    public async Task<ActionResult<ResponseDto<GetAllArticlesDto>>> GetSingleArticle(string articleId)
+    public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId, string userId)
     {
-        try
+        if (string.IsNullOrEmpty(articleId) || string.IsNullOrEmpty(userId))
         {
-            var article = await _articleService.GetSingleArticle(articleId);
-
-            if (article == null) return NotFound($"Article with ID {articleId} not found.");
-
-            return Ok(new ResponseDto<GetSingleArticleDto>
+            return BadRequest(new ResponseDto<GetSingleArticleDto>
             {
-                Data = article,
-                Code = 200,
-                Message = "OK",
-                Error = ""
+                Data = null,
+                Code = (int)HttpStatusCode.BadRequest,
+                Message = "Bad Request",
+                Error = "Invalid articleId or userId"
             });
         }
-        catch (Exception ex)
+
+        var article = await _articleService.GetSingleArticle(articleId, userId);
+
+        if (article == null)
         {
-            _logger.LogError($"Error: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            return BadRequest(new ResponseDto<GetSingleArticleDto>
+            {
+                Data = null,
+                Code = (int)HttpStatusCode.NotFound,
+                Message = "Not Found",
+                Error = "Article not found"
+            });
         }
+
+        return Ok(new ResponseDto<GetSingleArticleDto>
+        {
+            Data = article,
+            Code = (int)HttpStatusCode.OK,
+            Message = "OK",
+            Error = ""
+        });
     }
 
 
