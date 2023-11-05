@@ -64,6 +64,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
+builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -98,7 +99,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-Seeder.SeedeMe(app);
+//Seeder.SeedeMe(app);
 
 app.MapControllers();
 
