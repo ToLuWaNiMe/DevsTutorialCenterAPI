@@ -26,11 +26,34 @@ public class ArticleService : IArticleService
         return await _repository.GetByIdAsync<Article>(articleId);
     }
 
-    public async Task UpdateArticleAsync(Article article)
+    public async Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle)
     {
-        if (article == null) throw new ArgumentNullException(nameof(article));
 
-        await _repository.UpdateAsync(article);
+        var existingArticle = await _repository.GetByIdAsync<Article>(articleId);
+
+        if (existingArticle == null)
+        {
+            throw new Exception($"Article with ID {articleId} not found.");
+        }
+
+        existingArticle.Title = updatedArticle.Title ?? existingArticle.Title;
+        existingArticle.Tag = updatedArticle.Tag ?? existingArticle.Tag;
+        existingArticle.Text = updatedArticle.Text ?? existingArticle.Text;
+        existingArticle.ImageUrl = updatedArticle.ImageUrl ?? existingArticle.ImageUrl;
+        
+
+        await _repository.UpdateAsync<Article>(existingArticle);
+
+        var updatedArticleDto = new UpdateArticleDto
+        {
+            Title = existingArticle.Title,
+            Tag = existingArticle.Tag,
+            Text = existingArticle.Text,
+            ImageUrl = existingArticle.ImageUrl
+        };
+
+        return updatedArticleDto;
+
     }
 
 

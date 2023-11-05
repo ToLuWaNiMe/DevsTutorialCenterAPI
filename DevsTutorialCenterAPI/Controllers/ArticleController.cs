@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
@@ -29,7 +29,7 @@ public class ArticleController : ControllerBase
 
 
     
-
+    //DONE
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
@@ -99,6 +99,44 @@ public class ArticleController : ControllerBase
             _logger.LogError($"Error: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
         }
+    }
+
+
+    //DONE
+    [HttpPut("{articleId}")]
+    public async Task<IActionResult> UpdateArticle(string articleId, [FromBody] UpdateArticleDto updatedArticle)
+    {
+        if (updatedArticle == null)
+        {
+            return BadRequest(new ResponseDto<UpdateArticleDto>
+            {
+                Code = (int)HttpStatusCode.BadRequest,
+                Data = null,
+                Message = "Invalid or empty article data",
+                Error = "The provided article data is invalid or empty."
+            });
+        }
+
+        var updateResult = await _articleService.UpdateArticleAsync(articleId, updatedArticle);
+
+        if (updateResult == null)
+        {
+            return BadRequest(new ResponseDto<UpdateArticleDto>
+            {
+                Code = (int)HttpStatusCode.BadRequest,
+                Data = null,
+                Message = "Failed to update the article",
+                Error = "An error occurred while trying to update the article."
+            });
+        }
+
+        return Ok(new ResponseDto<UpdateArticleDto>
+        {
+            Code = (int)HttpStatusCode.OK,
+            Data = updatedArticle,
+            Message = "Article updated successfully",
+            Error = string.Empty
+        });
     }
 
 

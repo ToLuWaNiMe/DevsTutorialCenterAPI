@@ -9,7 +9,7 @@ public interface IArticleService
     Task<GetSingleArticleDto> GetSingleArticle(string articleId);
     Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model);
     Task<Article> GetArticleById(string articleId);
-    Task UpdateArticleAsync(Article article);
+    Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle);
     Task<bool> SetArticleReportStatus(string articleId, string status);
     Task<bool> DeleteArticleAsync(string articleId);
     Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId);
