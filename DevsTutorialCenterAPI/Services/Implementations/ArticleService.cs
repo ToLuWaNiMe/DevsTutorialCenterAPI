@@ -26,6 +26,7 @@ public class ArticleService : IArticleService
         return await _repository.GetByIdAsync<Article>(articleId);
     }
 
+    //DONE
     public async Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle)
     {
 
@@ -56,6 +57,17 @@ public class ArticleService : IArticleService
 
     }
 
+    //DONE (GOES WITH GETSINGLE ARTICLE)
+    public async Task LogArticleReadAsync(string articleId, string userId)
+    {
+        var articleRead = new ArticleRead
+        {
+            UserId = userId,
+            ArticleId = articleId
+        };
+
+        await _repository.AddAsync<ArticleRead>(articleRead);
+    }
 
     public async Task<GetSingleArticleDto> GetSingleArticle(string articleId, string userId)
     {
@@ -87,12 +99,11 @@ public class ArticleService : IArticleService
             ReadTime = article.ReadTime
         };
 
-
-
         return articleDto;
     }
 
 
+    //DONE
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {
         string[] allowedTags = { "JAVA", ".NET", "NODE" };
