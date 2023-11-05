@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Security.Claims;
+using System.Xml.Linq;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Models.Enums;
@@ -34,12 +35,36 @@ public class ArticleController : ControllerBase
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+
+        string[] allowedTags = { "JAVA", ".NET", "NODE" };
+        if (!allowedTags.Contains(model.Tag, StringComparer.OrdinalIgnoreCase))
+            return BadRequest(new ResponseDto<CreateArticleDto>
+            {
+                Data = null,
+                Code = 500,
+                Message = "Artcile Creation failed",
+                Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
+            });
+
+        if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
+        {
+            Data = null,
+            Code = 500,
+            Message = "Artcile Creation failed",
+            Error = "Invalid Data"
+        });
 
         if (string.IsNullOrWhiteSpace(model.Tag))
         {
-            ModelState.AddModelError("Tag", "Article must have at least one tag.");
-            return BadRequest(ModelState);
+            //ModelState.AddModelError("Tag", "Article must have at least one tag.");
+            return BadRequest(new ResponseDto<CreateArticleDto>
+            {
+                Data = null,
+                Code = 500,
+                Message = "Artcile Creation failed",
+                Error = "Article must have at least one tag"
+            });
         }
 
         var createdArticle = await _articleService.CreateArticleAsync(model);
@@ -77,10 +102,39 @@ public class ArticleController : ControllerBase
         }
     }
 
+    //DONE
+    [AllowAnonymous]
+    [HttpGet("all-articles")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
+    {
+        var articles = await _articleService.GetAllArticle();
+        return Ok(articles);
+    }
 
     //DONE
     [AllowAnonymous]
-    [HttpGet("{articleId}")]
+    [HttpGet("{articleId}/is-bookmarked")]
+    public async Task<ActionResult<bool>> IsArticleBookmarked(string articleId)
+    {
+
+        string currentUserId = GetCurrentUserId();
+
+
+        bool isBookmarked = await _articleService.IsArticleBookmarkedByUser(articleId, currentUserId);
+
+        return Ok(isBookmarked);
+    }
+
+    private string GetCurrentUserId()
+    {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return userId;
+    }
+
+
+    //DONE
+    [AllowAnonymous]
+    [HttpGet("get-single-article/{articleId}")]
     public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId, string userId)
     {
         if (string.IsNullOrEmpty(articleId) || string.IsNullOrEmpty(userId))
@@ -118,7 +172,7 @@ public class ArticleController : ControllerBase
 
 
     //DONE
-    [HttpPut("{articleId}")]
+    [HttpPut("update-article/{articleId}")]
     public async Task<IActionResult> UpdateArticle(string articleId, [FromBody] UpdateArticleDto updatedArticle)
     {
         if (updatedArticle == null)
@@ -318,31 +372,4 @@ public class ArticleController : ControllerBase
         });
     }
 
-    [AllowAnonymous]
-    [HttpGet("all-articles")]
-    public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
-    {
-        var articles = await _articleService.GetAllArticle();
-        return Ok(articles);
-    }
-
-    
-    [HttpGet("{articleId}/is-bookmarked")]
-    public async Task<ActionResult<bool>> IsArticleBookmarked(string articleId)
-    {
-        
-        string currentUserId = GetCurrentUserId(); 
-
-        
-        bool isBookmarked = await _articleService.IsArticleBookmarkedByUser(articleId, currentUserId);
-
-        return Ok(isBookmarked);
-    }
-
-    private string GetCurrentUserId()
-    {
-        
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return userId;
-    }
 }

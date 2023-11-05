@@ -106,9 +106,7 @@ public class ArticleService : IArticleService
     //DONE
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {
-        string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        if (!allowedTags.Contains(model.Tag, StringComparer.OrdinalIgnoreCase))
-            throw new ArgumentException("Invalid tag. Tag must either one of: JAVA, .NET, NODE.");
+        
         var readtimeresult = Helper.CalculateReadingTime(model.Text);
         var newArticle = new Article
         {
