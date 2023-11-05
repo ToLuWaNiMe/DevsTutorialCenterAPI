@@ -24,8 +24,8 @@ public class TagService : ITagService
         {
             var tag = new ArticleTag { Name = createTagDto.Name };
 
-            await _repository.AddAsync(tag);
-            return tag.Id;
+            await _repository.AddAsync<ArticleTag>(tag);
+            return tag.Name;
         }
 
         catch (Exception ex)
@@ -33,19 +33,6 @@ public class TagService : ITagService
             throw new Exception(ex.Message);
         }
     }
-
-
-    public async Task Delete(string id)
-    {
-        var existingTag = await _repository.GetByIdAsync<ArticleTag>(id);
-
-        if (existingTag == null)
-            throw new InvalidOperationException($"Tag with ID {id} not found.");
-
-
-        await _repository.DeleteAsync(existingTag);
-    }
-
 
     public async Task<ArticleTag> GetByIdAsync<T>(string id)
     {
