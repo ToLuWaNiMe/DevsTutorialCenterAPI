@@ -292,4 +292,21 @@ public class ArticleService : IArticleService
         };
     }
 
+    public async Task<IEnumerable<Article>> GetAllArticle()
+    {
+        var articles = await _repository.GetAllAsync<Article>();
+        return articles;
+    }
+
+    public async Task<bool> IsArticleBookmarkedByUser(string articleId, string userId)
+    {
+        
+        var bookmarkedArticle = await _repository.GetAllAsync<ArticleBookMark>();
+
+        bool isBookmarked = bookmarkedArticle.Any(b => b.ArticleId == articleId && b.UserId == userId);
+
+        return isBookmarked;
+    }
+
+
 }

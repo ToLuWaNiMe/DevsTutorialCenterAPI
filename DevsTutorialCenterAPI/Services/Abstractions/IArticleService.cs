@@ -15,4 +15,10 @@ public interface IArticleService
     Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId);
     Task<AuthorsStatsDto> GetAuthorStatsAsync(FetchAuthorsStatsDto fetchAuthorsStatsDto);
     Task LogArticleReadAsync(string articleId, string userId);
+
+
+    Task<IEnumerable<Article>> GetAllArticle();
+
+    
+    Task<bool> IsArticleBookmarkedByUser(string articleId, string userId);
 }

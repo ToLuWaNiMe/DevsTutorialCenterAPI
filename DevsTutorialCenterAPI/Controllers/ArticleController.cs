@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Models.Enums;
@@ -315,5 +316,33 @@ public class ArticleController : ControllerBase
             Data = result,
             Message = "Successful"
         });
+    }
+
+    [AllowAnonymous]
+    [HttpGet("all-articles")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
+    {
+        var articles = await _articleService.GetAllArticle();
+        return Ok(articles);
+    }
+
+    
+    [HttpGet("{articleId}/is-bookmarked")]
+    public async Task<ActionResult<bool>> IsArticleBookmarked(string articleId)
+    {
+        
+        string currentUserId = GetCurrentUserId(); 
+
+        
+        bool isBookmarked = await _articleService.IsArticleBookmarkedByUser(articleId, currentUserId);
+
+        return Ok(isBookmarked);
+    }
+
+    private string GetCurrentUserId()
+    {
+        
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return userId;
     }
 }
