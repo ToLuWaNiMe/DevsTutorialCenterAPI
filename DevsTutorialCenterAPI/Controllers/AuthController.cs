@@ -7,13 +7,13 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthAPIController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 
         
 
-        public AuthAPIController(IAuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
@@ -23,23 +23,25 @@ namespace DevsTutorialCenterAPI.Controllers
 
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO model)
         {
-            var errorMessage = await _authService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
                 {
                     Data = null,
-                    Code = 400,
+                    Code = 500,
                     Error = "Invalid input data",
                     Message = "Error"
 
                 });
             }
 
+            var newUser = await _authService.Register2(model);
+           
+
             return Ok(new ResponseDto<object> 
             { 
                 Code = 200,
-                Data = "User Registered Successfully",
+                Data = newUser,
                 Error= "",
                 Message = "OK"
             
