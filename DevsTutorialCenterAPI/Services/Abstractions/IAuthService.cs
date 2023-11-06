@@ -8,5 +8,7 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
         Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
 
         Task<bool> AssignRole(string email, string roleName);
+
+        Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO);
     }
 }
