@@ -12,10 +12,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class ArticleService : IArticleService
 {
     private readonly IRepository _repository;
+    private readonly IArticleApprovalService _articleApprovalService;
 
-    public ArticleService(IRepository repository)
+    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService)
     {
         _repository = repository;
+        _articleApprovalService = articleApprovalService;
     }
 
 
@@ -24,19 +26,60 @@ public class ArticleService : IArticleService
         return await _repository.GetByIdAsync<Article>(articleId);
     }
 
-    public async Task UpdateArticleAsync(Article article)
+    //DONE
+    public async Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle)
     {
-        if (article == null) throw new ArgumentNullException(nameof(article));
 
-        await _repository.UpdateAsync(article);
+        var existingArticle = await _repository.GetByIdAsync<Article>(articleId);
+
+        if (existingArticle == null)
+        {
+            throw new Exception($"Article with ID {articleId} not found.");
+        }
+
+        existingArticle.Title = updatedArticle.Title ?? existingArticle.Title;
+        existingArticle.Tag = updatedArticle.Tag ?? existingArticle.Tag;
+        existingArticle.Text = updatedArticle.Text ?? existingArticle.Text;
+        existingArticle.ImageUrl = updatedArticle.ImageUrl ?? existingArticle.ImageUrl;
+        
+
+        await _repository.UpdateAsync<Article>(existingArticle);
+
+        var updatedArticleDto = new UpdateArticleDto
+        {
+            Title = existingArticle.Title,
+            Tag = existingArticle.Tag,
+            Text = existingArticle.Text,
+            ImageUrl = existingArticle.ImageUrl
+        };
+
+        return updatedArticleDto;
+
     }
 
+    //DONE (GOES WITH GETSINGLE ARTICLE)
+    public async Task LogArticleReadAsync(string articleId, string userId)
+    {
+        var articleRead = new ArticleRead
+        {
+            UserId = userId,
+            ArticleId = articleId
+        };
 
-    public async Task<GetSingleArticleDto> GetSingleArticle(string articleId)
+        await _repository.AddAsync<ArticleRead>(articleRead);
+    }
+
+    public async Task<GetSingleArticleDto> GetSingleArticle(string articleId, string userId)
     {
         var article = await _repository.GetByIdAsync<Article>(articleId);
 
         if (article == null) throw new Exception($"Article with ID {articleId} not found.");
+
+        var user = await _repository.GetByIdAsync<AppUser>(userId);
+
+        if (user == null) throw new Exception($"User with ID {userId} not found.");
+
+        await LogArticleReadAsync(article.Id, user.Id);
 
         var articleDto = new GetSingleArticleDto
         {
@@ -59,55 +102,35 @@ public class ArticleService : IArticleService
         return articleDto;
     }
 
+
+    //DONE
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {
-        string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        if (!allowedTags.Contains(model.Tag, StringComparer.OrdinalIgnoreCase))
-            throw new ArgumentException("Invalid tag. Tag must either one of: JAVA, .NET, NODE.");
+        
         var readtimeresult = Helper.CalculateReadingTime(model.Text);
         var newArticle = new Article
         {
             Title = model.Title,
             Tag = model.Tag,
             Text = model.Text,
-            ImageUrl = model.ImageUrl,
-            IsRecommended = model.IsRecommended,
-            IsTrending = model.IsTrending,
-            IsPublished = model.IsPublished,
-            IsRead = model.IsRead,
-            IsDraft = model.IsDraft,
-            IsSaved = model.IsSaved,
-            IsPending = model.IsPending,
-            IsReported = model.IsReported,
-            PublicId = model.PublicId,
-            PublishedOn = model.PublishedOn,
-            CreatedOn = model.CreatedOn,
-            UserId = model.UserId,
-            ReadTime = readtimeresult
+            ImageUrl = model.ImageUrl
         };
         
 
-        await _repository.AddAsync(newArticle);
+        await _repository.AddAsync<Article>(newArticle);
+        var articleApproval = new ArticleApproval
+        {
+            ArticleId = newArticle.Id
+        };
+
+        await _articleApprovalService.ApproveAsync(articleApproval);
 
         var newArticleData = new CreateArticleDto
         {
             Title = newArticle.Title,
             Tag = newArticle.Tag,
             Text = newArticle.Text,
-            ImageUrl= newArticle.ImageUrl,
-            IsRecommended = newArticle.IsRecommended,
-            IsTrending = newArticle.IsTrending,
-            IsPublished = newArticle.IsPublished,
-            IsRead = newArticle.IsRead,
-            IsDraft = newArticle.IsDraft,
-            IsSaved = newArticle.IsSaved,
-            IsPending = newArticle.IsPending,
-            PublicId = newArticle.PublicId,
-            CreatedOn = newArticle.CreatedOn,
-            PublishedOn = newArticle.PublishedOn,
-            IsReported = newArticle.IsReported,
-            UserId = newArticle.UserId,
-            ReadTime = newArticle.ReadTime
+            ImageUrl= newArticle.ImageUrl
         };
 
         return newArticleData;
@@ -266,4 +289,22 @@ public class ArticleService : IArticleService
             AuthorStatsDtos = authorStats
         };
     }
+
+    public async Task<IEnumerable<Article>> GetAllArticle()
+    {
+        var articles = await _repository.GetAllAsync<Article>();
+        return articles;
+    }
+
+    public async Task<bool> IsArticleBookmarkedByUser(string articleId, string userId)
+    {
+        
+        var bookmarkedArticle = await _repository.GetAllAsync<ArticleBookMark>();
+
+        bool isBookmarked = bookmarkedArticle.Any(b => b.ArticleId == articleId && b.UserId == userId);
+
+        return isBookmarked;
+    }
+
+
 }
