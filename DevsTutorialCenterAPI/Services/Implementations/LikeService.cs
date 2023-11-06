@@ -4,6 +4,7 @@ using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
@@ -25,6 +26,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 throw new ArgumentException("Article not found", nameof(articleId));
             }
+            var user = await _repository.GetByIdAsync<AppUser>(userId);
+            if (user == null) 
+            {
+                throw new ArgumentException("User not found", nameof(userId));
+            }
 
             var like = await _repository.GetAllAsync<ArticlesLikes>();
             var existingLike = like.FirstOrDefault(al => al.ArticleId == articleId && al.UserId == userId);
@@ -40,7 +46,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 UserId = userId
             };
 
-            await _repository.AddAsync(newLike);
+            await _repository.AddAsync<ArticlesLikes>(newLike);
         }
 
         public async Task UnlikeArticleAsync(string articleId, string userId)
@@ -60,7 +66,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 return;
             }
 
-            await _repository.DeleteAsync(existingLike);
+            await _repository.DeleteAsync<ArticlesLikes>(existingLike);
         }
     }
 }

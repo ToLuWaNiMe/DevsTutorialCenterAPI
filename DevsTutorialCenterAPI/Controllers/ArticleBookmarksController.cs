@@ -1,7 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
-using DevsTutorialCenterAPI.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/article-bookmarks")]
     public class ArticleBookmarksController : ControllerBase
@@ -23,167 +23,59 @@ namespace DevsTutorialCenterAPI.Controllers
             _repository = repository;
         }
 
-        [HttpPost("bookmark/{articleId}")]
-        public async Task<IActionResult> BookmarkArticle(string articleId, [FromBody] ArticlesBookmarkDto dto)
+        [HttpPost("bookmark")]
+        public async Task<IActionResult> BookmarkArticle([FromBody] ArticlesBookmarkDto dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                string userId = dto.UserId;
-
-                // Check if the user exists
-                var user = await _repository.GetByIdAsync<AppUser>(userId);
-                if (user == null)
+                return BadRequest(new ResponseDto<object>
                 {
-                    return NotFound("User not found");
-                }
-
-                // Check if the article exists by Id
-                var article = await _repository.GetByIdAsync<Article>(articleId);
-                if (article == null)
-                {
-                    return NotFound("Article not found");
-                }
-
-                // Proceed to bookmark the article if the user and article exist
-                await _bookmarkService.BookmarkArticleAsync(articleId, userId);
-
-                // Return a response indicating success
-                var response = new ResponseDto<string>
-                {
-                    Code = 200,
-                    Message = "Article bookmarked successfully",
-                    Data = "Article bookmarked successfully",
-                    Error = string.Empty
-                };
-
-                return Ok(response);
+                    Data = null,
+                    Code = 500,
+                    Error = "Invalid data",
+                    Message = "Failed"
+                });
             }
-            catch (ArgumentException ex)
+
+            // Proceed to bookmark the article if the user and article exist
+           var Bookmark = await _bookmarkService.BookmarkArticleAsync(dto); 
+
+            var response = new ResponseDto<ArticlesBookmarkDto>
             {
-                var response = new ResponseDto<string>
-                {
-                    Code = 404, // Not Found
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
+                Code = 200,
+                Message = "Article bookmarked successfully",
+                Data = Bookmark,
+                Error = string.Empty
+            };
 
-                return NotFound(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 400, // Bad Request
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 500, // Internal Server Error
-                    Message = "Error bookmarking the article",
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return StatusCode(500, response);
-            }
+            return Ok(response);
         }
 
-        [HttpDelete("remove-bookmark/{articleId}")]
-        public async Task<IActionResult> RemoveBookmark(string articleId, [FromBody] ArticlesBookmarkDto dto)
+        [HttpDelete("unbookmark")]
+        public async Task<IActionResult> UnbookmarkArticle([FromBody] ArticlesBookmarkDto dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                string userId = dto.UserId;
-
-                // Check if the user exists
-                var user = await _repository.GetByIdAsync<AppUser>(userId);
-                if (user == null)
+                return BadRequest(new ResponseDto<object>
                 {
-                    return NotFound("User not found");
-                }
-
-                // Check if the article exists by Id
-                var article = await _repository.GetByIdAsync<Article>(articleId);
-                if (article == null)
-                {
-                    return NotFound("Article not found");
-                }
-
-                // Check if the user has bookmarked the article
-                var bookmark = await _repository.GetAllAsync<ArticleBookMark>();
-                var existingBookmark = bookmark.FirstOrDefault(ab => ab.ArticleId == articleId && ab.UserId == userId);
-
-                if (existingBookmark == null)
-                {
-                    
-                    return Ok(new ResponseDto<string>
-                    {
-                        Code = 200,
-                        Message = "Bookmark not found, nothing to remove",
-                        Data = "Bookmark not found, nothing to remove",
-                        Error = string.Empty
-                    });
-                }
-
-                // Proceed to remove the bookmark if the user has bookmarked the article
-                await _bookmarkService.UnbookmarkArticleAsync(articleId, userId);
-
-                // Return a response indicating success
-                var response = new ResponseDto<string>
-                {
-                    Code = 200,
-                    Message = "Bookmark removed successfully",
-                    Data = "Bookmark removed successfully",
-                    Error = string.Empty
-                };
-
-                return Ok(response);
+                    Data = null,
+                    Code = 500,
+                    Error = "Invalid data",
+                    Message = "Failed"
+                });
             }
-            catch (ArgumentException ex)
+
+            // Proceed to unbookmark the article if the user and article exist
+            await _bookmarkService.UnbookmarkArticleAsync(dto.ArticleId, dto.UserId);
+
+            var response = new ResponseDto<string>
             {
-                var response = new ResponseDto<string>
-                {
-                    Code = 404, // Not Found
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
+                Code = 200,
+                Message = "Article Unbookmarked successfully",
+                Error = string.Empty
+            };
 
-                return NotFound(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 400, // Bad Request
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 500, // Internal Server Error
-                    Message = "Error removing the bookmark",
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return StatusCode(500, response);
-            }
+            return Ok(response);
         }
-
     }
 }

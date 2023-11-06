@@ -7,6 +7,7 @@ using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
+using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb"))
 );
 
+
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
 
     .AddDefaultTokenProviders();
@@ -65,6 +67,8 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 
 builder.Services.AddAuthentication(options =>
 {

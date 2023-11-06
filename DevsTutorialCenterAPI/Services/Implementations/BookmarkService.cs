@@ -17,18 +17,22 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             _repository = repository;
         }
 
-        public async Task BookmarkArticleAsync(string articleId, string userId)
+        public async Task<ArticlesBookmarkDto> BookmarkArticleAsync(ArticlesBookmarkDto dto)
         {
-            var article = await _repository.GetByIdAsync<Article>(articleId);
+            var article = await _repository.GetByIdAsync<Article>(dto.ArticleId);
 
             if (article == null)
             {
-                throw new ArgumentException("Article not found", nameof(articleId));
+                throw new ArgumentException("Article not found", nameof(dto.ArticleId));
             }
-
+            var user = await _repository.GetByIdAsync<AppUser>(dto.UserId);
+            if (user == null) 
+            {
+                throw new ArgumentException("User not found", nameof(dto.UserId));
+            }
             var bookmarks = await _repository.GetAllAsync<ArticleBookMark>();
-            var existingBookmark = bookmarks.FirstOrDefault(ab => ab.ArticleId == articleId && ab.UserId == userId);
-
+            var existingBookmark = bookmarks.FirstOrDefault(ab => ab.ArticleId == article.Id && ab.UserId == user.Id);
+            
             if (existingBookmark != null)
             {
                 throw new InvalidOperationException("User has already bookmarked the article");
@@ -36,12 +40,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             var newBookmark = new ArticleBookMark
             {
-                ArticleId = articleId,
-                UserId = userId
+                ArticleId = article.Id,
+                UserId = user.Id
             };
 
-            await _repository.AddAsync(newBookmark);
-
+            await _repository.AddAsync<ArticleBookMark>(newBookmark);
+            return new ArticlesBookmarkDto { ArticleId = newBookmark.ArticleId, UserId = user.Id };
         }
 
         public async Task UnbookmarkArticleAsync(string articleId, string userId)

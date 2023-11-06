@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/article-likes")]
     public class ArticlesLikeController : ControllerBase
@@ -23,29 +23,26 @@ namespace DevsTutorialCenterAPI.Controllers
             _repository = repository;
         }
 
-        [HttpPost("like/{articleId}")]
-        public async Task<IActionResult> LikeArticle(string articleId, [FromBody] LikesByArticleDto dto)
+        [HttpPost("like")]
+        public async Task<IActionResult> LikeArticle([FromBody] LikesByArticleDto dto)
         {
-            try
+
+
+
+
+            if (!ModelState.IsValid)
             {
-                string userId = dto.UserId;
-
-                // Check if the user exists
-                var user = await _repository.GetByIdAsync<AppUser>(userId);
-                if (user == null)
+                return BadRequest(new ResponseDto<object>
                 {
-                    return NotFound("User not found");
-                }
-
-                // Check if the article exists by Id
-                var article = await _repository.GetByIdAsync<Article>(articleId);
-                if (article == null)
-                {
-                    return NotFound("Article not found");
-                }
+                    Data = null,
+                    Code = 500,
+                    Error = "Invalid data",
+                    Message = "Failed"
+                });
+            }
 
                 // Proceed to like the article if the user and article exist
-                await _likeService.LikeArticleAsync(articleId, userId);
+                await _likeService.LikeArticleAsync(dto.ArticleId, dto.UserId);
 
                 var response = new ResponseDto<string>
                 {
@@ -56,127 +53,44 @@ namespace DevsTutorialCenterAPI.Controllers
                 };
 
                 return Ok(response);
-            }
-            catch (ArgumentException ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 404, // Not Found
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return NotFound(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 400, // Bad Request
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 500, // Internal Server Error
-                    Message = "Error liking the article",
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
-
-                return StatusCode(500, response);
-            }
+            
+             
+            
+               
+            
         }
 
-        [HttpDelete("unlike/{articleId}")]
-        public async Task<IActionResult> UnlikeArticle(string articleId, [FromBody] LikesByArticleDto dto)
+        [HttpDelete("unlike")]
+        public async Task<IActionResult> UnlikeArticle([FromBody] LikesByArticleDto dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                string userId = dto.UserId;
-
-                // Check if the user exists
-                var user = await _repository.GetByIdAsync<AppUser>(userId);
-                if (user == null)
+                return BadRequest(new ResponseDto<object>
                 {
-                    return NotFound("User not found");
-                }
-
-                // Check if the article exists by Id
-                var article = await _repository.GetByIdAsync<Article>(articleId);
-                if (article == null)
-                {
-                    return NotFound("Article not found");
-                }
-
-                // Check if the user has liked the article
-                var likesQuery = await _repository.GetAllAsync<ArticlesLikes>();
-                var existingLike = likesQuery.FirstOrDefault(al => al.ArticleId == articleId && al.UserId == userId);
-
-                if (existingLike == null)
-                {
-                    return BadRequest("User has not liked the article");
-                }
-
-                // Proceed to unlike the article if the user and article exist
-                await _likeService.UnlikeArticleAsync(articleId, userId);
-
-                // Return a response indicating success
-                var response = new ResponseDto<string>
-                {
-                    Code = 200,
-                    Message = "Article unliked successfully",
-                    Data = "Article unliked successfully",
-                    Error = string.Empty
-                };
-
-                return Ok(response);
+                    Data = null,
+                    Code = 500,
+                    Error = "Invalid data",
+                    Message = "Failed"
+                });
             }
-            catch (ArgumentException ex)
+
+            // Proceed to unlike the article if the user and article exist
+            await _likeService.UnlikeArticleAsync(dto.ArticleId, dto.UserId);
+
+            var response = new ResponseDto<string>
             {
-                var response = new ResponseDto<string>
-                {
-                    Code = 404, // Not Found
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
+                Code = 200,
+                Message = "Article Unliked successfully",
+                Error = string.Empty
+            };
 
-                return NotFound(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 400, // Bad Request
-                    Message = ex.Message,
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
+            return Ok(response);
 
-                return BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseDto<string>
-                {
-                    Code = 500, // Internal Server Error
-                    Message = "Error unliking the article",
-                    Data = string.Empty,
-                    Error = ex.Message
-                };
 
-                return StatusCode(500, response);
-            }
+
+
+
         }
-
 
     }
 }
