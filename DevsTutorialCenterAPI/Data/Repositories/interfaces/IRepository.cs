@@ -1,4 +1,6 @@
-﻿namespace DevsTutorialCenterAPI.Data.Repositories
+﻿using DevsTutorialCenterAPI.Data.Entities;
+
+namespace DevsTutorialCenterAPI.Data.Repositories
 {
     public interface IRepository
     {
@@ -9,5 +11,6 @@
         Task UpdateAsync<T>(T entity) where T : class;
         Task DeleteAsync<T>(T entity) where T : class;
         Task DeleteRangeAsync<T>(T entities) where T : class;
+
     }
 }

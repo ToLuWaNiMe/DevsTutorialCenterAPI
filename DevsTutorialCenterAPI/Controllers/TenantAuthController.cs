@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-[Route("api/auth")]
+[Route("api/tenant-auth")]
 [ApiController]
 public class TenantAuthController : ControllerBase
 {

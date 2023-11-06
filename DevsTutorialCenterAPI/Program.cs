@@ -59,6 +59,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<D
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
@@ -67,6 +68,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
 builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+builder.Services.AddScoped<IArticleApprovalService, ArticleApprovalService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 
