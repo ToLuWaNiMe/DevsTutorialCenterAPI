@@ -1,5 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Utilities;
 using Humanizer;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevsTutorialCenterAPI.Data.Entities;
 
@@ -11,11 +13,10 @@ public class Article : BaseEntity
     public string TagId { get; set; }
     public int ReadCount { get; set; }
     public string ImageUrl { get; set; }
+    public string PublicId { get; set; }
     public string ReadTime { get; set; }
-    public bool IsDeleted { get; set; } 
-    public DateTime? DeletedAt { get; set; }
+    public bool IsDeleted { get; set; }
 
-    
 
 
 

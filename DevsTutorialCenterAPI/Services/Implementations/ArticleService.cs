@@ -38,7 +38,7 @@ public class ArticleService : IArticleService
         }
 
         existingArticle.Title = updatedArticle.Title ?? existingArticle.Title;
-        existingArticle.Tag = updatedArticle.Tag ?? existingArticle.Tag;
+        existingArticle.TagId = updatedArticle.TagId ?? existingArticle.TagId;
         existingArticle.Text = updatedArticle.Text ?? existingArticle.Text;
         existingArticle.ImageUrl = updatedArticle.ImageUrl ?? existingArticle.ImageUrl;
         
@@ -48,7 +48,7 @@ public class ArticleService : IArticleService
         var updatedArticleDto = new UpdateArticleDto
         {
             Title = existingArticle.Title,
-            Tag = existingArticle.Tag,
+            TagId = existingArticle.TagId,
             Text = existingArticle.Text,
             ImageUrl = existingArticle.ImageUrl
         };
@@ -85,18 +85,15 @@ public class ArticleService : IArticleService
         {
             Id = article.Id,
             PublicId = article.PublicId,
-            UserId = article.UserId,
+            AuthorId = article.AuthorId,
             Title = article.Title,
-            Tag = article.Tag,
+            TagId = article.TagId,
             Text = article.Text,
             ImageUrl = article.ImageUrl,
-            IsPublished = article.IsPublished,
-            IsRead = article.IsRead,
-            IsRecommended = article.IsRecommended,
-            IsReported = article.IsReported,
-            IsSaved = article.IsSaved,
+            ReadCount = article.ReadCount,
+            ReadTime = article.ReadTime,
             CreatedOn = article.CreatedOn,
-            ReadTime = article.ReadTime
+           
         };
 
         return articleDto;
@@ -111,7 +108,7 @@ public class ArticleService : IArticleService
         var newArticle = new Article
         {
             Title = model.Title,
-            Tag = model.Tag,
+            TagId = model.TagId,
             Text = model.Text,
             ImageUrl = model.ImageUrl
         };
@@ -128,7 +125,7 @@ public class ArticleService : IArticleService
         var newArticleData = new CreateArticleDto
         {
             Title = newArticle.Title,
-            Tag = newArticle.Tag,
+            TagId = newArticle.TagId,
             Text = newArticle.Text,
             ImageUrl= newArticle.ImageUrl
         };
@@ -136,63 +133,63 @@ public class ArticleService : IArticleService
         return newArticleData;
     }
 
-    public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
-    {
-        var authorIdFilter = !string.IsNullOrEmpty(filters.AuthorId);
-        var tagFilter = !string.IsNullOrEmpty(filters.Tag);
-        var isRecommendedFilter = filters.IsRecommended != null;
-        var isSavedFilter = filters.IsSaved != null;
-        var isReadFilter = filters.IsRead != null;
-        var isReportedFilter = filters.IsReported != null;
-        var isPublishedFilter = filters.IsPublished != null;
-        var isTrendingFilter = filters.IsTrending != null;
-        var isDraftFilter = filters.IsDraft != null;
-        var isPendingFilter = filters.IsPending != null;
+    //public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
+    //{
+    //    var authorIdFilter = !string.IsNullOrEmpty(filters.AuthorId);
+    //    var tagFilter = !string.IsNullOrEmpty(filters.Tag);
+    //    var isRecommendedFilter = filters.IsRecommended != null;
+    //    var isSavedFilter = filters.IsSaved != null;
+    //    var isReadFilter = filters.IsRead != null;
+    //    var isReportedFilter = filters.IsReported != null;
+    //    var isPublishedFilter = filters.IsPublished != null;
+    //    var isTrendingFilter = filters.IsTrending != null;
+    //    var isDraftFilter = filters.IsDraft != null;
+    //    var isPendingFilter = filters.IsPending != null;
 
 
 
-        var articles = await _repository.GetAllAsync<Article>();
+    //    var articles = await _repository.GetAllAsync<Article>();
 
-        if (authorIdFilter) articles = articles.Where(a => a.UserId == filters.AuthorId);
+    //    if (authorIdFilter) articles = articles.Where(a => a.UserId == filters.AuthorId);
 
-        if (tagFilter) articles = articles.Where(a => a.Tag == filters.Tag.ToUpper());
+    //    if (tagFilter) articles = articles.Where(a => a.Tag == filters.Tag.ToUpper());
 
-        if (isRecommendedFilter) articles = articles.Where(a => a.IsRecommended);
+    //    if (isRecommendedFilter) articles = articles.Where(a => a.IsRecommended);
 
-        if (isSavedFilter) articles = articles.Where(a => a.IsSaved);
+    //    if (isSavedFilter) articles = articles.Where(a => a.IsSaved);
 
-        if (isReadFilter) articles = articles.Where(a => a.IsRead);
+    //    if (isReadFilter) articles = articles.Where(a => a.IsRead);
 
-        if (isReportedFilter) articles = articles.Where(a => a.IsReported);
+    //    if (isReportedFilter) articles = articles.Where(a => a.IsReported);
 
-        if (isPublishedFilter) articles = articles.Where(a => a.IsPublished);
-        if (isTrendingFilter) articles = articles.Where(a => a.IsTrending);
-        if (isDraftFilter) articles = articles.Where(a => a.IsDraft);
-        if (isPendingFilter) articles = articles.Where(a => a.IsPending);
+    //    if (isPublishedFilter) articles = articles.Where(a => a.IsPublished);
+    //    if (isTrendingFilter) articles = articles.Where(a => a.IsTrending);
+    //    if (isDraftFilter) articles = articles.Where(a => a.IsDraft);
+    //    if (isPendingFilter) articles = articles.Where(a => a.IsPending);
 
-        var articlesDto = articles.Select(a => new GetAllArticlesDto
-        {
-            Id = a.Id,
-            UserId = a.UserId,
-            Title = a.Title,
-            Tag = a.Tag,
-            Text = a.Text,
-            ImageUrl = a.ImageUrl,
-            CreatedOn = a.CreatedOn,
-            ReadTime = a.ReadTime,
-            PublishedOn = a.PublishedOn,
+    //    var articlesDto = articles.Select(a => new GetAllArticlesDto
+    //    {
+    //        Id = a.Id,
+    //        UserId = a.UserId,
+    //        Title = a.Title,
+    //        Tag = a.Tag,
+    //        Text = a.Text,
+    //        ImageUrl = a.ImageUrl,
+    //        CreatedOn = a.CreatedOn,
+    //        ReadTime = a.ReadTime,
+    //        PublishedOn = a.PublishedOn,
            
-        });
+    //    });
 
-        var pageNum = filters.Page ?? 1;
-        var pageSize = filters.Size ?? 10;
+    //    var pageNum = filters.Page ?? 1;
+    //    var pageSize = filters.Size ?? 10;
 
-        var skipAmount = (pageNum - 1) * pageSize;
+    //    var skipAmount = (pageNum - 1) * pageSize;
 
-        var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
+    //    var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
 
-        return paginatorResponse;
-    }
+    //    return paginatorResponse;
+    //}
 
 
         public async Task<bool> SetArticleReportStatus(string articleId, string status)
@@ -209,27 +206,27 @@ public class ArticleService : IArticleService
                 throw new Exception("Article not found");
             }
 
-            if(article.IsReported && status == ArticleStatusReportEnum.Approved.ToString().ToLower())
-            {
-                throw new Exception("Article already approved");
-            }
+            //if(article.IsReported && status == ArticleStatusReportEnum.Approved.ToString().ToLower())
+            //{
+            //    throw new Exception("Article already approved");
+            //}
 
-            if (!article.IsReported && status == ArticleStatusReportEnum.Declined.ToString().ToLower())
-            {
-                throw new Exception("Article already declined");
-            }
-
-
-            if (status == ArticleStatusReportEnum.Approved.ToString().ToLower())
-            {
-                article.IsReported = true;
-            }
+            //if (!article.IsReported && status == ArticleStatusReportEnum.Declined.ToString().ToLower())
+            //{
+            //    throw new Exception("Article already declined");
+            //}
 
 
-            else if (status == ArticleStatusReportEnum.Declined.ToString().ToLower())
-            {
-                article.IsReported= false;
-            }
+            //if (status == ArticleStatusReportEnum.Approved.ToString().ToLower())
+            //{
+            //    article.IsReported = true;
+            //}
+
+
+            //else if (status == ArticleStatusReportEnum.Declined.ToString().ToLower())
+            //{
+            //    article.IsReported= false;
+            //}
 
             await _repository.UpdateAsync<Article>(article);
 
@@ -272,13 +269,13 @@ public class ArticleService : IArticleService
         foreach (var authorId in fetchAuthorsStatsDto.AuthorIdList)
         {
             var query = await _repository.GetAllAsync<Article>();
-            query = query.Where(a => a.UserId == authorId);
+            query = query.Where(a => a.AuthorId == authorId);
             
             var authorStat = new AuthorStatsDto
             {
                 AuthorId = authorId,
                 TotalNumOfArticles = query.Count(),
-                TotalReportedArticles = query.Where(a => a.IsReported).Count()
+               // TotalReportedArticles = query.Where(a => a.IsReported).Count()
             };
             
             authorStats.Add(authorStat);
