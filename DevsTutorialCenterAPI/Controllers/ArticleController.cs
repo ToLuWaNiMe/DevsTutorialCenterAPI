@@ -38,7 +38,7 @@ public class ArticleController : ControllerBase
         
 
         string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        if (!allowedTags.Contains(model.Tag, StringComparer.OrdinalIgnoreCase))
+        if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
             return BadRequest(new ResponseDto<CreateArticleDto>
             {
                 Data = null,
@@ -55,7 +55,7 @@ public class ArticleController : ControllerBase
             Error = "Invalid Data"
         });
 
-        if (string.IsNullOrWhiteSpace(model.Tag))
+        if (string.IsNullOrWhiteSpace(model.TagId))
         {
             //ModelState.AddModelError("Tag", "Article must have at least one tag.");
             return BadRequest(new ResponseDto<CreateArticleDto>
@@ -79,28 +79,28 @@ public class ArticleController : ControllerBase
 
     }
 
-    [AllowAnonymous]
-    [HttpGet("get-all-articles")]
-    public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
-    {
-        try
-        {
-            var articles = await _articleService.GetAllArticles(filters);
+    //[AllowAnonymous]
+    //[HttpGet("get-all-articles")]
+    //public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
+    //{
+    //    try
+    //    {
+    //        var articles = await _articleService.GetAllArticles(filters);
 
-            return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
-            {
-                Data = articles,
-                Code = 200,
-                Message = "OK",
-                Error = ""
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-        }
-    }
+    //        return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
+    //        {
+    //            Data = articles,
+    //            Code = 200,
+    //            Message = "OK",
+    //            Error = ""
+    //        });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError($"Error: {ex.Message}");
+    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+    //    }
+    //}
 
     //DONE
     [AllowAnonymous]
@@ -249,32 +249,32 @@ public class ArticleController : ControllerBase
         }
 
 
-    [HttpPost("{articleId}/report-article")]
-    public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request,
-        string articleId)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(new ResponseDto<object>
-            {
-                Data = null,
-                Message = "Validation failed",
-                Code = 500
-            });
+    //[HttpPost("{articleId}/report-article")]
+    //public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request,
+    //    string articleId)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(new ResponseDto<object>
+    //        {
+    //            Data = null,
+    //            Message = "Validation failed",
+    //            Code = 500
+    //        });
 
 
-        var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
+    //    var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
 
-        return Ok(new ResponseDto<object>
-        {
-            Data = response,
-            Code = 200,
-            Message = "Ok",
-            Error = ""
-        });
+    //    return Ok(new ResponseDto<object>
+    //    {
+    //        Data = response,
+    //        Code = 200,
+    //        Message = "Ok",
+    //        Error = ""
+    //    });
 
 
        
-    }
+    //}
 
 
     [HttpPatch("{articleId}/report-status")]

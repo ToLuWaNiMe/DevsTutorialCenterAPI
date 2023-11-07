@@ -7,8 +7,9 @@ public class ArticleBookMark : BaseEntity
 {
     public string UserId { get; set; }
 
+    public string ArticleId { get; set; }
+
     [ForeignKey("ArticleId")]
     [ValidateNever]
     public Article? Article { get; set; }
-    public string ArticleId { get; set; }
 }
