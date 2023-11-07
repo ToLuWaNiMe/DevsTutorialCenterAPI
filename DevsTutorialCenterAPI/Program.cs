@@ -7,6 +7,7 @@ using DevsTutorialCenterAPI.Data.Repositories.interfaces;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
+using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -52,11 +53,13 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
     option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb"))
 );
 
+
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
 
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
@@ -64,6 +67,10 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITenantAuthService, TenantAuthService>();
 builder.Services.AddScoped<IReportArticleService, ReportArticleService>();
+builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+builder.Services.AddScoped<IArticleApprovalService, ArticleApprovalService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -98,7 +105,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-Seeder.SeedeMe(app);
+//Seeder.SeedeMe(app);
 
 app.MapControllers();
 

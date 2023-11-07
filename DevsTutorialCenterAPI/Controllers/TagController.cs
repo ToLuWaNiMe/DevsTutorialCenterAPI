@@ -30,39 +30,34 @@ public class TagController : ControllerBase
             Data = tag
         });
     }
-
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
     {
         if (!ModelState.IsValid)
+        {
             return BadRequest(new ResponseDto<object>
             {
                 Data = null,
                 Code = 400,
-                Error = "ModelState.GetError()",
+                Error = "Invalid input data",
                 Message = "Error"
             });
+        }
 
+        var tag = await _tagService.CreateTagAsync(createTagDto);
 
-        var response = await _tagService.CreateTagAsync(createTagDto);
-        if (!string.IsNullOrEmpty(response))
-            return Ok(new ResponseDto<object>
-            {
-                Code = 200,
-                Message = "OK",
-                Error = "",
-                Data = new { TagId = response }
-            });
-
-        return BadRequest(new ResponseDto<object>
+        return Ok(new ResponseDto<object>
         {
-            Data = null,
-            Code = 400,
-            Error = "failed to add tag",
-            Message = "Error"
-        });
+            Data = tag,
+            Code = 200,
+            Error = "",
+            Message = "Ok",
+
+        } );
+
     }
+
 
     [Authorize]
     [HttpPut("{id}")]
@@ -88,21 +83,5 @@ public class TagController : ControllerBase
             Message = "Tag updated successfully.",
             Data = existingTag
         });
-    }
-
-    [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<ResponseDto<UpdateTagDto>>> DeleteTag([FromRoute] string id)
-    {
-        await _tagService.Delete(id);
-
-        var response = new ResponseDto<UpdateTagDto>
-        {
-            Code = StatusCodes.Status200OK,
-            Message = "Tag deleted successfully.",
-            Data = null
-        };
-
-        return Ok(response);
     }
 }
