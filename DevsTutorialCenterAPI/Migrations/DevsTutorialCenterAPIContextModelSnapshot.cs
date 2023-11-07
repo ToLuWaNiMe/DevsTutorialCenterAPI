@@ -34,6 +34,12 @@ namespace DevsTutorialCenterAPI.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -41,14 +47,23 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsReported")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -67,6 +82,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("PublicId")
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -78,6 +96,9 @@ namespace DevsTutorialCenterAPI.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -100,6 +121,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -109,40 +133,19 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsDraft")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsPending")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRecommended")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsReported")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSaved")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsTrending")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("PublicId")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("PublishedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ReadTime")
+                    b.Property<int>("ReadCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Tag")
+                    b.Property<string>("ReadTime")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TagId")
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
@@ -153,9 +156,6 @@ namespace DevsTutorialCenterAPI.Migrations
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -171,6 +171,9 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
@@ -197,6 +200,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -219,6 +225,9 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -245,6 +254,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -263,9 +275,6 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<string>("ArticleId")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -279,8 +288,6 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ArticleId");
 
                     b.ToTable("Tags");
                 });
@@ -324,6 +331,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -346,6 +356,9 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ReportText")
                         .HasColumnType("text");
 
@@ -366,6 +379,9 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Identity")
@@ -545,15 +561,6 @@ namespace DevsTutorialCenterAPI.Migrations
                 });
 
             modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ArticlesLikes", b =>
-                {
-                    b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
-                        .WithMany()
-                        .HasForeignKey("ArticleId");
-
-                    b.Navigation("Article");
-                });
-
-            modelBuilder.Entity("DevsTutorialCenterAPI.Data.Entities.ArticleTag", b =>
                 {
                     b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
                         .WithMany()

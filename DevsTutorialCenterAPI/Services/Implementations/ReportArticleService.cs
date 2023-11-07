@@ -14,39 +14,39 @@ public class ReportArticleService : IReportArticleService
         _repository = repository;
     }
 
-    public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)
-    {
-        try
-        {
-            var article = await _repository.GetByIdAsync<Article>(articleId);
+    //public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)
+    //{
+    //    try
+    //    {
+    //        var article = await _repository.GetByIdAsync<Article>(articleId);
 
-            if (article == null) throw new Exception("This article cannot be found");
-
-
-            if (article.IsReported) throw new Exception("This article has already been reported");
+    //        if (article == null) throw new Exception("This article cannot be found");
 
 
-            var reportedarticle = new ReportArticle
-            {
-                ReportText = request.ReportText,
-                ArticleId = article.Id,
-                ReportedBy = request.ReportedBy
-            };
+    //        if (article.IsReported) throw new Exception("This article has already been reported");
 
-            await _repository.AddAsync(reportedarticle);
 
-            article.IsReported = true;
+    //        var reportedarticle = new ReportArticle
+    //        {
+    //            ReportText = request.ReportText,
+    //            ArticleId = article.Id,
+    //            ReportedBy = request.ReportedBy
+    //        };
 
-            await _repository.UpdateAsync(article);
+    //        await _repository.AddAsync(reportedarticle);
 
-            return reportedarticle;
+    //        article.IsReported = true;
 
-            // add new article report to db
-            // update isReported property of article in db
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.ToString());
-        }
-    }
+    //        await _repository.UpdateAsync(article);
+
+    //        return reportedarticle;
+
+    //        // add new article report to db
+    //        // update isReported property of article in db
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception(ex.ToString());
+    //    }
+    //}
 }

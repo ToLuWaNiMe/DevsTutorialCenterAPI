@@ -59,7 +59,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 Email = user.Email,
                 ID = user.Id,
-                Name = user.Name,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
                 Squad = user.Squad,
                 Stack = user.Stack
@@ -80,7 +81,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 UserName = registrationRequestDTO.Email,
                 Email = registrationRequestDTO.Email,
                 NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
-                Name = registrationRequestDTO.Name,
+               FirstName= registrationRequestDTO.FirstName,
+               LastName= registrationRequestDTO.LastName,
                 PhoneNumber = registrationRequestDTO.PhoneNumber,
                 Stack = registrationRequestDTO.Stack,
                 Squad = registrationRequestDTO.Squad
@@ -99,7 +101,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                     {
                         Email = userToReturn.Email,
                         ID = userToReturn.Id,
-                        Name = userToReturn.Name,
+                        FirstName = userToReturn.FirstName,
+                        LastName = userToReturn.LastName,
                         PhoneNumber = userToReturn.PhoneNumber,
                         Squad = userToReturn.Squad,
                         Stack = userToReturn.Stack
@@ -165,7 +168,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 UserName = registrationRequestDTO.Email,
                 Email = registrationRequestDTO.Email,
                 NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
-                Name = registrationRequestDTO.Name,
+             FirstName = registrationRequestDTO.FirstName,
+             LastName = registrationRequestDTO.LastName,
                 PhoneNumber = registrationRequestDTO.PhoneNumber,
                 Stack = registrationRequestDTO.Stack,
                 Squad = registrationRequestDTO.Squad
@@ -184,7 +188,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                     {
                         Email = userToReturn.Email,
                         ID = userToReturn.Id,
-                        Name = userToReturn.Name,
+                       FirstName = userToReturn.FirstName,
+                       LastName = userToReturn.LastName,
                         PhoneNumber = userToReturn.PhoneNumber,
                         Squad = userToReturn.Squad,
                         Stack = userToReturn.Stack
