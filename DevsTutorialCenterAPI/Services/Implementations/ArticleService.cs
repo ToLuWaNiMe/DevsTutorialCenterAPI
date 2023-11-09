@@ -132,7 +132,8 @@ public class ArticleService : IArticleService
         await _repository.AddAsync<Article>(newArticle);
         var articleApproval = new ArticleApproval
         {
-            ArticleId = newArticle.Id
+            ArticleId = newArticle.Id,
+            Status = SD.pending
         };
 
         await _articleApprovalService.ApproveAsync(articleApproval);
