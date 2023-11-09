@@ -13,11 +13,15 @@ public class ArticleService : IArticleService
 {
     private readonly IRepository _repository;
     private readonly IArticleApprovalService _articleApprovalService;
+    private readonly ITagService _tagService;
+    private readonly DevsTutorialCenterAPIContext _db;
 
-    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService)
+    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService, ITagService tagService, DevsTutorialCenterAPIContext db)
     {
         _repository = repository;
         _articleApprovalService = articleApprovalService;
+        _tagService = tagService;
+        _db = db;
     }
 
 
@@ -104,13 +108,24 @@ public class ArticleService : IArticleService
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {
         
-        var readtimeresult = Helper.CalculateReadingTime(model.Text);
+        //var readtimeresult = Helper.CalculateReadingTime(model.Text);
+
+
+
+        var tag = await _tagService.GetByIdAsync<ArticleTag>(model.TagId);
+
+        if(tag == null)
+        {
+            throw new Exception("Tag  not found.");
+        }
+
         var newArticle = new Article
         {
             Title = model.Title,
-            TagId = model.TagId,
+            TagId = tag.Id,
             Text = model.Text,
-            ImageUrl = model.ImageUrl
+            ImageUrl = model.ImageUrl,
+            
         };
         
 

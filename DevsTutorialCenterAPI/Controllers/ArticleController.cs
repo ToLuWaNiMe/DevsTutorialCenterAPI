@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
@@ -37,15 +37,15 @@ public class ArticleController : ControllerBase
     {
         
 
-        string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
-            return BadRequest(new ResponseDto<CreateArticleDto>
-            {
-                Data = null,
-                Code = 500,
-                Message = "Artcile Creation failed",
-                Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
-            });
+        //string[] allowedTags = { "JAVA", ".NET", "NODE" };
+        //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
+        //    return BadRequest(new ResponseDto<CreateArticleDto>
+        //    {
+        //        Data = null,
+        //        Code = 500,
+        //        Message = "Artcile Creation failed",
+        //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
+        //    });
 
         if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
         {
@@ -125,7 +125,9 @@ public class ArticleController : ControllerBase
         return Ok(isBookmarked);
     }
 
+    
     private string GetCurrentUserId()
+
     {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return userId;

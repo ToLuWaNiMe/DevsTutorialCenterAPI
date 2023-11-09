@@ -31,7 +31,4 @@
         <None Remove="Data\Repositories\interfaces\" />
         <None Remove="Services\" />
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Models\Enums\" />
-    </ItemGroup>
 </Project>

@@ -198,10 +198,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                     return appUserDTO;
                 }
 
-                else
-                {
-                    return null;
-                }
+                
             }
             catch (Exception ex)
             {

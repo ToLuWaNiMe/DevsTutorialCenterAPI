@@ -52,7 +52,7 @@ public class TagService : ITagService
 
         existingTag.Name = updatedTagDto.Name;
 
-        await _repository.UpdateAsync(existingTag);
+        await _repository.UpdateAsync<ArticleTag>(existingTag);
         return new UpdateTagDto
         {
             Name = existingTag.Name
