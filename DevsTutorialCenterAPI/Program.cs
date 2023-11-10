@@ -50,7 +50,7 @@ builder.Services.AddSwaggerGen(options =>
 
 
 builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
-    option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb"))
+    option => option.UseNpgsql(builder.Configuration.GetConnectionString("ProdDb1"))
 );
 
 

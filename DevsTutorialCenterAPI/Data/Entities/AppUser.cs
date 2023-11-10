@@ -13,6 +13,9 @@ namespace DevsTutorialCenterAPI.Data.Entities
 
         public string Stack { get; set; }
         public string Squad { get; set; }
+        
+        // This is to enable soft deleting.
+        public string IsDeleted { get; set; } = "false";
 
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
