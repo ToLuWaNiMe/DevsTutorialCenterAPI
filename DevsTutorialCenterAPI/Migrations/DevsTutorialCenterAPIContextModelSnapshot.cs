@@ -53,8 +53,8 @@ namespace DevsTutorialCenterAPI.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<string>("IsDeleted")
-                        .HasColumnType("text");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsReported")
                         .HasColumnType("boolean");
