@@ -71,6 +71,7 @@ builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>(
 builder.Services.AddScoped<IArticleApprovalService, ArticleApprovalService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(options =>
 {
