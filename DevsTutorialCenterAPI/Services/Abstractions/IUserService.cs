@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
@@ -6,5 +7,6 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     {
         Task<IEnumerable<AppUserDTO>> GetAllUsers();
         Task<AppUserDTO> GetUserById(string userId);
+        Task<List<GetReadArticlesDto>> GetArticleReadByUser(string userId);
     }
 }
