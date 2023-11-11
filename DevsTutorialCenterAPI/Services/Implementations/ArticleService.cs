@@ -319,5 +319,35 @@ public class ArticleService : IArticleService
         return isBookmarked;
     }
 
+    public async Task<List<GetPendingArticlesDto>> GetPendingArticles()
+    {
+        //var filter = (await _repository.GetAllAsync<ArticleApproval>()).Where(x => x.Status == SD.pending);
+        var articleApprovals = await _repository.GetAllAsync2<ArticleApproval>();
 
+        var filter = articleApprovals.Where(x => x.Status == 1);
+
+        if (filter == null) 
+        {
+            throw new ArgumentNullException("No pending articles");
+        }
+
+        var getAllPendingArticles = new List<GetPendingArticlesDto>();
+
+        foreach (var article in filter)
+        {
+            var foundArticle = await GetArticleById(article.ArticleId);
+            var getPendingArticle = new GetPendingArticlesDto
+            {
+                Title = foundArticle is not null ? foundArticle.Title : null,
+                Text = foundArticle is not null ? foundArticle.Text : null,
+                TagId = foundArticle is not null ? foundArticle.TagId : null,
+                ImageUrl = foundArticle is not null ? foundArticle.ImageUrl : null,
+            };
+
+            getAllPendingArticles.Add(getPendingArticle);
+        }
+
+
+        return getAllPendingArticles;
+    }
 }

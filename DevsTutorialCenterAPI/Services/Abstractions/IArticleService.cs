@@ -21,4 +21,7 @@ public interface IArticleService
 
     
     Task<bool> IsArticleBookmarkedByUser(string articleId, string userId);
+
+
+    Task<List<GetPendingArticlesDto>> GetPendingArticles();
 }
