@@ -374,4 +374,20 @@ public class ArticleController : ControllerBase
         });
     }
 
+    [HttpGet("pending-articles")]
+    public async Task<ActionResult<List<GetPendingArticlesDto>>> GetPendingArticles()
+    {
+        var pendingArticles = await _articleService.GetPendingArticles();
+
+        return Ok(new ResponseDto<List<GetPendingArticlesDto>>
+        {
+            Data = pendingArticles,
+            Code = (int)HttpStatusCode.OK,
+            Message = "Ok",
+            Error = ""
+        });
+
+
+    }
+
 }

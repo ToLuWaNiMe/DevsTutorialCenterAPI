@@ -11,6 +11,6 @@ namespace DevsTutorialCenterAPI.Data.Repositories
         Task UpdateAsync<T>(T entity) where T : class;
         Task DeleteAsync<T>(T entity) where T : class;
         Task DeleteRangeAsync<T>(T entities) where T : class;
-
+        Task<IQueryable<T>> GetAllAsync2<T>() where T : class;
     }
 }
