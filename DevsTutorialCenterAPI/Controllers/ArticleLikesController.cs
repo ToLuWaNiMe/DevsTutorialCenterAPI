@@ -51,7 +51,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 {
                     Code = 200,
                     Message = "Article liked successfully",
-                    Data = "Article liked successfully",
+                   // Data = null,
                     Error = string.Empty
                 };
 
