@@ -3,6 +3,7 @@ using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -16,18 +17,20 @@ namespace DevsTutorialCenterAPI.Controllers
     {
         private readonly ILikeService _likeService;
         private readonly IRepository _repository;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public ArticlesLikeController(ILikeService likeService, IRepository repository)
+        public ArticlesLikeController(ILikeService likeService, IRepository repository, SignInManager<AppUser> signInManager)
         {
             _likeService = likeService;
             _repository = repository;
+            _signInManager = signInManager;
         }
 
-        [HttpPost("like")]
-        public async Task<IActionResult> LikeArticle([FromBody] LikesByArticleDto dto)
+        [HttpPost("like/{articleId}")]
+        public async Task<IActionResult> LikeArticle(string articleId)
         {
 
-
+            var user = await _signInManager.UserManager.GetUserAsync(User);
 
 
             if (!ModelState.IsValid)
@@ -42,13 +45,13 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
                 // Proceed to like the article if the user and article exist
-                await _likeService.LikeArticleAsync(dto.ArticleId, dto.UserId);
+                await _likeService.LikeArticleAsync(articleId, user.Id);
 
                 var response = new ResponseDto<string>
                 {
                     Code = 200,
                     Message = "Article liked successfully",
-                    Data = "Article liked successfully",
+                   // Data = null,
                     Error = string.Empty
                 };
 
@@ -60,9 +63,10 @@ namespace DevsTutorialCenterAPI.Controllers
             
         }
 
-        [HttpDelete("unlike")]
-        public async Task<IActionResult> UnlikeArticle([FromBody] LikesByArticleDto dto)
+        [HttpDelete("unlike/{articleId}")]
+        public async Task<IActionResult> UnlikeArticle(string articleId)
         {
+            var user = await _signInManager.UserManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
@@ -75,7 +79,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
             // Proceed to unlike the article if the user and article exist
-            await _likeService.UnlikeArticleAsync(dto.ArticleId, dto.UserId);
+            await _likeService.UnlikeArticleAsync(articleId, user.Id);
 
             var response = new ResponseDto<string>
             {
