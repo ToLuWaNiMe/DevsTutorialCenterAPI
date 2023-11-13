@@ -24,7 +24,7 @@ public class UserManagementService : IUserManagementService
     public async Task<IEnumerable<AppUserDTO>> GetAllUsers()
     {
         var users = (await _repository.GetAllAsync<AppUser>())
-            .Where( user => user.IsDeleted == false );
+            .Where( user => user.DeletedAt == null );
 
         var userDtoList = _mapper.Map<List<AppUserDTO>>(users);
 
@@ -35,7 +35,7 @@ public class UserManagementService : IUserManagementService
     {
         var existingUser = await _repository.GetByIdAsync<AppUser>(userId);
 
-        if (existingUser == null || existingUser.IsDeleted == true)
+        if (existingUser == null || existingUser.DeletedAt is not null)
             return null;
 
         var userDto = _mapper.Map<AppUserDTO>(existingUser);
@@ -47,10 +47,10 @@ public class UserManagementService : IUserManagementService
     {
         var user = await _repository.GetByIdAsync<AppUser>(id);
 
-        if (user == null || user.IsDeleted)
+        if (user == null || !(user.DeletedAt is null))
             return false;
 
-        user.IsDeleted = true;
+        user.DeletedAt = DateTime.UtcNow;
         user.DeletedAt = DateTime.UtcNow;
         user.UpdatedOn = DateTime.UtcNow;
 
@@ -62,7 +62,7 @@ public class UserManagementService : IUserManagementService
     {
         var user = await _repository.GetByIdAsync<AppUser>(id);
 
-        if (user == null || user.IsDeleted)
+        if (user == null || user.DeletedAt is not null)
             return false;
 
         user.FirstName = appUser.FirstName;
@@ -93,10 +93,10 @@ public class UserManagementService : IUserManagementService
             var foundArticle = await _articleService.GetArticleById(article.ArticleId);
             var getReadArticle = new GetReadArticlesDto
             {
-                Title = foundArticle is not null ? foundArticle.Title : null,
-                Text = foundArticle is not null ? foundArticle.Text : null,
-                TagId = foundArticle is not null ? foundArticle.TagId : null,
-                ImageUrl = foundArticle is not null ? foundArticle.ImageUrl : null,
+                Title = foundArticle?.Title,
+                Text = foundArticle?.Text,
+                TagId = foundArticle?.TagId,
+                ImageUrl = foundArticle?.ImageUrl,
 
 
             };

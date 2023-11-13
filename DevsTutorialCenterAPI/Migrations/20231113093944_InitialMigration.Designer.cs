@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevsTutorialCenterAPI.Migrations
 {
     [DbContext(typeof(DevsTutorialCenterAPIContext))]
-    [Migration("20231110220943_Initial")]
-    partial class Initial
+    [Migration("20231113093944_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,9 +54,6 @@ namespace DevsTutorialCenterAPI.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsReported")
                         .HasColumnType("boolean");
