@@ -55,6 +55,12 @@ public class Repository : IRepository
         return await _context.Set<T>().FindAsync(id);
     }
 
+    public async Task<IQueryable<T>> GetAllAsync2<T>() where T : class
+    {
+        var result = await _context.Set<T>().ToListAsync();
+        return result.AsQueryable();
+    }
+
     public async Task UpdateAsync<T>(T entity) where T : class
     {
         if (entity == null)

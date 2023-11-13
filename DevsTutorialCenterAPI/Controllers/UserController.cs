@@ -4,6 +4,7 @@ using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,14 +12,16 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize(Roles = "ADMIN")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserManagementService _userService;
+        private readonly SignInManager<AppUser> _signInManager;
 
         public UserController(IUserManagementService userService)
         {
             _userService = userService;
+            _signInManager = signInManager;
         }
 
         [HttpGet("get-all-users")]
@@ -69,6 +72,38 @@ namespace DevsTutorialCenterAPI.Controllers
             });
         }
 
+
+        [HttpGet("get-read-articles-by-user")]
+        public async Task<ActionResult<List<GetReadArticlesDto>>> ArticlesReadByUser()
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                // Handle the case where the user is not logged in
+                return BadRequest(new ResponseDto<List<GetReadArticlesDto>>
+                {
+                    Data = null,
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Message = "Bad Request",
+                    Error = "User Not Found"
+                });
+            }
+
+            var userId = user.Id;
+
+            // Call the service method to get articles read by the user
+            var readArticles = await _userService.GetArticleReadByUser(userId);
+
+            return Ok(new ResponseDto<List<GetReadArticlesDto>>
+            {
+                Data = readArticles,
+                Code = (int)HttpStatusCode.OK,
+                Message = "Ok",
+                Error = ""
+            });
+        }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -95,3 +130,4 @@ namespace DevsTutorialCenterAPI.Controllers
         }
     }
 }
+
