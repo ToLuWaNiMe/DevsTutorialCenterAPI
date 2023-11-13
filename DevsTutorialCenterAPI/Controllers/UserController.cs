@@ -18,7 +18,9 @@ namespace DevsTutorialCenterAPI.Controllers
         private readonly IUserManagementService _userService;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(IUserManagementService userService)
+        public UserController(
+            IUserManagementService userService,
+            SignInManager<AppUser> signInManager)
         {
             _userService = userService;
             _signInManager = signInManager;

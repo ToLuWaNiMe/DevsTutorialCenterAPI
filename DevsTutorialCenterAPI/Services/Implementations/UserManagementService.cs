@@ -9,13 +9,16 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class UserManagementService : IUserManagementService
 {
     private readonly IRepository _repository;
+    private readonly IArticleService _articleService;
     private readonly IMapper _mapper;
     public UserManagementService(
         IRepository repository,
-        IMapper mapper)
+        IMapper mapper,
+        IArticleService articleService)
     {
         _repository = repository;
         _mapper = mapper;
+        _articleService = articleService;
     }
 
     public async Task<IEnumerable<AppUserDTO>> GetAllUsers()
@@ -74,5 +77,33 @@ public class UserManagementService : IUserManagementService
         await _repository.UpdateAsync(user);
 
         return true;
+    }
+
+    public async Task<List<GetReadArticlesDto>> GetArticleReadByUser(string userId)
+    {
+        // Retrieve all ArticleRead entries for the given user
+        var articleReadEntries = (await _repository.GetAllAsync2<ArticleRead>()).Where(a => a.UserId == userId);
+        if (articleReadEntries == null)
+            throw new ArgumentNullException("User has read no articles");
+
+        var getAllReadArticles = new List<GetReadArticlesDto>();
+
+        foreach (var article in articleReadEntries)
+        {
+            var foundArticle = await _articleService.GetArticleById(article.ArticleId);
+            var getReadArticle = new GetReadArticlesDto
+            {
+                Title = foundArticle is not null ? foundArticle.Title : null,
+                Text = foundArticle is not null ? foundArticle.Text : null,
+                TagId = foundArticle is not null ? foundArticle.TagId : null,
+                ImageUrl = foundArticle is not null ? foundArticle.ImageUrl : null,
+
+
+            };
+            getAllReadArticles.Add(getReadArticle);
+        }
+
+
+        return getAllReadArticles;
     }
 }
