@@ -51,7 +51,6 @@ public class UserManagementService : IUserManagementService
             return false;
 
         user.DeletedAt = DateTime.UtcNow;
-        user.DeletedAt = DateTime.UtcNow;
         user.UpdatedOn = DateTime.UtcNow;
 
         await _repository.UpdateAsync(user);
@@ -74,7 +73,7 @@ public class UserManagementService : IUserManagementService
         user.Squad = appUser.Squad;
         user.UpdatedOn = DateTime.UtcNow;
 
-        await _repository.UpdateAsync(user);
+        await _repository.UpdateAsync<AppUser>(user);
 
         return true;
     }
