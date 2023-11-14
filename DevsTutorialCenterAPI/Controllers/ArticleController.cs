@@ -32,53 +32,53 @@ public class ArticleController : ControllerBase
 
 
     
-    //DONE
-    [HttpPost("create-article")]
-    public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
-    {
+    ////DONE
+    //[HttpPost("create-article")]
+    //public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
+    //{
         
 
-        //string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
-        //    return BadRequest(new ResponseDto<CreateArticleDto>
-        //    {
-        //        Data = null,
-        //        Code = 500,
-        //        Message = "Artcile Creation failed",
-        //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
-        //    });
+    //    //string[] allowedTags = { "JAVA", ".NET", "NODE" };
+    //    //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
+    //    //    return BadRequest(new ResponseDto<CreateArticleDto>
+    //    //    {
+    //    //        Data = null,
+    //    //        Code = 500,
+    //    //        Message = "Artcile Creation failed",
+    //    //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
+    //    //    });
 
-        if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
-        {
-            Data = null,
-            Code = 500,
-            Message = "Artcile Creation failed",
-            Error = "Invalid Data"
-        });
+    //    if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
+    //    {
+    //        Data = null,
+    //        Code = 500,
+    //        Message = "Artcile Creation failed",
+    //        Error = "Invalid Data"
+    //    });
 
-        if (string.IsNullOrWhiteSpace(model.TagId))
-        {
-            //ModelState.AddModelError("Tag", "Article must have at least one tag.");
-            return BadRequest(new ResponseDto<CreateArticleDto>
-            {
-                Data = null,
-                Code = 500,
-                Message = "Artcile Creation failed",
-                Error = "Article must have at least one tag"
-            });
-        }
+    //    if (string.IsNullOrWhiteSpace(model.TagId))
+    //    {
+    //        //ModelState.AddModelError("Tag", "Article must have at least one tag.");
+    //        return BadRequest(new ResponseDto<CreateArticleDto>
+    //        {
+    //            Data = null,
+    //            Code = 500,
+    //            Message = "Artcile Creation failed",
+    //            Error = "Article must have at least one tag"
+    //        });
+    //    }
 
-        var createdArticle = await _articleService.CreateArticleAsync(model);
+    //    var createdArticle = await _articleService.CreateArticleAsync(model);
 
-        return Ok(new ResponseDto<CreateArticleDto>
-        {
-            Data = createdArticle,
-            Code = 200,
-            Message = "OK",
-            Error = ""
-        });
+    //    return Ok(new ResponseDto<CreateArticleDto>
+    //    {
+    //        Data = createdArticle,
+    //        Code = 200,
+    //        Message = "OK",
+    //        Error = ""
+    //    });
 
-    }
+    //}
 
     [HttpPost("create-article2")]
     public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
