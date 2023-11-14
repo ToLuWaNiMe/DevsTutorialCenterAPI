@@ -20,13 +20,15 @@ public class ArticleController : ControllerBase
 {
     private readonly IArticleService _articleService;
     private readonly ILogger<ArticleController> _logger;
+    private readonly SignInManager<AppUser> _signInManager;
     private readonly IReportArticleService _reportArticleService;
 
     public ArticleController(IReportArticleService reportArticleService, IArticleService articleService,
-        ILogger<ArticleController> logger)
+        ILogger<ArticleController> logger, SignInManager<AppUser> signInManager)
     {
         _articleService = articleService;
         _logger = logger;
+        _signInManager = signInManager;
         _reportArticleService = reportArticleService;
     }
 
@@ -210,20 +212,25 @@ public class ArticleController : ControllerBase
     //DONE
     [AllowAnonymous]
     [HttpGet("get-single-article/{articleId}")]
-    public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId, string userId)
+    public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId)
     {
-        if (string.IsNullOrEmpty(articleId) || string.IsNullOrEmpty(userId))
+        var user = await _signInManager.UserManager.GetUserAsync(User);
+
+        
+
+
+        if (string.IsNullOrEmpty(articleId))
         {
             return BadRequest(new ResponseDto<GetSingleArticleDto>
             {
                 Data = null,
                 Code = (int)HttpStatusCode.BadRequest,
                 Message = "Bad Request",
-                Error = "Invalid articleId or userId"
+                Error = "Invalid articleId"
             });
         }
 
-        var article = await _articleService.GetSingleArticle(articleId, userId);
+        var article = await _articleService.GetSingleArticle(articleId, user.Id);
 
         if (article == null)
         {

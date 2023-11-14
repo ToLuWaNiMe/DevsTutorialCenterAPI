@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using DevsTutorialCenterAPI;
 using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
@@ -55,7 +56,6 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
-
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IImageService, ImageService>();
@@ -71,7 +71,8 @@ builder.Services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>(
 builder.Services.AddScoped<IArticleApprovalService, ArticleApprovalService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddAuthentication(options =>
 {

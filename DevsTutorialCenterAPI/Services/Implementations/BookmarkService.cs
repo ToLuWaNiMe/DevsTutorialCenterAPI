@@ -17,18 +17,18 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             _repository = repository;
         }
 
-        public async Task<ArticlesBookmarkDto> BookmarkArticleAsync(ArticlesBookmarkDto dto)
+        public async Task<ArticlesBookmarkDto> BookmarkArticleAsync(string articleId, string userId)
         {
-            var article = await _repository.GetByIdAsync<Article>(dto.ArticleId);
+            var article = await _repository.GetByIdAsync<Article>(articleId);
 
             if (article == null)
             {
-                throw new ArgumentException("Article not found", nameof(dto.ArticleId));
+                throw new ArgumentException("Article not found", nameof(articleId));
             }
-            var user = await _repository.GetByIdAsync<AppUser>(dto.UserId);
+            var user = await _repository.GetByIdAsync<AppUser>(userId);
             if (user == null) 
             {
-                throw new ArgumentException("User not found", nameof(dto.UserId));
+                throw new ArgumentException("User not found", nameof(userId));
             }
             var bookmarks = await _repository.GetAllAsync<ArticleBookMark>();
             var existingBookmark = bookmarks.FirstOrDefault(ab => ab.ArticleId == article.Id && ab.UserId == user.Id);
@@ -56,9 +56,13 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 throw new ArgumentException("Article not found", nameof(articleId));
             }
-
+            var user = await _repository.GetByIdAsync<AppUser>(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User not found", nameof(userId));
+            }
             var bookmarks = await _repository.GetAllAsync<ArticleBookMark>();
-            var existingBookmark = bookmarks.FirstOrDefault(ab => ab.ArticleId == articleId && ab.UserId == userId);
+            var existingBookmark = bookmarks.FirstOrDefault(ab => ab.ArticleId == article.Id && ab.UserId == user.Id);
 
             if (existingBookmark == null)
             {
@@ -66,7 +70,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 return;
             }
 
-            await _repository.DeleteAsync(existingBookmark);
+            await _repository.DeleteAsync<ArticleBookMark>(existingBookmark);
         }
     }
 }

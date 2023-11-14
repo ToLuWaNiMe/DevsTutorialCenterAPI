@@ -3,6 +3,7 @@ using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -16,16 +17,20 @@ namespace DevsTutorialCenterAPI.Controllers
     {
         private readonly IBookmarkService _bookmarkService;
         private readonly IRepository _repository;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public ArticleBookmarksController(IBookmarkService bookmarkService, IRepository repository)
+        public ArticleBookmarksController(IBookmarkService bookmarkService, IRepository repository, SignInManager<AppUser> signInManager)
         {
             _bookmarkService = bookmarkService;
             _repository = repository;
+            _signInManager = signInManager;
         }
 
-        [HttpPost("bookmark")]
-        public async Task<IActionResult> BookmarkArticle([FromBody] ArticlesBookmarkDto dto)
+        [HttpPost("bookmark/{articleId}")]
+        public async Task<IActionResult> BookmarkArticle(string articleId)
         {
+            var user = await _signInManager.UserManager.GetUserAsync(User);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
@@ -38,7 +43,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
             // Proceed to bookmark the article if the user and article exist
-           var Bookmark = await _bookmarkService.BookmarkArticleAsync(dto); 
+           var Bookmark = await _bookmarkService.BookmarkArticleAsync(articleId, user.Id); 
 
             var response = new ResponseDto<ArticlesBookmarkDto>
             {
@@ -51,9 +56,10 @@ namespace DevsTutorialCenterAPI.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("unbookmark")]
-        public async Task<IActionResult> UnbookmarkArticle([FromBody] ArticlesBookmarkDto dto)
+        [HttpDelete("unbookmark/{articleId}")]
+        public async Task<IActionResult> UnbookmarkArticle(string articleId)
         {
+            var user = await _signInManager.UserManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ResponseDto<object>
@@ -66,7 +72,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
             // Proceed to unbookmark the article if the user and article exist
-            await _bookmarkService.UnbookmarkArticleAsync(dto.ArticleId, dto.UserId);
+            await _bookmarkService.UnbookmarkArticleAsync(articleId, user.Id);
 
             var response = new ResponseDto<string>
             {

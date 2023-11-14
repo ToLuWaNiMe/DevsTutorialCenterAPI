@@ -13,7 +13,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenGeneratorService _jwtTokenGenerator;
 
-        public AuthService(DevsTutorialCenterAPIContext devs, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IJwtTokenGeneratorService jwtTokenGenerator)
+        public AuthService(
+            DevsTutorialCenterAPIContext devs,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IJwtTokenGeneratorService jwtTokenGenerator)
         {
             _devs = devs;
             _userManager = userManager;
@@ -57,8 +61,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             AppUserDTO appUserDTO = new()
             {
+                Id = user.Id,
                 Email = user.Email,
-                ID = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
@@ -99,8 +103,8 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
                     AppUserDTO appUserDTO = new()
                     {
+                        Id = userToReturn.Id,
                         Email = userToReturn.Email,
-                        ID = userToReturn.Id,
                         FirstName = userToReturn.FirstName,
                         LastName = userToReturn.LastName,
                         PhoneNumber = userToReturn.PhoneNumber,
@@ -186,10 +190,10 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
                     AppUserDTO appUserDTO = new()
                     {
+                        Id = userToReturn.Id,
                         Email = userToReturn.Email,
-                        ID = userToReturn.Id,
-                       FirstName = userToReturn.FirstName,
-                       LastName = userToReturn.LastName,
+                        FirstName = userToReturn.FirstName,
+                        LastName = userToReturn.LastName,
                         PhoneNumber = userToReturn.PhoneNumber,
                         Squad = userToReturn.Squad,
                         Stack = userToReturn.Stack
