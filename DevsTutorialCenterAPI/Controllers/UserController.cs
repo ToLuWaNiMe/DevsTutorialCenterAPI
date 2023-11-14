@@ -15,10 +15,12 @@ namespace DevsTutorialCenterAPI.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserManagementService _userService;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(IUserService userService, SignInManager<AppUser> signInManager)
+        public UserController(
+            IUserManagementService userService,
+            SignInManager<AppUser> signInManager)
         {
             _userService = userService;
             _signInManager = signInManager;
@@ -34,7 +36,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 {
                     Data = null,
                     Code = (int)HttpStatusCode.BadRequest,
-                    Message = "Bad Request",
+                    Message = "User may not exist or has been deleted",
                     Error = "No Users Found"
                 });
             }
@@ -58,7 +60,7 @@ namespace DevsTutorialCenterAPI.Controllers
                 return BadRequest(new ResponseDto<object>
                 {
                     Data = null,
-                    Code = (int)HttpStatusCode.BadRequest,
+                    Code = (int)HttpStatusCode.NotFound,
                     Message = "Bad Request",
                     Error = "User Not Found"
                 });
@@ -102,6 +104,31 @@ namespace DevsTutorialCenterAPI.Controllers
                 Message = "Ok",
                 Error = ""
             });
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userService.GetUserById(id);
+
+            if (user == null)
+                return NotFound("User not found");
+
+            if (!await _userService.SoftDeleteUser(id))
+                return BadRequest("User does not exist or has been deleted already");
+
+            return Ok("User deleted!");
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateUser(
+            string id,
+            [FromBody] AppUserUpdateRequestDTO appUserDTO)
+        {
+            if (!await _userService.UpdateUser(id, appUserDTO))
+                return BadRequest();
+
+            return Ok("User Updated!");
         }
     }
 }
