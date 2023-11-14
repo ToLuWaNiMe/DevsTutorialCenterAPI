@@ -33,12 +33,12 @@ public class ArticleController : ControllerBase
     }
 
 
-    
+
     ////DONE
     //[HttpPost("create-article")]
     //public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
     //{
-        
+
 
     //    //string[] allowedTags = { "JAVA", ".NET", "NODE" };
     //    //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
@@ -81,8 +81,8 @@ public class ArticleController : ControllerBase
     //    });
 
     //}
-
-    [HttpPost("create-article2")]
+    [Authorize]
+    [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
     {
         if (!ModelState.IsValid)
