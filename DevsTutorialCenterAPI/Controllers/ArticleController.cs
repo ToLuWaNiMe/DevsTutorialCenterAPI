@@ -8,6 +8,7 @@ using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementations;
 using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
@@ -79,30 +80,102 @@ public class ArticleController : ControllerBase
 
     }
 
-    //[AllowAnonymous]
-    //[HttpGet("get-all-articles")]
-    //public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
-    //{
-    //    try
-    //    {
-    //        var articles = await _articleService.GetAllArticles(filters);
+    [HttpPost("create-article2")]
+    public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(new ResponseDto<CreateArticleDtoReturn>
+            {
+                Data = null,
+                Code = 500,
+                Message = "Article Creation failed",
+                Error = "Invalid Data"
+            });
+        }
 
-    //        return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
-    //        {
-    //            Data = articles,
-    //            Code = 200,
-    //            Message = "OK",
-    //            Error = ""
-    //        });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError($"Error: {ex.Message}");
-    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-    //    }
-    //}
+        if (string.IsNullOrWhiteSpace(model.TagId))
+        {
+            return BadRequest(new ResponseDto<CreateArticleDtoReturn>
+            {
+                Data = null,
+                Code = 500,
+                Message = "Article Creation failed",
+                Error = "Article must have at least one tag"
+            });
+        }
 
-    //DONE
+        try
+        {
+            
+
+           
+            var createdArticle = await _articleService.CreateArticleAsync2(model);
+
+            return Ok(new ResponseDto<CreateArticleDtoReturn>
+            {
+                Data = createdArticle,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return an appropriate response
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+
+    [AllowAnonymous]
+    [HttpGet("get-all-articles")]
+    public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
+    {
+        try
+        {
+            var articles = await _articleService.GetAllArticles(filters);
+
+            return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
+            {
+                Data = articles,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get-bookmarked-articles")]
+    public async Task<ActionResult> GetBookmarkedArticles([FromQuery] string userId)
+    {
+        try
+        {
+            var bookmarkedArticles = await _articleService.GetBookmarkedArticles(userId);
+
+            return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
+            {
+                Data = bookmarkedArticles,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+
     [AllowAnonymous]
     [HttpGet("all-articles")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
