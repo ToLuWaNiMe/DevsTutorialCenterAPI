@@ -4,7 +4,7 @@ namespace DevsTutorialCenterAPI.Services.Interfaces
 {
     public interface IBookmarkService
     {
-        Task<ArticlesBookmarkDto> BookmarkArticleAsync(ArticlesBookmarkDto dto);
+        Task<ArticlesBookmarkDto> BookmarkArticleAsync(string articleId, string userId);
         Task UnbookmarkArticleAsync(string articleId, string userId);
     }
 }
