@@ -33,79 +33,151 @@ public class ArticleController : ControllerBase
     }
 
 
-    
-    //DONE
+
+    ////DONE
+    //[HttpPost("create-article")]
+    //public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
+    //{
+
+
+    //    //string[] allowedTags = { "JAVA", ".NET", "NODE" };
+    //    //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
+    //    //    return BadRequest(new ResponseDto<CreateArticleDto>
+    //    //    {
+    //    //        Data = null,
+    //    //        Code = 500,
+    //    //        Message = "Artcile Creation failed",
+    //    //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
+    //    //    });
+
+    //    if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
+    //    {
+    //        Data = null,
+    //        Code = 500,
+    //        Message = "Artcile Creation failed",
+    //        Error = "Invalid Data"
+    //    });
+
+    //    if (string.IsNullOrWhiteSpace(model.TagId))
+    //    {
+    //        //ModelState.AddModelError("Tag", "Article must have at least one tag.");
+    //        return BadRequest(new ResponseDto<CreateArticleDto>
+    //        {
+    //            Data = null,
+    //            Code = 500,
+    //            Message = "Artcile Creation failed",
+    //            Error = "Article must have at least one tag"
+    //        });
+    //    }
+
+    //    var createdArticle = await _articleService.CreateArticleAsync(model);
+
+    //    return Ok(new ResponseDto<CreateArticleDto>
+    //    {
+    //        Data = createdArticle,
+    //        Code = 200,
+    //        Message = "OK",
+    //        Error = ""
+    //    });
+
+    //}
+    [Authorize]
     [HttpPost("create-article")]
-    public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
+    public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
     {
-        
-
-        //string[] allowedTags = { "JAVA", ".NET", "NODE" };
-        //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
-        //    return BadRequest(new ResponseDto<CreateArticleDto>
-        //    {
-        //        Data = null,
-        //        Code = 500,
-        //        Message = "Artcile Creation failed",
-        //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
-        //    });
-
-        if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
+        if (!ModelState.IsValid)
         {
-            Data = null,
-            Code = 500,
-            Message = "Artcile Creation failed",
-            Error = "Invalid Data"
-        });
-
-        if (string.IsNullOrWhiteSpace(model.TagId))
-        {
-            //ModelState.AddModelError("Tag", "Article must have at least one tag.");
-            return BadRequest(new ResponseDto<CreateArticleDto>
+            return BadRequest(new ResponseDto<CreateArticleDtoReturn>
             {
                 Data = null,
                 Code = 500,
-                Message = "Artcile Creation failed",
+                Message = "Article Creation failed",
+                Error = "Invalid Data"
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(model.TagId))
+        {
+            return BadRequest(new ResponseDto<CreateArticleDtoReturn>
+            {
+                Data = null,
+                Code = 500,
+                Message = "Article Creation failed",
                 Error = "Article must have at least one tag"
             });
         }
 
-        var createdArticle = await _articleService.CreateArticleAsync(model);
-
-        return Ok(new ResponseDto<CreateArticleDto>
+        try
         {
-            Data = createdArticle,
-            Code = 200,
-            Message = "OK",
-            Error = ""
-        });
+            
 
+           
+            var createdArticle = await _articleService.CreateArticleAsync2(model);
+
+            return Ok(new ResponseDto<CreateArticleDtoReturn>
+            {
+                Data = createdArticle,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return an appropriate response
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
     }
 
-    //[AllowAnonymous]
-    //[HttpGet("get-all-articles")]
-    //public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
-    //{
-    //    try
-    //    {
-    //        var articles = await _articleService.GetAllArticles(filters);
 
-    //        return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
-    //        {
-    //            Data = articles,
-    //            Code = 200,
-    //            Message = "OK",
-    //            Error = ""
-    //        });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError($"Error: {ex.Message}");
-    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
-    //    }
-    //}
+    [AllowAnonymous]
+    [HttpGet("get-all-articles")]
+    public async Task<ActionResult> GetAllArticles([FromQuery] FilterArticleDto filters)
+    {
+        try
+        {
+            var articles = await _articleService.GetAllArticles(filters);
 
-    //DONE
+            return Ok(new ResponseDto<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>>
+            {
+                Data = articles,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get-bookmarked-articles")]
+    public async Task<ActionResult> GetBookmarkedArticles([FromQuery] string userId)
+    {
+        try
+        {
+            var bookmarkedArticles = await _articleService.GetBookmarkedArticles(userId);
+
+            return Ok(new ResponseDto<IEnumerable<GetAllArticlesDto>>
+            {
+                Data = bookmarkedArticles,
+                Code = 200,
+                Message = "OK",
+                Error = ""
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
+
+
     [AllowAnonymous]
     [HttpGet("all-articles")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
