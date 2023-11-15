@@ -1,18 +1,13 @@
-﻿namespace DevsTutorialCenterAPI.Models.DTOs;
-
-public class FilterArticleDto
+﻿namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public string? AuthorId { get; set; }
-    public string? Tag { get; set; }
-    public int? Page { get; set; }
-    public int? Size { get; set; }
-    public bool? IsRecommended { get; set; }
-    public bool? IsSaved { get; set; }
-    public bool? IsRead { get; set; }
-    public bool? IsReported { get; set; }
-    public bool? IsPublished { get; set; }
-    public bool? IsTrending { get; set; }
-    public bool? IsDraft { get; set; }
-    public bool? IsPending { get; set; }
-    
+    public class FilterArticleDto
+    {
+        public string? AuthorId { get; set; }
+        public int? Page { get; set; }
+        public int? Size { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool? IsRecentlyAdded { get; set; }
+        public bool? IsTopRead { get; set; }
+        public string? TagId { get; set; }
+    }
 }

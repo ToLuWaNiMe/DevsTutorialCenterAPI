@@ -12,7 +12,7 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserManagementService _userService;
