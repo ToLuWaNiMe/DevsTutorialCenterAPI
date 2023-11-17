@@ -384,7 +384,7 @@ public class ArticleController : ControllerBase
         });
     }
 
-
+    [Authorize(Roles = "Editor")]
     [HttpPost("publish-article")]
     public async Task<IActionResult> PublishArticle(string articleId)
     {
@@ -413,6 +413,7 @@ public class ArticleController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Editor")]
     [HttpPost("{articleId}/review-article")]
     public async Task<IActionResult> ReviewArticle(string articleId)
     {
@@ -440,7 +441,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "Editor")]
     [HttpGet("pending-articles")]
     public async Task<ActionResult<IEnumerable<ArticleApproval>>> GetPendingArticles()
     {
