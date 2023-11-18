@@ -6,9 +6,10 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     {
         Task ApproveAsync(ArticleApproval articleApproval);
         Task <ArticleApproval> ArticleApprovalById(string articleid);
+        Task<ArticleApproval> ApprovalArticleById(string articleId);
         Task<ArticleApproval> PublishedArticle(string articleId);
 
         Task<ArticleApproval> ReviewArticle(string articleId);
-        Task<IEnumerable<ArticleApproval>> PendingArticles();
+        Task<ArticleApproval> RejectArticle(string articleId);
     }
 }

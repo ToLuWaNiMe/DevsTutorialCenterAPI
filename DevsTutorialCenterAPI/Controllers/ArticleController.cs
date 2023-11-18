@@ -384,8 +384,37 @@ public class ArticleController : ControllerBase
         });
     }
 
-    [Authorize(Roles = "Editor")]
-    [HttpPost("publish-article")]
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("approve-article/{articleId}")]
+    public async Task<IActionResult> ApproveArticle(string articleId)
+    {
+
+        var result = await _articleApprovalService.ApprovalArticleById(articleId);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<ArticleApproval>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article Approved Successfully",
+                Error = string.Empty
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ArticleApproval>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to Meet Approval Requirement",
+                Error = string.Empty
+            });
+        }
+    }
+
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("publish-article/{articleId}")]
     public async Task<IActionResult> PublishArticle(string articleId)
     {
        
@@ -413,8 +442,8 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Editor")]
-    [HttpPost("{articleId}/review-article")]
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("review-article/{articleId}")]
     public async Task<IActionResult> ReviewArticle(string articleId)
     {
         var result = await _articleApprovalService.ReviewArticle(articleId);
@@ -441,34 +470,34 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Editor")]
-    [HttpGet("pending-articles")]
-    public async Task<ActionResult<IEnumerable<ArticleApproval>>> GetPendingArticles()
+    [HttpPost("reject-article/{articleId}")]
+    public async Task<IActionResult> RejectArticle(string articleId)
     {
-       
-        var pendingApprovals = await _articleApprovalService.PendingArticles();
+        var result = await _articleApprovalService.RejectArticle(articleId);
 
-        if(pendingApprovals != null)
+        if (result != null)
         {
-            return Ok(new ResponseDto<IEnumerable<ArticleApproval>>
+            return Ok(new ResponseDto<ArticleApproval>
             {
-                Data = pendingApprovals,
+                Data = result,
                 Code = 200,
-                Message = "OK",
+                Message = "Article rejected successfully",
                 Error = string.Empty
             });
         }
         else
         {
-            return BadRequest(new ResponseDto<IEnumerable<ArticleApproval>>
+            return BadRequest(new ResponseDto<ArticleApproval>
             {
                 Data = null,
                 Code = 400,
-                Message = "Failed to retrieve pending articles",
+                Message = "Failed to Reject Article",
                 Error = string.Empty
             });
         }
+        
 
     }
+
 
 }

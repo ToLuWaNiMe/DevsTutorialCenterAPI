@@ -29,12 +29,33 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return articleApproval;
         }
 
-        public async Task<IEnumerable<ArticleApproval>> PendingArticles()
+        public async Task<ArticleApproval>ApprovalArticleById(string articleId)
         {
-            var pendingApprovals = await _devsTutorialCenterAPIContext.ArticleApprovals.Where(a => a.Status == SD.pending).ToListAsync();
+            var article = await _repository.GetByIdAsync<Article>(articleId);
 
-            return pendingApprovals;
+            if (article == null)
+            {
+                throw new Exception("Article not found");
+            }
+
+            var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id);
+            if (articleApproval == null)
+            {
+                throw new Exception("Article cannot be approved yet");
+            }
+
+            if (articleApproval.Status == SD.in_review)
+            {
+                articleApproval.Status = SD.is_approved;
+            }
+            
+
+            await _repository.UpdateAsync<ArticleApproval>(articleApproval);
+
+            return articleApproval;
         }
+
+
 
         public async Task<ArticleApproval> PublishedArticle(string articleId)
         {
@@ -79,17 +100,55 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article is already in review");
             }
 
-            var newApproval = new ArticleApproval
-            {
-                ArticleId = article.Id,
-                Status = SD.in_review
-            };
+            var reviewedApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
+                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == SD.is_approved);
 
-            await _repository.AddAsync<ArticleApproval>(newApproval);
+            if (reviewedApproval != null)
+            {
+                throw new Exception("Article has already been reviewed successfully");
+            }
+
+            var newApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
+                .FirstOrDefaultAsync(a => a.ArticleId == article.Id);
+
+            newApproval.Status = SD.in_review;
+
+            await _repository.UpdateAsync<ArticleApproval>(newApproval);
 
             return newApproval;
         }
-        
+
+
+        public async Task<ArticleApproval> RejectArticle(string articleId)
+        {
+            var article = await _repository.GetByIdAsync<Article>(articleId);
+
+            if (article == null)
+            {
+                throw new Exception("Article not found");
+            }
+
+            var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
+                .FirstOrDefaultAsync(a => a.ArticleId == articleId);
+
+            if(articleApproval.Status == SD.is_rejected)
+            {
+                throw new Exception("Article has already been rejected");
+            }
+
+            if (articleApproval.Status == SD.in_review)
+            {
+                articleApproval.Status = SD.is_rejected;
+            }
+
+                
+           
+            await _repository.UpdateAsync<ArticleApproval>(articleApproval);
+
+            return articleApproval;
+        }
+
+
     }
 
 }
