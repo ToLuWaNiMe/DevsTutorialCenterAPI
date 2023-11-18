@@ -1,4 +1,5 @@
 ﻿using DevsTutorialCenterAPI.Models.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
@@ -7,8 +8,10 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
         Task<string> Register(RegistrationRequestDTO registrationRequestDTO);
         Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
 
-        Task<bool> AssignRole(string email, string roleName);
+        Task<bool> AssignRole(string email, string roleId);
 
         Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO);
+
+        Task<List<IdentityRole>> GetAllRoles();
     }
 }

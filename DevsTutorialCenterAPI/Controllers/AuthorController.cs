@@ -1,37 +1,52 @@
-﻿//using System.Threading.Tasks;
-//using DevsTutorialCenterAPI.Data.Repositories;
-//using DevsTutorialCenterAPI.Models.DTOs;
-//using DevsTutorialCenterAPI.Services.Interfaces;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace DevsTutorialCenterAPI.Controllers
-//{
-//    [Authorize]
-//    [ApiController]
-//    [Route("api/authors")]
-//    public class AuthorController : ControllerBase
-//    {
-//        private readonly IAuthorStatsService _authorStatsService;
-//        private readonly IRepository _repository;
+namespace DevsTutorialCenterAPI.Controllers
+{
+   // [Authorize]
+    [ApiController]
+    [Route("api/authors")]
+    public class AuthorController : ControllerBase
+    {
+       // private readonly IAuthorStatsService _authorStatsService;
+        private readonly IRepository _repository;
+        private readonly IArticleService _articleService;
 
-//        public AuthorController(IAuthorStatsService authorStatsService, IRepository repository)
-//        {
-//            _authorStatsService = authorStatsService;
-//            _repository = repository;
-//        }
+        public AuthorController( IRepository repository, IArticleService articleService)
+        {
+            //_authorStatsService = authorStatsService;
+            _repository = repository;
+            _articleService = articleService;
+        }
 
-//        [HttpGet("{authorId}/stats")]
-//        public async Task<IActionResult> GetAuthorStats(string authorId)
-//        {
-//            var authorStats = await _authorStatsService.GetAuthorStatsAsync(authorId);
+        [HttpGet("author-stats")]
+        public async Task<IActionResult> GetAuthorStats()
+        {
+            var authorStats = await _articleService.GetAuthorStats();
 
-//            if (authorStats == null)
-//            {
-//                return NotFound($"Author with ID {authorId} not found.");
-//            }
+            if (authorStats == null)
+            {
+                return BadRequest(new ResponseDto<List<AuthorDTO>>
+                {
+                    Code = 500,
+                    Data = null,
+                    Message = "No authors found",
+                    Error = "Failed"
+                });
+            }
 
-//            return Ok(authorStats);
-//        }
-//    }
-//}
+            return Ok(new ResponseDto<List<AuthorDTO>>
+            {
+                Code = 200,
+                Data = authorStats,
+                Message = "Authors found",
+                Error = ""
+            });
+        }
+    }
+}

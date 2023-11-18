@@ -1,6 +1,6 @@
 ﻿namespace DevsTutorialCenterAPI.Models.DTOs;
 
-public class CreateCommentDto
+public class UpdateCommentDto
 {
     public string Text { get; set; }
     

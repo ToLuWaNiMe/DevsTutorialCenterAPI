@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
@@ -12,16 +14,20 @@ namespace DevsTutorialCenterAPI.Controllers;
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public CommentController(ICommentService commentService)
+    public CommentController(ICommentService commentService, SignInManager<AppUser> signInManager)
     {
         _commentService = commentService;
+        _signInManager = signInManager;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto commentDto)
+    [HttpPost("add-comment/{articleId}")]
+    public async Task<IActionResult> CreateComment(string articleId, [FromBody] CreateCommentDto commentDto)
     {
-        var response = new ResponseDto<object>();
+        var response = new ResponseDto<CreateCommentDto>();
+
+        var user = await _signInManager.UserManager.GetUserAsync(User);
 
         if (!ModelState.IsValid)
         {
@@ -36,7 +42,7 @@ public class CommentController : ControllerBase
 
         try
         {
-            var createdComment = await _commentService.CreateCommentAsync(commentDto);
+            var createdComment = await _commentService.CreateCommentAsync(articleId, user.Id, commentDto);
             if (createdComment == null)
             {
                 response.Code = 400;
@@ -48,7 +54,7 @@ public class CommentController : ControllerBase
 
             response.Code = 200;
             response.Message = "Ok";
-            response.Data = new { commentId = createdComment.Id };
+            response.Data = createdComment;
             response.Error = "";
         }
         catch (Exception ex)
@@ -64,10 +70,12 @@ public class CommentController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPut("{commentId}")]
-    public async Task<IActionResult> UpdateComment([FromRoute] string commentId, [FromBody] CommentDto commentDto)
+    [HttpPut("update-comment/{commentId}")]
+    public async Task<IActionResult> UpdateComment( string commentId, [FromBody] CommentDto commentDto)
     {
-        var response = new ResponseDto<object>();
+        var response = new ResponseDto<UpdateCommentDto>();
+
+        var user = await _signInManager.UserManager.GetUserAsync(User);
 
         if (!ModelState.IsValid)
         {
@@ -81,8 +89,8 @@ public class CommentController : ControllerBase
 
         try
         {
-            var updateComment = await _commentService.UpdateCommentAsync(commentId, commentDto);
-            if (!updateComment)
+            var updateComment = await _commentService.UpdateCommentAsync(commentId,user.Id, commentDto);
+            if (updateComment == null)
             {
                 response.Code = 400;
                 response.Message = "Comment not updated";
@@ -93,7 +101,7 @@ public class CommentController : ControllerBase
 
             response.Code = 200;
             response.Message = "Ok";
-            response.Data = "";
+            response.Data = updateComment;
             response.Error = "";
         }
         catch (Exception ex)
@@ -109,14 +117,16 @@ public class CommentController : ControllerBase
         return Ok(response);
     }
 
-    [HttpDelete("{commentId}")]
+    [HttpDelete("delete-comment/{commentId}")]
     public async Task<IActionResult> DeleteComment(string commentId)
     {
         var response = new ResponseDto<object>();
 
+        var user = await _signInManager.UserManager.GetUserAsync(User);
+
         try
         {
-            var isDeleted = await _commentService.DeleteCommentAsync(commentId);
+            var isDeleted = await _commentService.DeleteCommentAsync(commentId, user.Id);
             if (!isDeleted)
             {
                 response.Code = 400;
@@ -129,14 +139,14 @@ public class CommentController : ControllerBase
 
             response.Code = 200;
             response.Message = "deleted successfully";
-            response.Data = "";
+            response.Data = true;
             response.Error = "";
         }
         catch (Exception ex)
         {
             response.Code = 500;
             response.Message = "Error";
-            response.Data = null;
+            response.Data = false;
             response.Error = ex.Message;
 
             return BadRequest(response);
@@ -145,7 +155,7 @@ public class CommentController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{articleId}")]
+    [HttpGet("get-comments/{articleId}")]
     public async Task<IActionResult> GetCommentsByArticle(string articleId)
     {
         var response = new ResponseDto<object>();
@@ -209,5 +219,36 @@ public class CommentController : ControllerBase
 
             return StatusCode(500, errorResponse);
         }
+    }
+
+    [HttpPost("like-comment/{commentId}")]
+
+    public async Task<IActionResult> LikeAComment(string commentId)
+    {
+        var response = new ResponseDto<string>();
+
+        var user = await _signInManager.UserManager.GetUserAsync(User);
+
+        try
+        {
+            var like = await _commentService.LikeComment(commentId, user.Id);
+           
+
+            response.Code = 200;
+            response.Message = "Comment liked";
+            response.Data = like;
+            response.Error = "";
+        }
+        catch (Exception ex)
+        {
+            response.Code = 500;
+            response.Message = "Error";
+            response.Data = null;
+            response.Error = ex.Message;
+
+            return BadRequest(response);
+        }
+
+        return Ok(response);
     }
 }
