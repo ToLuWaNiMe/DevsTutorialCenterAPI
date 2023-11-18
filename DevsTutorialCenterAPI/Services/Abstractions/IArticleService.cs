@@ -24,4 +24,8 @@ public interface IArticleService
 
 
     Task<List<GetPendingArticlesDto>> GetPendingArticles();
+
+    Task<object> SoftDeleteArticle(string articleId);
+
+    Task<List<AuthorDTO>> GetAuthorStats();
 }

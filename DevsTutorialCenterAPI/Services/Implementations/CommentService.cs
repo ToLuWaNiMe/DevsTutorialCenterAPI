@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Data;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
@@ -9,10 +10,12 @@ namespace DevsTutorialCenterAPI.Services.Implementations;
 public class CommentService : ICommentService
 {
     private readonly IRepository _repository;
+    private readonly DevsTutorialCenterAPIContext _db;
 
-    public CommentService(IRepository repository)
+    public CommentService(IRepository repository, DevsTutorialCenterAPIContext db)
     {
         _repository = repository;
+        _db = db;
     }
 
     public async Task<CreateCommentDto> CreateCommentAsync(string articleId, string userId, CreateCommentDto dto)
@@ -125,4 +128,43 @@ public class CommentService : ICommentService
             throw new Exception("Failed to retrieve likes by comments.", ex);
         }
     }
+
+    public async Task<string> LikeComment(string commentId, string userId)
+    {
+        var comment = await _repository.GetByIdAsync<Comment>(commentId);
+
+        if (comment == null) throw new Exception("Comment not found");
+
+        var user = await _repository.GetByIdAsync<AppUser>(userId);
+
+        if (user == null) throw new Exception("User not found");
+
+        var commentLikeCheck = await GetCommentLikeByUserId(user.Id, comment.Id);
+
+        if(commentLikeCheck != null)
+        {
+            throw new Exception("You have already liked this comment");
+        }
+
+        var commentLike = new CommentsLikes
+        {
+            UserId = user.Id,
+            CommentId = comment.Id
+        };
+
+        await _repository.AddAsync<CommentsLikes>(commentLike);
+
+        var likes = (await _repository.GetAllAsync2<CommentsLikes>()).Where(cl => cl.CommentId == comment.Id);
+
+        return likes.Count().ToString();
+
+
+    }
+
+    public async Task<CommentsLikes> GetCommentLikeByUserId(string userId, string commentId)
+    {
+        return await _db.CommentsLikes.FirstOrDefaultAsync(cl => cl.UserId == userId && cl.CommentId == commentId);
+    }
+
+   
 }

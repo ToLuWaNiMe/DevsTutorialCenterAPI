@@ -35,7 +35,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ResponseDto<object>
+                return BadRequest(new ResponseDto<string>
                 {
                     Data = null,
                     Code = 500,
@@ -45,13 +45,13 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
                 // Proceed to like the article if the user and article exist
-                await _likeService.LikeArticleAsync(articleId, user.Id);
+                var data = await _likeService.LikeArticleAsync(articleId, user.Id);
 
                 var response = new ResponseDto<string>
                 {
                     Code = 200,
                     Message = "Article liked successfully",
-                   // Data = null,
+                   Data = data,
                     Error = string.Empty
                 };
 
@@ -79,11 +79,12 @@ namespace DevsTutorialCenterAPI.Controllers
             }
 
             // Proceed to unlike the article if the user and article exist
-            await _likeService.UnlikeArticleAsync(articleId, user.Id);
+            var data = await _likeService.UnlikeArticleAsync(articleId, user.Id);
 
             var response = new ResponseDto<string>
             {
                 Code = 200,
+                Data = data,
                 Message = "Article Unliked successfully",
                 Error = string.Empty
             };
@@ -94,6 +95,34 @@ namespace DevsTutorialCenterAPI.Controllers
 
 
 
+        }
+
+        [HttpGet("get-likes-for-article/{articleId}")]
+
+        public async Task<IActionResult> GetLikesForArticleId(string articleId)
+        {
+            var data = await _likeService.GetLikesByArticle(articleId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDto<List<AppUserLikeDTO>>
+                {
+                    Data = null,
+                    Code = 500,
+                    Error = "Invalid data",
+                    Message = "Failed"
+                });
+            }
+
+            var response = new ResponseDto<List<AppUserLikeDTO>>
+            {
+                Code = 200,
+                Data = data,
+                Message = "Likes retrieved successfully",
+                Error = string.Empty
+            };
+
+            return Ok(response);
         }
 
     }

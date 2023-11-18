@@ -7,8 +7,8 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
     {
         Task<IEnumerable<AppUserDTO>> GetAllUsers();
         Task<AppUserDTO> GetUserById(string userId);
-        Task<bool> SoftDeleteUser(string Id);
-        Task<bool> UpdateUser(string id, AppUserUpdateRequestDTO appUser);
+        Task<object> SoftDeleteUser(string Id);
+        Task<AppUserUpdateRequestDTO> UpdateUser(string id, AppUserUpdateRequestDTO appUser);
         Task<List<GetReadArticlesDto>> GetArticleReadByUser(string userId);
     }
 }
