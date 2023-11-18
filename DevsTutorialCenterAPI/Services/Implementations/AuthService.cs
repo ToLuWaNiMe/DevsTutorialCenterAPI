@@ -3,6 +3,7 @@ using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations
 {
@@ -24,17 +25,18 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             _roleManager = roleManager;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
-        public async Task<bool> AssignRole(string email, string roleName)
+        public async Task<bool> AssignRole(string email, string roleId)
         {
             var user = _devs.AppUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if(user != null)
             {
-                if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+                var role = _roleManager.FindByIdAsync(roleId).GetAwaiter().GetResult();
+                if (role == null)
                 {
                     //create role if it does not exist
-                    _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(role.Name)).GetAwaiter().GetResult();
                 }
-                await _userManager.AddToRoleAsync(user, roleName);
+                await _userManager.AddToRoleAsync(user, role.Name);
                 return true;
             }
             return false;
@@ -67,7 +69,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
                 Squad = user.Squad,
-                Stack = user.Stack
+                Stack = user.Stack,
+                RoleName = roles,
+                ImageUrl = user.ImageUrl
             };
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
@@ -211,5 +215,15 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return null; 
 
         }
+
+        public async Task<List<IdentityRole>> GetAllRoles()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            if (roles == null) throw new Exception("You have no roles created yet");
+
+            return roles;
+        }
+
     }
 }

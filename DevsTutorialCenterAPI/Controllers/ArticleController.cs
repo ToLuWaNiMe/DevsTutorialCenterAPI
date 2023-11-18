@@ -183,7 +183,27 @@ public class ArticleController : ControllerBase
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
     {
         var articles = await _articleService.GetAllArticle();
-        return Ok(articles);
+        if(articles == null)
+        {
+            return BadRequest(new ResponseDto<IEnumerable<Article>>
+            {
+                Code = 500,
+                Data = null,
+                Message = "Articles not retrieved",
+                Error = "Failed"
+
+
+
+            }); 
+        }
+
+        return Ok(new ResponseDto<IEnumerable<Article>>
+        {
+            Code=200,
+            Data = articles,
+            Message = "Articles successfully retrieved",
+            Error = ""
+        });
     }
 
     //DONE
@@ -291,19 +311,19 @@ public class ArticleController : ControllerBase
     }
 
 
-    [HttpDelete("delete-article/{Id}")]
+    [HttpDelete("delete-article/{articleId}")]
     public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
             {
-                var result = await _articleService.DeleteArticleAsync(articleId);
+                var result = await _articleService.SoftDeleteArticle(articleId);
 
-                if (result)
+                if (result != null)
                 {
-                    var response = new ResponseDto<bool>
+                    var response = new ResponseDto<object>
                     {
-                        Code = (int)HttpStatusCode.NoContent,
-                        Data = true,
+                        Code = 200,
+                        Data = result,
                         Message = "Article Deleted Successfully",
                         Error = string.Empty
                     };
@@ -312,12 +332,12 @@ public class ArticleController : ControllerBase
                 }
                 else
                 {
-                    var response = new ResponseDto<bool>
+                    var response = new ResponseDto<object>
                     {
                         Code = (int)HttpStatusCode.BadRequest,
-                        Data = false,
+                        Data = null,
                         Message = "Failed to Delete Article",
-                        Error = string.Empty
+                        Error = "Failed"
                     };
 
                     return BadRequest(response);

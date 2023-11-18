@@ -187,7 +187,7 @@ public class ArticleService : IArticleService
             ReadCount  = 0,
             PublicId= model.PublicId,
             ReadTime = readtimeresult.ToString(),
-            IsDeleted = model.IsDeleted,
+            
 
         };
 
@@ -203,15 +203,15 @@ public class ArticleService : IArticleService
 
         var newArticleData = new CreateArticleDtoReturn
         {
-            Title = model.Title,
-            TagId = tag.Id,
-            Text = model.Text,
-            ImageUrl = model.ImageUrl,
-            AuthorId = userId,
-            PublicId = model.PublicId,
-            ReadCount = 0,
-            ReadTime = readtimeresult.ToString(),
-            IsDeleted = model.IsDeleted,
+            Title = newArticle.Title,
+            TagId = newArticle.TagId,
+            Text = newArticle.Text,
+            ImageUrl = newArticle.ImageUrl,
+            AuthorId = newArticle.AuthorId,
+            PublicId = newArticle.PublicId,
+            ReadCount = newArticle.ReadCount,
+            ReadTime = newArticle.ReadTime
+            
         };
 
         return newArticleData;
@@ -440,5 +440,52 @@ public class ArticleService : IArticleService
 
 
         return getAllPendingArticles;
+    }
+
+    public async Task<object> SoftDeleteArticle(string articleId)
+    {
+        var article = await _repository.GetByIdAsync<Article>(articleId);
+
+        if (article == null) throw new Exception("Article not Found");
+
+        article.DeletedAt = DateTime.UtcNow;
+
+        await _repository.UpdateAsync<Article>(article);
+
+        return new {deletedAt =  article.DeletedAt};
+    }
+
+    public async Task<List<AuthorDTO>> GetAuthorStats()
+    {
+        var articles = await _repository.GetAllAsync2<Article>();
+
+        var authors = new List<AuthorDTO>();
+
+        foreach(var art in articles)
+        {
+            var user = await _repository.GetByIdAsync<AppUser>(art.AuthorId);
+
+            var articlesByUser = (await _repository.GetAllAsync2<Article>()).Where(a => a.AuthorId == user.Id);
+
+            if (user is not null)
+            {
+                var author = new AuthorDTO
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Squad = user.Squad,
+                    Stack = user.Stack,
+                    PhoneNumber = user.PhoneNumber,
+                    ImageUrl = user.ImageUrl,
+                    NoOfArticles = articlesByUser.Count()
+                };
+
+                authors.Add(author);
+            }
+        }
+
+        return authors;
     }
 }

@@ -53,7 +53,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
         public async Task<IActionResult> GiveRole([FromBody] AssignRoleDTO model)
         {
-            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleName.ToUpper());
+            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleId);
 
             if (!assignRoleSuccessful)
             {
@@ -103,6 +103,34 @@ namespace DevsTutorialCenterAPI.Controllers
                 Message = "OK"
 
             });
+        }
+
+        [HttpGet("get-all-roles")]
+
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _authService.GetAllRoles();
+
+            if(result == null)
+            {
+                return BadRequest(new ResponseDto<object>
+                {
+                    Data = null,
+                    Code = 400,
+                    Error = "No roles found",
+                    Message = "Error"
+
+                });
+            }
+            return Ok(new ResponseDto<object>
+            {
+                Code = 200,
+                Data = result,
+                Error = "",
+                Message = "OK"
+
+            });
+
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserManagementService _userService;
@@ -26,6 +26,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _signInManager = signInManager;
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpGet("get-all-users")]
         public async Task<ActionResult<IEnumerable<object>>> GetAllUsers()
         {
@@ -49,7 +50,7 @@ namespace DevsTutorialCenterAPI.Controllers
             });
         }
 
-
+        [Authorize(Roles = "ADMIN")]
         [HttpGet("get-user-by-id/{userId}")]
         public async Task<ActionResult<object>> GetUserById(string userId)
         {
@@ -106,29 +107,71 @@ namespace DevsTutorialCenterAPI.Controllers
             });
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _userService.GetUserById(id);
 
-            if (user == null)
-                return NotFound("User not found");
+            var result = await _userService.SoftDeleteUser(id);
 
-            if (!await _userService.SoftDeleteUser(id))
-                return BadRequest("User does not exist or has been deleted already");
+            if (result != null)
+            {
+                var response = new ResponseDto<object>
+                {
+                    Code = 200,
+                    Data = result,
+                    Message = "User Deleted Successfully",
+                    Error = string.Empty
+                };
 
-            return Ok("User deleted!");
+                return Ok(response);
+            }
+            else
+            {
+                var response = new ResponseDto<object>
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Data = null,
+                    Message = "Failed to Delete User",
+                    Error = "Failed"
+                };
+
+                return BadRequest(response);
+            }
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateUser(
             string id,
             [FromBody] AppUserUpdateRequestDTO appUserDTO)
         {
-            if (!await _userService.UpdateUser(id, appUserDTO))
-                return BadRequest();
+            var result = await _userService.UpdateUser(id, appUserDTO);
 
-            return Ok("User Updated!");
+            if (result != null)
+            {
+                var response = new ResponseDto<AppUserUpdateRequestDTO>
+                {
+                    Code = 200,
+                    Data = result,
+                    Message = "User Updated Successfully",
+                    Error = string.Empty
+                };
+
+                return Ok(response);
+            }
+            else
+            {
+                var response = new ResponseDto<AppUserUpdateRequestDTO>
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Data = null,
+                    Message = "Failed to update User",
+                    Error = "Failed"
+                };
+
+                return BadRequest(response);
+            }
         }
     }
 }
