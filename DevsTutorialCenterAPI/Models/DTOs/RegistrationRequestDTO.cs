@@ -1,19 +1,22 @@
-﻿namespace DevsTutorialCenterAPI.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DevsTutorialCenterAPI.Models.DTOs;
+
+public class RegistrationRequestDTO
 {
-    public class RegistrationRequestDTO
-    {
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string PhoneNumber { get; set; }
-        public string Password { get; set; }
-
-        //public string RoleName { get; set; }
-
-        public  string Stack { get; set; }
-
-        public string Squad { get; set; }
-    }
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+    [Required]
+    public string FirstName { get; set; }
+    [Required]
+    public string LastName { get; set; }
+    [Required]
+    public string PhoneNumber { get; set; }
+    [Required]
+    public string Password { get; set; }
+    [Required]
+    public  string Stack { get; set; }
+    [Required]
+    public string Squad { get; set; }
 }

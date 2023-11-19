@@ -4,212 +4,182 @@ using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace DevsTutorialCenterAPI.Services.Implementations
+namespace DevsTutorialCenterAPI.Services.Implementations;
+
+public class AuthService : IAuthService
 {
-    public class AuthService : IAuthService
+    private readonly DevsTutorialCenterAPIContext _devs;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IJwtTokenGeneratorService _jwtTokenGenerator;
+
+    public AuthService(
+        DevsTutorialCenterAPIContext devs,
+        UserManager<AppUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IJwtTokenGeneratorService jwtTokenGenerator)
     {
-        private readonly DevsTutorialCenterAPIContext _devs;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IJwtTokenGeneratorService _jwtTokenGenerator;
+        _devs = devs;
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _jwtTokenGenerator = jwtTokenGenerator;
+    }
 
-        public AuthService(
-            DevsTutorialCenterAPIContext devs,
-            UserManager<AppUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IJwtTokenGeneratorService jwtTokenGenerator)
+    public async Task<bool> AssignRole(string email, string roleName)
+    {
+        var user = _devs.AppUsers.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
+        if (user == null) return false;
+        
+        if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
         {
-            _devs = devs;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _jwtTokenGenerator = jwtTokenGenerator;
-        }
-        public async Task<bool> AssignRole(string email, string roleName)
-        {
-            var user = _devs.AppUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-            if(user != null)
-            {
-                if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
-                {
-                    //create role if it does not exist
-                    _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
-                }
-                await _userManager.AddToRoleAsync(user, roleName);
-                return true;
-            }
-            return false;
+            //create role if it does not exist
+            _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
         }
 
-        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+        await _userManager.AddToRoleAsync(user, roleName);
+        return true;
+    }
+
+    public async Task<Result<LoginResponseDTO>> Login(LoginRequestDTO loginRequestDTO)
+    {
+        var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+        if (user is null)
+            return Result.Failure<LoginResponseDTO>(new[]
+                { new Error("Auth.Error", "username or password not correct") });
+
+        var isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+
+        if (!isValid)
+            return Result.Failure<LoginResponseDTO>(new[]
+                { new Error("Auth.Error", "username or password not correct") });
+
+        //If user is found, generate JWT Token
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = _jwtTokenGenerator.GenerateToken(user, roles);
+
+        var appUserDto = new AppUserDTO
         {
-            var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
-
-            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
-
-            if (user == null || isValid == false)
-            {
-                return new LoginResponseDTO()
-                {
-                    User = null,
-                    Token = ""
-                };
-            }
-
-            //If user is found, generate JWT Token
-            var roles = await _userManager.GetRolesAsync(user);
-            var token = _jwtTokenGenerator.GenerateToken(user, roles);
-
-            AppUserDTO appUserDTO = new()
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhoneNumber = user.PhoneNumber,
-                Squad = user.Squad,
-                Stack = user.Stack
-            };
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
-            {
-                User = appUserDTO,
-                Token = token
-            };
-
-            return loginResponseDTO;
-        }
-
-        public async Task<string> Register(RegistrationRequestDTO registrationRequestDTO)
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Squad = user.Squad,
+            Stack = user.Stack
+        };
+        
+        var loginResponseDto = new LoginResponseDTO()
         {
-            AppUser user = new()
-            {
-                UserName = registrationRequestDTO.Email,
-                Email = registrationRequestDTO.Email,
-                NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
-               FirstName= registrationRequestDTO.FirstName,
-               LastName= registrationRequestDTO.LastName,
-                PhoneNumber = registrationRequestDTO.PhoneNumber,
-                Stack = registrationRequestDTO.Stack,
-                Squad = registrationRequestDTO.Squad
+            User = appUserDto,
+            Token = token
+        };
 
-            };
+        return Result.Success(loginResponseDto);
+    }
 
-            try
-            {
-                var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
-
-                if (result.Succeeded)
-                {
-                    var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
-
-                    AppUserDTO appUserDTO = new()
-                    {
-                        Id = userToReturn.Id,
-                        Email = userToReturn.Email,
-                        FirstName = userToReturn.FirstName,
-                        LastName = userToReturn.LastName,
-                        PhoneNumber = userToReturn.PhoneNumber,
-                        Squad = userToReturn.Squad,
-                        Stack = userToReturn.Stack
-                    };
-
-                    return "";
-                }
-
-                else
-                {
-                    return result.Errors.FirstOrDefault().Description;
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return "Error Encountered";
-
-        }
-
-        //public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
-        //{
-        //    var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
-
-        //    bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
-
-        //    if (user == null || isValid == false)
-        //    {
-        //        return new LoginResponseDTO()
-        //        {
-        //            User = null,
-        //            Token = ""
-        //        };
-        //    }
-
-        //    //If user is found, generate JWT Token
-        //    var roles = await _userManager.GetRolesAsync(user);
-        //    var token = _jwtTokenGenerator.GenerateToken(user, roles);
-
-        //    AppUserDTO appUserDTO = new()
-        //    {
-        //        Email = user.Email,
-        //        ID = user.Id,
-        //        Name = user.Name,
-        //        PhoneNumber = user.PhoneNumber,
-        //        Squad = user.Squad,
-        //        Stack = user.Stack
-        //    };
-        //    LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
-        //    {
-        //        User = appUserDTO,
-        //        Token = token
-        //    };
-
-        //    return loginResponseDTO;
-        //}
-
-        public async Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO)
+    public async Task<Result<AppUserDTO>> Register(RegistrationRequestDTO registrationRequestDTO)
+    {
+        AppUser user = new()
         {
-            AppUser user = new()
-            {
-                UserName = registrationRequestDTO.Email,
-                Email = registrationRequestDTO.Email,
-                NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
-             FirstName = registrationRequestDTO.FirstName,
-             LastName = registrationRequestDTO.LastName,
-                PhoneNumber = registrationRequestDTO.PhoneNumber,
-                Stack = registrationRequestDTO.Stack,
-                Squad = registrationRequestDTO.Squad
+            UserName = registrationRequestDTO.Email,
+            Email = registrationRequestDTO.Email,
+            NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
+            FirstName = registrationRequestDTO.FirstName,
+            LastName = registrationRequestDTO.LastName,
+            PhoneNumber = registrationRequestDTO.PhoneNumber,
+            Stack = registrationRequestDTO.Stack,
+            Squad = registrationRequestDTO.Squad
+        };
+            
+        var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
 
-            };
+        if (!result.Succeeded)
+            return Result.Failure<AppUserDTO>(result.Errors.Select(e => new Error(e.Code, e.Description)));
+            
+        var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
 
-            try
-            {
-                var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
+        AppUserDTO appUserDTO = new()
+        {
+            Id = userToReturn.Id,
+            Email = userToReturn.Email,
+            FirstName = userToReturn.FirstName,
+            LastName = userToReturn.LastName,
+            PhoneNumber = userToReturn.PhoneNumber,
+            Squad = userToReturn.Squad,
+            Stack = userToReturn.Stack
+        };
 
-                if (result.Succeeded)
-                {
-                    var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
+        return Result.Success(appUserDTO);
+    }
 
-                    AppUserDTO appUserDTO = new()
-                    {
-                        Id = userToReturn.Id,
-                        Email = userToReturn.Email,
-                        FirstName = userToReturn.FirstName,
-                        LastName = userToReturn.LastName,
-                        PhoneNumber = userToReturn.PhoneNumber,
-                        Squad = userToReturn.Squad,
-                        Stack = userToReturn.Stack
-                    };
+    //public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+    //{
+    //    var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
 
-                    return appUserDTO;
-                }
+    //    bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
 
-                
-            }
-            catch (Exception ex)
-            {
+    //    if (user == null || isValid == false)
+    //    {
+    //        return new LoginResponseDTO()
+    //        {
+    //            User = null,
+    //            Token = ""
+    //        };
+    //    }
 
-            }
-            return null; 
+    //    //If user is found, generate JWT Token
+    //    var roles = await _userManager.GetRolesAsync(user);
+    //    var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
-        }
+    //    AppUserDTO appUserDTO = new()
+    //    {
+    //        Email = user.Email,
+    //        ID = user.Id,
+    //        Name = user.Name,
+    //        PhoneNumber = user.PhoneNumber,
+    //        Squad = user.Squad,
+    //        Stack = user.Stack
+    //    };
+    //    LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+    //    {
+    //        User = appUserDTO,
+    //        Token = token
+    //    };
+
+    //    return loginResponseDTO;
+    //}
+
+    public async Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO)
+    {
+        AppUser user = new()
+        {
+            UserName = registrationRequestDTO.Email,
+            Email = registrationRequestDTO.Email,
+            NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
+            FirstName = registrationRequestDTO.FirstName,
+            LastName = registrationRequestDTO.LastName,
+            PhoneNumber = registrationRequestDTO.PhoneNumber,
+            Stack = registrationRequestDTO.Stack,
+            Squad = registrationRequestDTO.Squad
+        };
+            
+        var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
+
+        if (!result.Succeeded) return null;
+            
+        var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
+
+        AppUserDTO appUserDTO = new()
+        {
+            Id = userToReturn.Id,
+            Email = userToReturn.Email,
+            FirstName = userToReturn.FirstName,
+            LastName = userToReturn.LastName,
+            PhoneNumber = userToReturn.PhoneNumber,
+            Squad = userToReturn.Squad,
+            Stack = userToReturn.Stack
+        };
+
+        return appUserDTO;
     }
 }
