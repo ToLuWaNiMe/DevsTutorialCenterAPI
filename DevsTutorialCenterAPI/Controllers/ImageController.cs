@@ -44,7 +44,8 @@ namespace DevsTutorialCenterAPI.Controllers
                         PublicId = uploadResult.PublicId,
                         Url = uploadResult.SecureUri.AbsoluteUri
                     },
-                    Error = ""
+                    Error = "",
+                    IsSuccessful = true
                 });
             }
             catch (Exception ex)
@@ -73,7 +74,8 @@ namespace DevsTutorialCenterAPI.Controllers
                         Code = 200,
                         Message = "Ok",
                         Data = "",
-                        Error = ""
+                        Error = "",
+                        IsSuccessful = true
                     });
                 }
 

@@ -52,7 +52,8 @@ namespace DevsTutorialCenterAPI.Controllers
                     Code = 200,
                     Message = "Article liked successfully",
                    Data = data,
-                    Error = string.Empty
+                    Error = string.Empty,
+                    IsSuccessful = true
                 };
 
                 return Ok(response);
@@ -86,7 +87,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Code = 200,
                 Data = data,
                 Message = "Article Unliked successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             };
 
             return Ok(response);
@@ -119,7 +121,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Code = 200,
                 Data = data,
                 Message = "Likes retrieved successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             };
 
             return Ok(response);

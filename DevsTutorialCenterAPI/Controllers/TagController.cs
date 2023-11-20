@@ -27,7 +27,8 @@ public class TagController : ControllerBase
             Code = 200,
             Message = "OK",
             Error = "",
-            Data = tag
+            Data = tag,
+            IsSuccessful = true
         });
     }
     [Authorize]
@@ -53,6 +54,7 @@ public class TagController : ControllerBase
             Code = 200,
             Error = "",
             Message = "Ok",
+            IsSuccessful = true
 
         } );
 
@@ -81,7 +83,8 @@ public class TagController : ControllerBase
         {
             Code = StatusCodes.Status200OK,
             Message = "Tag updated successfully.",
-            Data = existingTag
+            Data = existingTag,
+            IsSuccessful = true
         });
     }
 }

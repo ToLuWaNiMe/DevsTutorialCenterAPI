@@ -48,9 +48,10 @@ public class AuthController : ControllerBase
         return Ok(new ResponseDto<object>
         {
             Code = 200,
-            Data = null,
+            Data = assignRoleSuccessful,
             Error = "",
-            Message = "OK"
+            Message = "OK",
+            IsSuccessful = true
         });
     }
 
@@ -86,7 +87,8 @@ public class AuthController : ControllerBase
             Code = 200,
             Data = result,
             Error = "",
-            Message = "OK"
+            Message = "OK",
+            IsSuccessful = true
         });
     }
 }
