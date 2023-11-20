@@ -1,14 +1,12 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Models.DTOs;
 
-namespace DevsTutorialCenterAPI.Services.Abstractions
+namespace DevsTutorialCenterAPI.Services.Abstractions;
+
+public interface IUserManagementService
 {
-    public interface IUserManagementService
-    {
-        Task<IEnumerable<AppUserDTO>> GetAllUsers();
-        Task<AppUserDTO> GetUserById(string userId);
-        Task<object> SoftDeleteUser(string Id);
-        Task<AppUserUpdateRequestDTO> UpdateUser(string id, AppUserUpdateRequestDTO appUser);
-        Task<List<GetReadArticlesDto>> GetArticleReadByUser(string userId);
-    }
+    Task<IEnumerable<AppUserDto>> GetAllUsers();
+    Task<AppUserDto> GetUserById(string userId);
+    Task<object> SoftDeleteUser(string Id);
+    Task<AppUserUpdateRequestDTO> UpdateUser(string id, AppUserUpdateRequestDTO appUser);
+    Task<List<GetReadArticlesDto>> GetArticleReadByUser(string userId);
 }

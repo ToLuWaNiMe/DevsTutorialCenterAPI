@@ -8,7 +8,7 @@ namespace DevsTutorialCenterAPI
     {
         public MapperConfig()
         {
-            CreateMap<AppUser, AppUserDTO>();
+            CreateMap<AppUser, AppUserDto>();
         }
     }
 }

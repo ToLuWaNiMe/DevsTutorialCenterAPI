@@ -52,7 +52,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpGet("get-user-by-id/{userId}")]
-        public async Task<ActionResult<object>> GetUserById(string userId)
+        public async Task<IActionResult> GetUserById(string userId)
         {
             var users = await _userService.GetUserById(userId);
 

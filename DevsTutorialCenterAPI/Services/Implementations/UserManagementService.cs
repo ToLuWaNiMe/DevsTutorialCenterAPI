@@ -14,6 +14,7 @@ public class UserManagementService : IUserManagementService
     private readonly IMapper _mapper;
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+
     public UserManagementService(
         IRepository repository,
         IMapper mapper,
@@ -28,18 +29,18 @@ public class UserManagementService : IUserManagementService
         _roleManager = roleManager;
     }
 
-    public async Task<IEnumerable<AppUserDTO>> GetAllUsers()
+    public async Task<IEnumerable<AppUserDto>> GetAllUsers()
     {
         var users = (await _repository.GetAllAsync2<AppUser>())
-            .Where( user => user.DeletedAt == null );
+            .Where(user => user.DeletedAt == null);
 
-        var userDtoList = new List<AppUserDTO>();
+        var userDtoList = new List<AppUserDto>();
 
-        foreach ( var user in users )
+        foreach (var user in users)
         {
             var userRole = await _userManager.GetRolesAsync(user);
 
-            var userDTO = new AppUserDTO
+            var userDto = new AppUserDto
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -50,23 +51,22 @@ public class UserManagementService : IUserManagementService
                 Squad = user.Squad,
                 Stack = user.Stack,
                 RoleName = userRole is not null ? userRole : null
-
             };
 
-            userDtoList.Add(userDTO);   
+            userDtoList.Add(userDto);
         }
 
         return userDtoList;
     }
 
-    public async Task<AppUserDTO> GetUserById(string userId)
+    public async Task<AppUserDto> GetUserById(string userId)
     {
         var existingUser = await _repository.GetByIdAsync<AppUser>(userId);
 
         if (existingUser == null || existingUser.DeletedAt is not null)
             return null;
 
-        var userDto = _mapper.Map<AppUserDTO>(existingUser);
+        var userDto = _mapper.Map<AppUserDto>(existingUser);
 
         return userDto;
     }
@@ -135,8 +135,6 @@ public class UserManagementService : IUserManagementService
                 Text = foundArticle?.Text,
                 TagId = foundArticle?.TagId,
                 ImageUrl = foundArticle?.ImageUrl,
-
-
             };
             getAllReadArticles.Add(getReadArticle);
         }

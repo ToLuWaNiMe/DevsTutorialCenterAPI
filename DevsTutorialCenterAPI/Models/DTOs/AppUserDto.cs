@@ -1,6 +1,6 @@
 ﻿namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class AppUserDTO
+    public class AppUserDto
     {
         public string Id { get; set; }
         public string Email { get; set; }

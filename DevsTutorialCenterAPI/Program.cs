@@ -5,6 +5,7 @@ using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Data.Repositories.interfaces;
+using DevsTutorialCenterAPI.Filters;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Implementation;
 using DevsTutorialCenterAPI.Services.Implementations;
@@ -20,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -55,7 +57,8 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 );
 
 
-builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IImageService, ImageService>();
