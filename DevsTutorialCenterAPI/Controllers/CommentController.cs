@@ -56,6 +56,7 @@ public class CommentController : ControllerBase
             response.Message = "Ok";
             response.Data = createdComment;
             response.Error = "";
+            response.IsSuccessful = true;
         }
         catch (Exception ex)
         {
@@ -103,6 +104,7 @@ public class CommentController : ControllerBase
             response.Message = "Ok";
             response.Data = updateComment;
             response.Error = "";
+            response.IsSuccessful = true;
         }
         catch (Exception ex)
         {
@@ -141,6 +143,7 @@ public class CommentController : ControllerBase
             response.Message = "deleted successfully";
             response.Data = true;
             response.Error = "";
+            response.IsSuccessful = true;
         }
         catch (Exception ex)
         {
@@ -168,6 +171,7 @@ public class CommentController : ControllerBase
             response.Message = "Comments found";
             response.Data = comments;
             response.Error = "";
+            response.IsSuccessful = true;
 
             return Ok(response);
         }
@@ -204,6 +208,7 @@ public class CommentController : ControllerBase
             response.Message = "OK";
             response.Data = likes;
             response.Error = "";
+            response.IsSuccessful = true;
 
             return Ok(response);
         }
@@ -238,6 +243,7 @@ public class CommentController : ControllerBase
             response.Message = "Comment liked";
             response.Data = like;
             response.Error = "";
+            response.IsSuccessful = true;
         }
         catch (Exception ex)
         {

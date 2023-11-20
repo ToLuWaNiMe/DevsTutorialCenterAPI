@@ -46,7 +46,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Data = users,
                 Code = (int)HttpStatusCode.OK,
                 Message = "Ok",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
 
@@ -71,7 +72,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Data = users,
                 Code = (int)HttpStatusCode.OK,
                 Message = "Ok",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
 
@@ -103,7 +105,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Data = readArticles,
                 Code = (int)HttpStatusCode.OK,
                 Message = "Ok",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
 
@@ -121,7 +124,8 @@ namespace DevsTutorialCenterAPI.Controllers
                     Code = 200,
                     Data = result,
                     Message = "User Deleted Successfully",
-                    Error = string.Empty
+                    Error = string.Empty,
+                    IsSuccessful = true
                 };
 
                 return Ok(response);
@@ -155,7 +159,8 @@ namespace DevsTutorialCenterAPI.Controllers
                     Code = 200,
                     Data = result,
                     Message = "User Updated Successfully",
-                    Error = string.Empty
+                    Error = string.Empty,
+                    IsSuccessful = true
                 };
 
                 return Ok(response);

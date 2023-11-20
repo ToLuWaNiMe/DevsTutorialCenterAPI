@@ -94,7 +94,8 @@ public class ArticleController : ControllerBase
                 Data = null,
                 Code = 500,
                 Message = "Article Creation failed",
-                Error = "Invalid Data"
+                Error = "Invalid Data",
+                
             });
         }
 
@@ -121,7 +122,8 @@ public class ArticleController : ControllerBase
                 Data = createdArticle,
                 Code = 200,
                 Message = "OK",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
         catch (Exception ex)
@@ -146,7 +148,8 @@ public class ArticleController : ControllerBase
                 Data = articles,
                 Code = 200,
                 Message = "OK",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
         catch (Exception ex)
@@ -169,7 +172,8 @@ public class ArticleController : ControllerBase
                 Data = bookmarkedArticles,
                 Code = 200,
                 Message = "OK",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
         catch (Exception ex)
@@ -204,7 +208,9 @@ public class ArticleController : ControllerBase
             Code=200,
             Data = articles,
             Message = "Articles successfully retrieved",
-            Error = ""
+            Error = "",
+            IsSuccessful = true
+
         });
     }
 
@@ -270,7 +276,8 @@ public class ArticleController : ControllerBase
             Data = article,
             Code = (int)HttpStatusCode.OK,
             Message = "OK",
-            Error = ""
+            Error = "",
+            IsSuccessful = true
         });
     }
 
@@ -308,7 +315,8 @@ public class ArticleController : ControllerBase
             Code = (int)HttpStatusCode.OK,
             Data = updatedArticle,
             Message = "Article updated successfully",
-            Error = string.Empty
+            Error = string.Empty,
+            IsSuccessful = true
         });
     }
 
@@ -327,7 +335,8 @@ public class ArticleController : ControllerBase
                         Code = 200,
                         Data = result,
                         Message = "Article Deleted Successfully",
-                        Error = string.Empty
+                        Error = string.Empty,
+                        IsSuccessful = true
                     };
 
                     return Ok(response); 
@@ -421,60 +430,60 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [HttpGet("{articleId}/get-likes")]
-    public async Task<IActionResult> GetLikesByArticleAsync([FromRoute] string articleId)
-    {
-        var response = new ResponseDto<List<LikesByArticleDto>>();
+    //[HttpGet("{articleId}/get-likes")]
+    //public async Task<IActionResult> GetLikesByArticleAsync([FromRoute] string articleId)
+    //{
+    //    var response = new ResponseDto<List<LikesByArticleDto>>();
 
-        try
-        {
-            var likes = await _articleService.GetLikesByArticleAsync(articleId);
-            if (!likes.Any())
-            {
-                response.Code = 404;
-                response.Message = "Not Found";
-                response.Data = likes;
-                response.Error = " ";
-                return NotFound(response);
-            }
+    //    try
+    //    {
+    //        var likes = await _articleService.GetLikesByArticleAsync(articleId);
+    //        if (!likes.Any())
+    //        {
+    //            response.Code = 404;
+    //            response.Message = "Not Found";
+    //            response.Data = likes;
+    //            response.Error = " ";
+    //            return NotFound(response);
+    //        }
 
-            response.Code = 200;
-            response.Message = "OK";
-            response.Data = likes;
-            response.Error = " ";
-        }
-        catch (Exception ex)
-        {
-            response.Code = 500;
-            response.Message = "Internal Server Error";
-            response.Data = null;
-            response.Error = ex.Message;
-            return BadRequest(response);
-        }
+    //        response.Code = 200;
+    //        response.Message = "OK";
+    //        response.Data = likes;
+    //        response.Error = " ";
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        response.Code = 500;
+    //        response.Message = "Internal Server Error";
+    //        response.Data = null;
+    //        response.Error = ex.Message;
+    //        return BadRequest(response);
+    //    }
 
-        return Ok(response);
-    }
+    //    return Ok(response);
+    //}
 
-    [HttpPost("fetch-authors-stats")]
-    public async Task<IActionResult> GetAuthorsStats([FromBody] FetchAuthorsStatsDto fetchAuthorsStatsDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(new ResponseDto<object>
-            {
-                Error = ModelState.GetError(),
-                Message = "author list empty",
-                Code = 400,
-            });
+    //[HttpPost("fetch-authors-stats")]
+    //public async Task<IActionResult> GetAuthorsStats([FromBody] FetchAuthorsStatsDto fetchAuthorsStatsDto)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(new ResponseDto<object>
+    //        {
+    //            Error = ModelState.GetError(),
+    //            Message = "author list empty",
+    //            Code = 400,
+    //        });
 
-        var result = await _articleService.GetAuthorStatsAsync(fetchAuthorsStatsDto);
+    //    var result = await _articleService.GetAuthorStatsAsync(fetchAuthorsStatsDto);
 
-        return Ok(new ResponseDto<AuthorsStatsDto>
-        {
-            Code = 200,
-            Data = result,
-            Message = "Successful"
-        });
-    }
+    //    return Ok(new ResponseDto<AuthorsStatsDto>
+    //    {
+    //        Code = 200,
+    //        Data = result,
+    //        Message = "Successful"
+    //    });
+    //}
 
     //[Authorize(Roles = "Editor")]
     [HttpPost("approve-article/{articleId}")]
@@ -490,7 +499,8 @@ public class ArticleController : ControllerBase
                 Data = result,
                 Code = 200,
                 Message = "Article Approved Successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             });
         }
         else
@@ -519,7 +529,8 @@ public class ArticleController : ControllerBase
                 Data = result,
                 Code = 200,
                 Message = "Article Published Successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             });
         }
         else
@@ -547,7 +558,8 @@ public class ArticleController : ControllerBase
                 Data = result,
                 Code = 200,
                 Message = "Article Reviewed Successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             });
         }
         else
@@ -574,7 +586,8 @@ public class ArticleController : ControllerBase
                 Data = result,
                 Code = 200,
                 Message = "Article rejected successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             });
         }
         else

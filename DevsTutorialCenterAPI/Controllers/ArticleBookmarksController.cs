@@ -50,7 +50,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Code = 200,
                 Message = "Article bookmarked successfully",
                 Data = Bookmark,
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             };
 
             return Ok(response);
@@ -78,7 +79,8 @@ namespace DevsTutorialCenterAPI.Controllers
             {
                 Code = 200,
                 Message = "Article Unbookmarked successfully",
-                Error = string.Empty
+                Error = string.Empty,
+                IsSuccessful = true
             };
 
             return Ok(response);

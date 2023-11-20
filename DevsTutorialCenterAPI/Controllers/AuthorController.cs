@@ -45,7 +45,8 @@ namespace DevsTutorialCenterAPI.Controllers
                 Code = 200,
                 Data = authorStats,
                 Message = "Authors found",
-                Error = ""
+                Error = "",
+                IsSuccessful = true
             });
         }
     }
