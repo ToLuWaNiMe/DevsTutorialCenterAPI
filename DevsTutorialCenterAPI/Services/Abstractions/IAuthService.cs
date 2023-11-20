@@ -4,11 +4,11 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
 {
     public interface IAuthService
     {
-        Task<Result<AppUserDTO>> Register(RegistrationRequestDTO registrationRequestDTO);
-        Task<Result<LoginResponseDTO>> Login(LoginRequestDTO loginRequestDTO);
+        Task<Result<AppUserDto>> Register(RegistrationRequestDTO registrationRequestDTO);
+        Task<Result<LoginResponseDto>> Login(LoginRequestDto loginRequestDto);
 
         Task<bool> AssignRole(string email, string roleName);
 
-        Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO);
+        Task<AppUserDto> Register2(RegistrationRequestDTO registrationRequestDTO);
     }
 }

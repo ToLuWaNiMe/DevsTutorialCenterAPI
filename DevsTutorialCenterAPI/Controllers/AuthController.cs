@@ -59,12 +59,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDTO model)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
     {
         var loginResponse = await _authService.Login(model);
         if (loginResponse.IsFailure)
             return BadRequest(loginResponse.Errors);
 
-        return Ok(ResponseDto<object>.Success(loginResponse));
+        var res = ResponseDto<object>.Success(loginResponse.Data);
+        return Ok(res);
     }
 }

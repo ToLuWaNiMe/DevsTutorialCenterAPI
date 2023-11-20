@@ -27,7 +27,7 @@ public class AuthService : IAuthService
 
     public async Task<bool> AssignRole(string email, string roleName)
     {
-        var user = _devs.AppUsers.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
+        var user = _devs.AppUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         if (user == null) return false;
         
         if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
@@ -40,24 +40,24 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<Result<LoginResponseDTO>> Login(LoginRequestDTO loginRequestDTO)
+    public async Task<Result<LoginResponseDto>> Login(LoginRequestDto loginRequestDto)
     {
-        var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+        var user = _devs.AppUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.Email.ToLower());
         if (user is null)
-            return Result.Failure<LoginResponseDTO>(new[]
+            return Result.Failure<LoginResponseDto>(new[]
                 { new Error("Auth.Error", "username or password not correct") });
 
-        var isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+        var isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
         if (!isValid)
-            return Result.Failure<LoginResponseDTO>(new[]
+            return Result.Failure<LoginResponseDto>(new[]
                 { new Error("Auth.Error", "username or password not correct") });
 
         //If user is found, generate JWT Token
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
-        var appUserDto = new AppUserDTO
+        var appUserDto = new AppUserDto
         {
             Id = user.Id,
             Email = user.Email,
@@ -68,7 +68,7 @@ public class AuthService : IAuthService
             Stack = user.Stack
         };
         
-        var loginResponseDto = new LoginResponseDTO()
+        var loginResponseDto = new LoginResponseDto()
         {
             User = appUserDto,
             Token = token
@@ -77,7 +77,7 @@ public class AuthService : IAuthService
         return Result.Success(loginResponseDto);
     }
 
-    public async Task<Result<AppUserDTO>> Register(RegistrationRequestDTO registrationRequestDTO)
+    public async Task<Result<AppUserDto>> Register(RegistrationRequestDTO registrationRequestDTO)
     {
         AppUser user = new()
         {
@@ -94,11 +94,11 @@ public class AuthService : IAuthService
         var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
 
         if (!result.Succeeded)
-            return Result.Failure<AppUserDTO>(result.Errors.Select(e => new Error(e.Code, e.Description)));
+            return Result.Failure<AppUserDto>(result.Errors.Select(e => new Error(e.Code, e.Description)));
             
         var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
 
-        AppUserDTO appUserDTO = new()
+        AppUserDto appUserDTO = new()
         {
             Id = userToReturn.Id,
             Email = userToReturn.Email,
@@ -149,7 +149,7 @@ public class AuthService : IAuthService
     //    return loginResponseDTO;
     //}
 
-    public async Task<AppUserDTO> Register2(RegistrationRequestDTO registrationRequestDTO)
+    public async Task<AppUserDto> Register2(RegistrationRequestDTO registrationRequestDTO)
     {
         AppUser user = new()
         {
@@ -169,7 +169,7 @@ public class AuthService : IAuthService
             
         var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
 
-        AppUserDTO appUserDTO = new()
+        AppUserDto appUserDTO = new()
         {
             Id = userToReturn.Id,
             Email = userToReturn.Email,

@@ -1,8 +1,8 @@
 ﻿namespace DevsTutorialCenterAPI.Models.DTOs
 {
-    public class LoginResponseDTO
+    public class LoginResponseDto
     {
-        public AppUserDTO User { get; set; }
+        public AppUserDto User { get; set; }
         public string Token { get; set; }
     }
 }

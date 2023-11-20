@@ -21,24 +21,24 @@ public class UserManagementService : IUserManagementService
         _articleService = articleService;
     }
 
-    public async Task<IEnumerable<AppUserDTO>> GetAllUsers()
+    public async Task<IEnumerable<AppUserDto>> GetAllUsers()
     {
         var users = (await _repository.GetAllAsync<AppUser>())
             .Where( user => user.DeletedAt == null );
 
-        var userDtoList = _mapper.Map<List<AppUserDTO>>(users);
+        var userDtoList = _mapper.Map<List<AppUserDto>>(users);
 
         return userDtoList;
     }
 
-    public async Task<AppUserDTO> GetUserById(string userId)
+    public async Task<AppUserDto> GetUserById(string userId)
     {
         var existingUser = await _repository.GetByIdAsync<AppUser>(userId);
 
         if (existingUser == null || existingUser.DeletedAt is not null)
             return null;
 
-        var userDto = _mapper.Map<AppUserDTO>(existingUser);
+        var userDto = _mapper.Map<AppUserDto>(existingUser);
 
         return userDto;
     }
