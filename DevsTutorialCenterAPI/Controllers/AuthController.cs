@@ -27,14 +27,12 @@ public class AuthController : ControllerBase
         }
 
         return Ok(ResponseDto<object>.Success(registerResult.Data));
-
     }
 
     [HttpPost("assign-role")]
-
-        public async Task<IActionResult> GiveRole([FromBody] AssignRoleDTO model)
-        {
-            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleId);
+    public async Task<IActionResult> GiveRole([FromBody] AssignRoleDTO model)
+    {
+        var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleId);
 
         if (!assignRoleSuccessful)
         {
@@ -44,7 +42,6 @@ public class AuthController : ControllerBase
                 Code = 400,
                 Error = "User not assigned role",
                 Message = "Error"
-
             });
         }
 
@@ -54,7 +51,6 @@ public class AuthController : ControllerBase
             Data = null,
             Error = "",
             Message = "OK"
-
         });
     }
 
@@ -67,35 +63,30 @@ public class AuthController : ControllerBase
 
         var res = ResponseDto<object>.Success(loginResponse.Data);
         return Ok(res);
-    
-        }
+    }
 
-        [HttpGet("get-all-roles")]
+    [HttpGet("get-all-roles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        var result = await _authService.GetAllRoles();
 
-        public async Task<IActionResult> GetRoles()
+        if (result == null)
         {
-            var result = await _authService.GetAllRoles();
-
-            if(result == null)
+            return BadRequest(new ResponseDto<object>
             {
-                return BadRequest(new ResponseDto<object>
-                {
-                    Data = null,
-                    Code = 400,
-                    Error = "No roles found",
-                    Message = "Error"
-
-                });
-            }
-            return Ok(new ResponseDto<object>
-            {
-                Code = 200,
-                Data = result,
-                Error = "",
-                Message = "OK"
-
+                Data = null,
+                Code = 400,
+                Error = "No roles found",
+                Message = "Error"
             });
-
         }
+
+        return Ok(new ResponseDto<object>
+        {
+            Code = 200,
+            Data = result,
+            Error = "",
+            Message = "OK"
+        });
     }
 }

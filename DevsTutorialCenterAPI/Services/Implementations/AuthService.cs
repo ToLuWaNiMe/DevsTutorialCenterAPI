@@ -30,7 +30,7 @@ public class AuthService : IAuthService
     {
         var user = _devs.AppUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         if (user == null) return false;
-        
+
         if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
         {
             //create role if it does not exist
@@ -68,7 +68,7 @@ public class AuthService : IAuthService
             Squad = user.Squad,
             Stack = user.Stack
         };
-        
+
         var loginResponseDto = new LoginResponseDto()
         {
             User = appUserDto,
@@ -91,12 +91,12 @@ public class AuthService : IAuthService
             Stack = registrationRequestDTO.Stack,
             Squad = registrationRequestDTO.Squad
         };
-            
+
         var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
 
         if (!result.Succeeded)
             return Result.Failure<AppUserDto>(result.Errors.Select(e => new Error(e.Code, e.Description)));
-            
+
         var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
 
         AppUserDto appUserDTO = new()
@@ -163,14 +163,14 @@ public class AuthService : IAuthService
             Stack = registrationRequestDTO.Stack,
             Squad = registrationRequestDTO.Squad
         };
-            
+
         var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
 
         if (!result.Succeeded) return null;
-            
+
         var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
 
-        AppUserDto appUserDTO = new()
+        AppUserDto appUserDto = new()
         {
             Id = userToReturn.Id,
             Email = userToReturn.Email,
@@ -181,27 +181,15 @@ public class AuthService : IAuthService
             Stack = userToReturn.Stack
         };
 
-                    return appUserDTO;
-                }
+        return appUserDto;
+    }
 
-                
-            }
-            catch (Exception ex)
-            {
+    public async Task<List<IdentityRole>> GetAllRoles()
+    {
+        var roles = await _roleManager.Roles.ToListAsync();
 
-            }
-            return null; 
+        if (roles == null) throw new Exception("You have no roles created yet");
 
-        }
-
-        public async Task<List<IdentityRole>> GetAllRoles()
-        {
-            var roles = await _roleManager.Roles.ToListAsync();
-
-            if (roles == null) throw new Exception("You have no roles created yet");
-
-            return roles;
-        }
-
+        return roles;
     }
 }
