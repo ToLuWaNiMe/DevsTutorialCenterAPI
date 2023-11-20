@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevsTutorialCenterAPI.Migrations
 {
     [DbContext(typeof(DevsTutorialCenterAPIContext))]
-    [Migration("20231113093944_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231120145528_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
@@ -59,6 +60,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -91,9 +93,11 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Squad")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Stack")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -124,6 +128,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("AuthorId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -148,12 +153,15 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TagId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -170,6 +178,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -197,6 +206,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -209,6 +219,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -224,6 +235,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -236,6 +248,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -251,6 +264,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -263,6 +277,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -284,6 +299,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -300,6 +316,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -309,12 +326,14 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -328,6 +347,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CommentId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -340,6 +360,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -353,6 +374,7 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ArticleId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
@@ -362,9 +384,11 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ReportText")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ReportedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -387,12 +411,15 @@ namespace DevsTutorialCenterAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Identity")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -539,7 +566,9 @@ namespace DevsTutorialCenterAPI.Migrations
                 {
                     b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleId");
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Article");
                 });
@@ -548,7 +577,9 @@ namespace DevsTutorialCenterAPI.Migrations
                 {
                     b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleId");
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Article");
                 });
@@ -557,7 +588,9 @@ namespace DevsTutorialCenterAPI.Migrations
                 {
                     b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleId");
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Article");
                 });
@@ -566,7 +599,9 @@ namespace DevsTutorialCenterAPI.Migrations
                 {
                     b.HasOne("DevsTutorialCenterAPI.Data.Entities.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleId");
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Article");
                 });

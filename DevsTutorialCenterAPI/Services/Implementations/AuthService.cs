@@ -66,7 +66,9 @@ public class AuthService : IAuthService
             LastName = user.LastName,
             PhoneNumber = user.PhoneNumber,
             Squad = user.Squad,
-            Stack = user.Stack
+            Stack = user.Stack,
+            ImageUrl = user.ImageUrl == null ? string.Empty : user.ImageUrl,
+            RoleName = roles
         };
 
         var loginResponseDto = new LoginResponseDto()

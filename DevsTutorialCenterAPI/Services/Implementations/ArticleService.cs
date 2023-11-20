@@ -188,11 +188,15 @@ public class ArticleService : IArticleService
             PublicId= model.PublicId,
             ReadTime = readtimeresult.ToString(),
             
+            
+            
 
         };
 
 
         await _repository.AddAsync<Article>(newArticle);
+        newArticle.CreatedOn = DateTime.UtcNow;
+        newArticle.UpdatedOn = DateTime.UtcNow;
         var articleApproval = new ArticleApproval
         {
             ArticleId = newArticle.Id,

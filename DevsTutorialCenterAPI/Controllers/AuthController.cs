@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     [HttpPost("assign-role")]
     public async Task<IActionResult> GiveRole([FromBody] AssignRoleDTO model)
     {
-        var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleId);
+        var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.RoleName);
 
         if (!assignRoleSuccessful)
         {
