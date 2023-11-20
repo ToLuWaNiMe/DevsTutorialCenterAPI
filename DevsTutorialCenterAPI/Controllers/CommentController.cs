@@ -220,4 +220,35 @@ public class CommentController : ControllerBase
             return StatusCode(500, errorResponse);
         }
     }
+
+    [HttpPost("like-comment/{commentId}")]
+
+    public async Task<IActionResult> LikeAComment(string commentId)
+    {
+        var response = new ResponseDto<string>();
+
+        var user = await _signInManager.UserManager.GetUserAsync(User);
+
+        try
+        {
+            var like = await _commentService.LikeComment(commentId, user.Id);
+           
+
+            response.Code = 200;
+            response.Message = "Comment liked";
+            response.Data = like;
+            response.Error = "";
+        }
+        catch (Exception ex)
+        {
+            response.Code = 500;
+            response.Message = "Error";
+            response.Data = null;
+            response.Error = ex.Message;
+
+            return BadRequest(response);
+        }
+
+        return Ok(response);
+    }
 }

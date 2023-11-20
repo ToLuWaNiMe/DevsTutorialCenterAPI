@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/articles")]
 public class ArticleController : ControllerBase
@@ -22,14 +22,16 @@ public class ArticleController : ControllerBase
     private readonly ILogger<ArticleController> _logger;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IReportArticleService _reportArticleService;
+    private readonly IArticleApprovalService _articleApprovalService;
 
     public ArticleController(IReportArticleService reportArticleService, IArticleService articleService,
-        ILogger<ArticleController> logger, SignInManager<AppUser> signInManager)
+        ILogger<ArticleController> logger, SignInManager<AppUser> signInManager, IArticleApprovalService articleApprovalService)
     {
         _articleService = articleService;
         _logger = logger;
         _signInManager = signInManager;
         _reportArticleService = reportArticleService;
+        _articleApprovalService = articleApprovalService;
     }
 
 
@@ -183,7 +185,27 @@ public class ArticleController : ControllerBase
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
     {
         var articles = await _articleService.GetAllArticle();
-        return Ok(articles);
+        if(articles == null)
+        {
+            return BadRequest(new ResponseDto<IEnumerable<Article>>
+            {
+                Code = 500,
+                Data = null,
+                Message = "Articles not retrieved",
+                Error = "Failed"
+
+
+
+            }); 
+        }
+
+        return Ok(new ResponseDto<IEnumerable<Article>>
+        {
+            Code=200,
+            Data = articles,
+            Message = "Articles successfully retrieved",
+            Error = ""
+        });
     }
 
     //DONE
@@ -291,19 +313,19 @@ public class ArticleController : ControllerBase
     }
 
 
-    [HttpDelete("delete-article/{Id}")]
+    [HttpDelete("delete-article/{articleId}")]
     public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
             {
-                var result = await _articleService.DeleteArticleAsync(articleId);
+                var result = await _articleService.SoftDeleteArticle(articleId);
 
-                if (result)
+                if (result != null)
                 {
-                    var response = new ResponseDto<bool>
+                    var response = new ResponseDto<object>
                     {
-                        Code = (int)HttpStatusCode.NoContent,
-                        Data = true,
+                        Code = 200,
+                        Data = result,
                         Message = "Article Deleted Successfully",
                         Error = string.Empty
                     };
@@ -312,12 +334,12 @@ public class ArticleController : ControllerBase
                 }
                 else
                 {
-                    var response = new ResponseDto<bool>
+                    var response = new ResponseDto<object>
                     {
                         Code = (int)HttpStatusCode.BadRequest,
-                        Data = false,
+                        Data = null,
                         Message = "Failed to Delete Article",
-                        Error = string.Empty
+                        Error = "Failed"
                     };
 
                     return BadRequest(response);
@@ -454,20 +476,120 @@ public class ArticleController : ControllerBase
         });
     }
 
-    [HttpGet("pending-articles")]
-    public async Task<ActionResult<List<GetPendingArticlesDto>>> GetPendingArticles()
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("approve-article/{articleId}")]
+    public async Task<IActionResult> ApproveArticle(string articleId)
     {
-        var pendingArticles = await _articleService.GetPendingArticles();
 
-        return Ok(new ResponseDto<List<GetPendingArticlesDto>>
+        var result = await _articleApprovalService.ApprovalArticleById(articleId);
+
+        if (result != null)
         {
-            Data = pendingArticles,
-            Code = (int)HttpStatusCode.OK,
-            Message = "Ok",
-            Error = ""
-        });
+            return Ok(new ResponseDto<ArticleApproval>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article Approved Successfully",
+                Error = string.Empty
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ArticleApproval>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to Meet Approval Requirement",
+                Error = string.Empty
+            });
+        }
+    }
 
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("publish-article/{articleId}")]
+    public async Task<IActionResult> PublishArticle(string articleId)
+    {
+       
+        var result = await _articleApprovalService.PublishedArticle(articleId);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<ArticleApproval>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article Published Successfully",
+                Error = string.Empty
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ArticleApproval>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to Publish Article",
+                Error = string.Empty
+            });
+        }
+    }
+
+    //[Authorize(Roles = "Editor")]
+    [HttpPost("review-article/{articleId}")]
+    public async Task<IActionResult> ReviewArticle(string articleId)
+    {
+        var result = await _articleApprovalService.ReviewArticle(articleId);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<ArticleApproval>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article Reviewed Successfully",
+                Error = string.Empty
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ArticleApproval>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to Review Article",
+                Error = string.Empty
+            });
+        }
+    }
+
+    [HttpPost("reject-article/{articleId}")]
+    public async Task<IActionResult> RejectArticle(string articleId)
+    {
+        var result = await _articleApprovalService.RejectArticle(articleId);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<ArticleApproval>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article rejected successfully",
+                Error = string.Empty
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ArticleApproval>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to Reject Article",
+                Error = string.Empty
+            });
+        }
+        
 
     }
+
 
 }

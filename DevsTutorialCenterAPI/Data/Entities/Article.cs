@@ -16,8 +16,4 @@ public class Article : BaseEntity
     public string PublicId { get; set; }
     public string ReadTime { get; set; }
     public bool IsDeleted { get; set; }
-
-
-
-
 }

@@ -3,6 +3,7 @@ using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations;
 
@@ -180,6 +181,27 @@ public class AuthService : IAuthService
             Stack = userToReturn.Stack
         };
 
-        return appUserDTO;
+                    return appUserDTO;
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null; 
+
+        }
+
+        public async Task<List<IdentityRole>> GetAllRoles()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            if (roles == null) throw new Exception("You have no roles created yet");
+
+            return roles;
+        }
+
     }
 }
