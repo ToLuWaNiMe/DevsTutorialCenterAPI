@@ -44,14 +44,13 @@ public class AuthController : ControllerBase
         }
 
         //Add Token to verify the email
-        var user = _mapper.Map<AppUser>(registerResult);
+        var user = _mapper.Map<AppUser>(registerResult.Data);
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var confirmatiionLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token, email = user.Email }, Request.Scheme);
         var message = new Message("Confirmation email link", new List<string>() { user.Email }, $"<a href=\"{confirmatiionLink}\">Click to confirm Confirmation email</a>");
 
         _messengerService.Send(message);
-
-
+       
         return Ok(ResponseDto<object>.Success(registerResult.Data));
     }
 
@@ -170,13 +169,22 @@ public class AuthController : ControllerBase
 
         var messageStatus = _messengerService.Send(message);
 
-        return Ok(new
+        if(messageStatus == "")
         {
-            message = messageStatus == ""
-                ? "A reset password link has been sent to the email provided. Please go to your inbox and click on the link to reset your password"
-                : "Failed to send a reset password link. Please try again"
+             return Ok(new
+        {
+            message = 
+                 "A reset password link has been sent to the email provided. Please go to your inbox and click on the link to reset your password"
+        });
+
+        }
+      
+        return BadRequest(new
+        {
+            message = "Failed to send a reset password link. Please try again" 
         });
     }
+
     [HttpGet("ResetPassword")]
     public IActionResult ResetPassword(string token, string Email)
     {
