@@ -348,7 +348,9 @@ public class ArticleController : ControllerBase
                         Code = (int)HttpStatusCode.BadRequest,
                         Data = null,
                         Message = "Failed to Delete Article",
-                        Error = "Failed"
+                        Error = "Failed",
+                        
+                        
                     };
 
                     return BadRequest(response);

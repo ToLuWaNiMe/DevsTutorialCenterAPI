@@ -73,12 +73,17 @@ public class AuthController : ControllerBase
 
         if (result == null)
         {
+           
+
             return BadRequest(new ResponseDto<object>
             {
                 Data = null,
                 Code = 400,
                 Error = "No roles found",
                 Message = "Error"
+                
+
+                
             });
         }
 
