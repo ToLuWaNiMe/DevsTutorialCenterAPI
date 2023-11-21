@@ -44,8 +44,8 @@ public class MessengerService : IMessengerService
             }
 
             SmtpClient smtpClient = new( _config["Host"], int.Parse(_config["Port"]) );
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
+            //smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = true;
             smtpClient.Credentials = new NetworkCredential(GmailAccount, GmailPassword);
             smtpClient.Send(appMail);
 
