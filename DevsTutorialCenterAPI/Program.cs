@@ -60,7 +60,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
     .AddDefaultTokenProviders();
-
+builder.Services.AddTransient<IMessengerService, MessengerService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRepository, Repository>();
