@@ -1,5 +1,4 @@
 ﻿using DevsTutorialCenterAPI.Models.DTOs;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DevsTutorialCenterAPI.Utilities;
 
@@ -42,17 +41,12 @@ public static class Helper
     {
         // Assuming an average reading speed of 200 words per minute
         const int WordsPerMinute = 200;
-       
 
         // Calculate the number of words in the text (you may need a more accurate word count algorithm)
-        int wordCount = text.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
+        int wordCount = text.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
+            .Length;
 
         // Calculate the reading time in minutes
-     return (int)Math.Ceiling((double)wordCount / WordsPerMinute);
-
+        return (int)Math.Ceiling((double)wordCount / WordsPerMinute);
     }
-
-  
-
-    
 }

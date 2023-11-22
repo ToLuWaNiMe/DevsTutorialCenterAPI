@@ -6,4 +6,6 @@ public class Comment : BaseEntity
     public string UserId { get; set; }
     public string ArticleId { get; set; }
 
+    public AppUser User { get; set; }
+    public Article Article { get; set; }
 }

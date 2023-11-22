@@ -13,7 +13,7 @@ public interface ICommentService
 
     Task<string> LikeComment(string commentId, string userId);
 
-    Task<CommentsLikes> GetCommentLikeByUserId(string userId, string commentId);
+    Task<CommentLike> GetCommentLikeByUserId(string userId, string commentId);
 
    
 }
