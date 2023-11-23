@@ -111,7 +111,7 @@ public class CommentService : ICommentService
     {
         try
         {
-            var likesQuery = await _repository.GetAllAsync<CommentsLikes>();
+            var likesQuery = await _repository.GetAllAsync<CommentLike>();
             var likes = await likesQuery
                 .Where(like => like.CommentId == commentId)
                 .Select(like => new LikesByCommentsDto
@@ -146,22 +146,22 @@ public class CommentService : ICommentService
             throw new Exception("You have already liked this comment");
         }
 
-        var commentLike = new CommentsLikes
+        var commentLike = new CommentLike
         {
             UserId = user.Id,
             CommentId = comment.Id
         };
 
-        await _repository.AddAsync<CommentsLikes>(commentLike);
+        await _repository.AddAsync<CommentLike>(commentLike);
 
-        var likes = (await _repository.GetAllAsync2<CommentsLikes>()).Where(cl => cl.CommentId == comment.Id);
+        var likes = (await _repository.GetAllAsync2<CommentLike>()).Where(cl => cl.CommentId == comment.Id);
 
         return likes.Count().ToString();
 
 
     }
 
-    public async Task<CommentsLikes> GetCommentLikeByUserId(string userId, string commentId)
+    public async Task<CommentLike> GetCommentLikeByUserId(string userId, string commentId)
     {
         return await _db.CommentsLikes.FirstOrDefaultAsync(cl => cl.UserId == userId && cl.CommentId == commentId);
     }

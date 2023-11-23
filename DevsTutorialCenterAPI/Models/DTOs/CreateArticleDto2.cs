@@ -4,14 +4,14 @@ namespace DevsTutorialCenterAPI.Models.DTOs;
 
 public class CreateArticleDto2
 {
+    [Required]
     public string Title { get; set; }
+    [Required]
     public string Text { get; set; }
-    //public string AuthorId { get; set; }
+    [Required]
     public string TagId { get; set; }
-   
+    [Required]
     public string ImageUrl { get; set; }
+    [Required]
     public string PublicId { get; set; }
-   // public string ReadTime { get; set; }
-    //public bool IsDeleted { get; set; }
-
 }

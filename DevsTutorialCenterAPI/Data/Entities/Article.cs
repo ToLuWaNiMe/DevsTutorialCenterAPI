@@ -1,9 +1,4 @@
-﻿using DevsTutorialCenterAPI.Utilities;
-using Humanizer;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DevsTutorialCenterAPI.Data.Entities;
+﻿namespace DevsTutorialCenterAPI.Data.Entities;
 
 public class Article : BaseEntity
 {
@@ -16,4 +11,7 @@ public class Article : BaseEntity
     public string? PublicId { get; set; }
     public string? ReadTime { get; set; }
     public bool IsDeleted { get; set; }
+    
+    public AppUser Author { get; set; }
+    public ArticleTag Tag { get; set; }
 }

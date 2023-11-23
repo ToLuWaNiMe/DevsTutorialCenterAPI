@@ -110,7 +110,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//Seeder.SeedeMe(app);
+await Seeder.Seed(app);
 
 app.MapControllers();
 

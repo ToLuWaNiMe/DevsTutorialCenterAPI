@@ -24,7 +24,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
 
             if (article == null) throw new Exception("Article not found");
 
-            var articleLikes = (await _repository.GetAllAsync2<ArticlesLikes>()).Where(al => al.ArticleId == articleId);
+            var articleLikes = (await _repository.GetAllAsync2<ArticleLike>()).Where(al => al.ArticleId == articleId);
 
             if(articleLikes == null)
             {
@@ -67,7 +67,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new ArgumentException("User not found", nameof(userId));
             }
 
-            var like = await _repository.GetAllAsync<ArticlesLikes>();
+            var like = await _repository.GetAllAsync<ArticleLike>();
             var existingLike = like.FirstOrDefault(al => al.ArticleId == article.Id && al.UserId == user.Id);
 
             if (existingLike != null)
@@ -75,15 +75,15 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new InvalidOperationException("User has already liked the article");
             }
 
-            var newLike = new ArticlesLikes
+            var newLike = new ArticleLike
             {
                 ArticleId = articleId,
                 UserId = userId
             };
 
-            await _repository.AddAsync<ArticlesLikes>(newLike);
+            await _repository.AddAsync<ArticleLike>(newLike);
 
-            var likesforArticle = (await _repository.GetAllAsync<ArticlesLikes>()).Where(al => al.ArticleId == article.Id);
+            var likesforArticle = (await _repository.GetAllAsync<ArticleLike>()).Where(al => al.ArticleId == article.Id);
 
            return  likesforArticle.Count().ToString();
         }
@@ -97,7 +97,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new ArgumentException("Article not found", nameof(articleId));
             }
 
-            var like = await _repository.GetAllAsync<ArticlesLikes>();
+            var like = await _repository.GetAllAsync<ArticleLike>();
             var existingLike = like.FirstOrDefault(al => al.ArticleId == articleId && al.UserId == userId);
 
             if (existingLike == null)
@@ -105,9 +105,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new ArgumentException("You haven't liked this article", nameof(articleId));
             }
 
-            await _repository.DeleteAsync<ArticlesLikes>(existingLike);
+            await _repository.DeleteAsync<ArticleLike>(existingLike);
 
-            var likesforArticle = (await _repository.GetAllAsync<ArticlesLikes>()).Where(al => al.ArticleId == article.Id);
+            var likesforArticle = (await _repository.GetAllAsync<ArticleLike>()).Where(al => al.ArticleId == article.Id);
 
             return likesforArticle.Count().ToString();
         }

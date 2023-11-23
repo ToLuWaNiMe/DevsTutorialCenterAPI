@@ -356,7 +356,7 @@ public class ArticleService : IArticleService
     public async Task<List<LikesByArticleDto>> GetLikesByArticleAsync(string articleId)
     {
         // Retrieve likes by article ID using the repository
-        var likes = await _repository.GetAllAsync<ArticlesLikes>();
+        var likes = await _repository.GetAllAsync<ArticleLike>();
 
         // Filter the likes by the specified articleId
         var likesWithArticleId = likes
