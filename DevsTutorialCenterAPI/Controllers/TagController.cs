@@ -18,6 +18,7 @@ public class TagController : ControllerBase
     }
 
     [HttpGet("get-all-tag")]
+    [Authorize]
     public async Task<ActionResult<ResponseDto<IEnumerable<GetAllTagsDto>>>> GetAllTagAsync()
     {
         var tag = await _tagService.GetAllTagAsync();
@@ -31,8 +32,9 @@ public class TagController : ControllerBase
             IsSuccessful = true
         });
     }
-    [Authorize]
+    
     [HttpPost]
+    [Authorize(Roles = "ADMIN")]
     public async Task<ActionResult<ResponseDto<object>>> CreateTagAsync([FromBody] CreateTagDto createTagDto)
     {
         if (!ModelState.IsValid)
@@ -61,7 +63,7 @@ public class TagController : ControllerBase
     }
 
 
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     [HttpPut("{id}")]
     public async Task<ActionResult<ResponseDto<UpdateTagDto>>> UpdateTag([FromRoute] string id,
         [FromBody] UpdateTagDto updatedTag)

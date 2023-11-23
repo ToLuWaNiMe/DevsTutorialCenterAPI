@@ -161,6 +161,7 @@ public class ArticleController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("get-bookmarked-articles")]
+    [Authorize]
     public async Task<ActionResult> GetBookmarkedArticles([FromQuery] string userId)
     {
         try
@@ -240,6 +241,7 @@ public class ArticleController : ControllerBase
     //DONE
     [AllowAnonymous]
     [HttpGet("get-single-article/{articleId}")]
+    [Authorize]
     public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId)
     {
         var user = await _signInManager.UserManager.GetUserAsync(User);
@@ -322,6 +324,7 @@ public class ArticleController : ControllerBase
 
 
     [HttpDelete("delete-article/{articleId}")]
+    [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
@@ -348,7 +351,9 @@ public class ArticleController : ControllerBase
                         Code = (int)HttpStatusCode.BadRequest,
                         Data = null,
                         Message = "Failed to Delete Article",
-                        Error = "Failed"
+                        Error = "Failed",
+                        
+                        
                     };
 
                     return BadRequest(response);
@@ -485,7 +490,7 @@ public class ArticleController : ControllerBase
     //    });
     //}
 
-    //[Authorize(Roles = "Editor")]
+    //[Authorize(Roles = "EDITOR")]
     [HttpPost("approve-article/{articleId}")]
     public async Task<IActionResult> ApproveArticle(string articleId)
     {
@@ -515,7 +520,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-    //[Authorize(Roles = "Editor")]
+    //[Authorize(Roles = "EDITOR")]
     [HttpPost("publish-article/{articleId}")]
     public async Task<IActionResult> PublishArticle(string articleId)
     {
@@ -545,7 +550,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-    //[Authorize(Roles = "Editor")]
+    //[Authorize(Roles = "EDITOR")]
     [HttpPost("review-article/{articleId}")]
     public async Task<IActionResult> ReviewArticle(string articleId)
     {
@@ -575,6 +580,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpPost("reject-article/{articleId}")]
+    //[Authorize(Roles = "EDITOR")]
     public async Task<IActionResult> RejectArticle(string articleId)
     {
         var result = await _articleApprovalService.RejectArticle(articleId);
@@ -603,6 +609,95 @@ public class ArticleController : ControllerBase
         
 
     }
+
+    [HttpGet("get-reported-articles")]
+    [Authorize(Roles = "EDITOR, ADMIN")]
+    public async Task<IActionResult> GetReportedArticles()
+    {
+        var result = await _reportArticleService.GetReportedArticlesAsync();
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<List<GetReportedArticleDTO>>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Reported articles retrieved successfully",
+                Error = string.Empty,
+                IsSuccessful = true
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<List<GetReportedArticleDTO>>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to retrieve reported articles",
+                Error = string.Empty
+            });
+        }
+    }
+
+    [HttpGet("get-reported-authors")]
+    [Authorize(Roles = "EDITOR, ADMIN")]
+    public async Task<IActionResult> GetReportedAuthors()
+    {
+        var result = await _reportArticleService.GetReportedAuthorsAsync();
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<List<GetReportedAuthorsDTO>>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Reported articles retrieved successfully",
+                Error = string.Empty,
+                IsSuccessful = true
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<List<GetReportedAuthorsDTO>>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to retrieve reported articles",
+                Error = string.Empty
+            });
+        }
+    }
+
+    [HttpGet("fetch-articles-by-approval-status/{number}")]
+    [Authorize(Roles = "EDITOR, ADMIN")]
+    public async Task<IActionResult> FetchArticlesByApprovalStatus(int number)
+    {
+        var result = await _articleApprovalService.FetchArticleStatusListAsync(number);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<List<GetSingleArticleDto>>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Articles retrieved successfully",
+                Error = string.Empty,
+                IsSuccessful = true
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<List<GetSingleArticleDto>>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to retrieve article",
+                Error = string.Empty
+            });
+        }
+
+    }
+
 
 
 }

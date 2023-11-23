@@ -94,12 +94,19 @@ public class AuthService : IAuthService
             Squad = registrationRequestDTO.Squad
         };
 
+       
         var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
+
+        
+
 
         if (!result.Succeeded)
             return Result.Failure<AppUserDto>(result.Errors.Select(e => new Error(e.Code, e.Description)));
 
         var userToReturn = _devs.AppUsers.First(u => u.UserName == registrationRequestDTO.Email);
+
+        await AssignRole(userToReturn.Email, "DECADEV");
+        var roles = await _userManager.GetRolesAsync(userToReturn);
 
         AppUserDto appUserDTO = new()
         {
@@ -109,7 +116,9 @@ public class AuthService : IAuthService
             LastName = userToReturn.LastName,
             PhoneNumber = userToReturn.PhoneNumber,
             Squad = userToReturn.Squad,
-            Stack = userToReturn.Stack
+            Stack = userToReturn.Stack,
+            RoleName = roles
+
         };
 
         return Result.Success(appUserDTO);

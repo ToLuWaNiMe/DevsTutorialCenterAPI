@@ -13,6 +13,7 @@ namespace DevsTutorialCenterAPI.Controllers
     //[Authorize]
     [ApiController]
     [Route("api/article-bookmarks")]
+    [Authorize]
     public class ArticleBookmarksController : ControllerBase
     {
         private readonly IBookmarkService _bookmarkService;

@@ -1,4 +1,5 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions
 {
@@ -11,5 +12,7 @@ namespace DevsTutorialCenterAPI.Services.Abstractions
 
         Task<ArticleApproval> ReviewArticle(string articleId);
         Task<ArticleApproval> RejectArticle(string articleId);
+
+        Task<List<GetSingleArticleDto>> FetchArticleStatusListAsync(int number);
     }
 }
