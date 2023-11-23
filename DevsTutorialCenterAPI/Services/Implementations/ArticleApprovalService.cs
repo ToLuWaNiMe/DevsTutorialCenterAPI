@@ -1,6 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
+using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -148,7 +149,73 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return articleApproval;
         }
 
+        public async Task<List<GetSingleArticleDto>> FetchArticleStatusListAsync(int number)
+        {
+            var articleApproval = await _repository.GetAllAsync2<ArticleApproval>();
 
+            if (number is not 4 && number is not 5)
+            {
+                throw new Exception("Number must either be 4 or 5");
+            }
+
+            var result = new List<GetSingleArticleDto>();
+
+            if(articleApproval.Count() != 0)
+            {
+                var publishedarticles = new List<GetSingleArticleDto>();
+                var rejectedarticles = new List<GetSingleArticleDto>();
+                foreach (var article in articleApproval)
+                {
+                    if(number == 4 && article.Status == number)
+                    {
+                        var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
+
+                        var getPArticle = new GetSingleArticleDto
+                        {
+                            Id = pArticle.Id,
+                            Title = pArticle.Title,
+                            TagId = pArticle.TagId,
+                            ImageUrl = pArticle.ImageUrl,
+                            AuthorId = pArticle.AuthorId,
+                            CreatedOn = pArticle.CreatedOn,
+                            PublicId = pArticle.PublicId,
+                            ReadCount = pArticle.ReadCount,
+                            ReadTime = pArticle.ReadTime,
+                            Text = pArticle.Text,
+
+                        };
+                        publishedarticles.Add(getPArticle);
+                        result = publishedarticles;
+                    }
+
+                    if (number == 5 && article.Status == number)
+                    {
+                        var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
+
+                        var getPArticle = new GetSingleArticleDto
+                        {
+                            Id = pArticle.Id,
+                            Title = pArticle.Title,
+                            TagId = pArticle.TagId,
+                            ImageUrl = pArticle.ImageUrl,
+                            AuthorId = pArticle.AuthorId,
+                            CreatedOn = pArticle.CreatedOn,
+                            PublicId = pArticle.PublicId,
+                            ReadCount = pArticle.ReadCount,
+                            ReadTime = pArticle.ReadTime,
+                            Text = pArticle.Text,
+
+                        };
+                        rejectedarticles.Add(getPArticle);
+                        result = rejectedarticles;
+                    }
+
+                }
+                
+            }
+
+            return result;
+        }
     }
 
 }

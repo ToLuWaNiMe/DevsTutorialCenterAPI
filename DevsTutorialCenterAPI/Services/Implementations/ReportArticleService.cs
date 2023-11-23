@@ -1,22 +1,107 @@
-﻿using DevsTutorialCenterAPI.Data.Entities;
+﻿using DevsTutorialCenterAPI.Data;
+using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
+using DevsTutorialCenterAPI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Services.Implementations;
 
 public class ReportArticleService : IReportArticleService
 {
     private readonly IRepository _repository;
-
-    public ReportArticleService(IRepository repository)
+    private readonly DevsTutorialCenterAPIContext _devsTutorialCenterAPIContext;
+    private readonly ILikeService _likeService;
+    private readonly ICommentService _commentService;
+    public ReportArticleService(IRepository repository, DevsTutorialCenterAPIContext devsTutorialCenterAPIContext, ILikeService likeService, ICommentService commentService)
     {
         _repository = repository;
+        _devsTutorialCenterAPIContext = devsTutorialCenterAPIContext;
+        _likeService = likeService;
+        _commentService = commentService;
     }
 
-    public Task<List<GetReportedArticleDTO>> GetReportedArticlesAsync()
+    public async Task<List<GetReportedArticleDTO>> GetReportedArticlesAsync()
     {
-        throw new NotImplementedException();
+        var reportedArticles = await _repository.GetAllAsync<ReportedArticle>();
+
+        if(reportedArticles.Count() == 0) { throw new Exception("No reported articles found");}
+
+        var getReportedArticles = new List<GetReportedArticleDTO>();
+
+        foreach(var reportedArticle in reportedArticles)
+        {
+            var article = await _repository.GetByIdAsync<Article>(reportedArticle.ArticleId);
+            if (article == null) continue;
+
+            var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id) ;
+
+            if (articleApproval == null) continue;
+
+            var articleLikes = await _likeService.GetLikesByArticle(article.Id);
+            if (articleLikes == null) continue;
+
+            var articleComments = await _commentService.GetCommentsByArticle(article.Id);
+            if (articleComments == null) continue;
+
+            var author = await _repository.GetByIdAsync<AppUser>(article.AuthorId); if (author == null) continue;
+
+            var getReportedArticle = new GetReportedArticleDTO
+            {
+                ArticleId = article.Id,
+                ArticleText = article.Text,
+                ArticleTitle = article.Title,
+                Author = $"{author.FirstName} {author.LastName}",
+                NoOfComments = articleComments.Count(),
+                NoOfLikes = articleLikes.Count(),
+                PublishedOn = articleApproval.CreatedOn
+            };
+
+            getReportedArticles.Add(getReportedArticle);    
+        }
+
+        return getReportedArticles;
+    }
+
+    public async Task<List<GetReportedAuthorsDTO>> GetReportedAuthorsAsync()
+    {
+        var reportedArticles = await _repository.GetAllAsync<ReportedArticle>();
+
+        if (reportedArticles.Count() == 0) { throw new Exception("No reported articles found"); }
+
+        var getReportedAuthors = new List<GetReportedAuthorsDTO>();
+
+        foreach(var reportedArticle in reportedArticles)
+        {
+            var article = await _repository.GetByIdAsync<Article>(reportedArticle.ArticleId);
+            if (article == null) continue;
+
+            var author = await _repository.GetByIdAsync<AppUser>(article.AuthorId); if (author == null) continue;
+
+            var articlesByAuthor = (await _repository.GetAllAsync2<Article>()).Where(a => a.AuthorId == author.Id);
+
+            var reportedAuthorTimes = new List<ReportedArticle>();
+
+            foreach(var articleReported in articlesByAuthor)
+            {
+                var rArticle = await _devsTutorialCenterAPIContext.ReportedArticles.FirstOrDefaultAsync(r => r.ArticleId == articleReported.Id);
+                if (rArticle == null) continue;
+                reportedAuthorTimes.Add(rArticle);
+            }
+
+            var reportedAuthor = new GetReportedAuthorsDTO
+            {
+                Name = $"{author.FirstName} {author.LastName}",
+                Stack = author.Stack,
+                NoOfArticles = articlesByAuthor.Count(),
+                NoOfReports = reportedAuthorTimes.Count()
+            };
+
+            getReportedAuthors.Add(reportedAuthor);
+        }
+
+        return getReportedAuthors;
     }
 
     //public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-   // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/authors")]
     public class AuthorController : ControllerBase

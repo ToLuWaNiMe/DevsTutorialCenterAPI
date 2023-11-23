@@ -79,6 +79,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
 
         [HttpGet("get-read-articles-by-user")]
+        [Authorize]
         public async Task<ActionResult<List<GetReadArticlesDto>>> ArticlesReadByUser()
         {
             var user = await _signInManager.UserManager.GetUserAsync(User);
