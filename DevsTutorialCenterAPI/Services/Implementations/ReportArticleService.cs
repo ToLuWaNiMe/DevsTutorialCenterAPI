@@ -14,6 +14,11 @@ public class ReportArticleService : IReportArticleService
         _repository = repository;
     }
 
+    public Task<List<GetReportedArticleDTO>> GetReportedArticlesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     //public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)
     //{
     //    try
