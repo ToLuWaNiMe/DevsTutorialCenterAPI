@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevsTutorialCenterAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/article-likes")]
     public class ArticlesLikeController : ControllerBase

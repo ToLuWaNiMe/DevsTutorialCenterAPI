@@ -83,7 +83,7 @@ public class ArticleController : ControllerBase
     //    });
 
     //}
-    [Authorize]
+    //[Authorize]
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
     {
@@ -159,9 +159,9 @@ public class ArticleController : ControllerBase
         }
     }
 
-    [AllowAnonymous]
+   // [AllowAnonymous]
     [HttpGet("get-bookmarked-articles")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult> GetBookmarkedArticles([FromQuery] string userId)
     {
         try
@@ -241,7 +241,7 @@ public class ArticleController : ControllerBase
     //DONE
     [AllowAnonymous]
     [HttpGet("get-single-article/{articleId}")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId)
     {
         var user = await _signInManager.UserManager.GetUserAsync(User);
@@ -324,7 +324,7 @@ public class ArticleController : ControllerBase
 
 
     [HttpDelete("delete-article/{articleId}")]
-    [Authorize(Roles = "ADMIN")]
+   // [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> DeleteArticle(string articleId)
         {
             try
@@ -611,7 +611,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpGet("get-reported-articles")]
-    [Authorize(Roles = "EDITOR, ADMIN")]
+    //[Authorize(Roles = "EDITOR, ADMIN")]
     public async Task<IActionResult> GetReportedArticles()
     {
         var result = await _reportArticleService.GetReportedArticlesAsync();
@@ -640,7 +640,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpGet("get-reported-authors")]
-    [Authorize(Roles = "EDITOR, ADMIN")]
+    //[Authorize(Roles = "EDITOR, ADMIN")]
     public async Task<IActionResult> GetReportedAuthors()
     {
         var result = await _reportArticleService.GetReportedAuthorsAsync();
@@ -669,7 +669,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpGet("fetch-articles-by-approval-status/{number}")]
-    [Authorize(Roles = "EDITOR, ADMIN")]
+    //[Authorize(Roles = "EDITOR, ADMIN")]
     public async Task<IActionResult> FetchArticlesByApprovalStatus(int number)
     {
         var result = await _articleApprovalService.FetchArticleStatusListAsync(number);

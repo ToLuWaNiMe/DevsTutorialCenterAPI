@@ -10,7 +10,7 @@ namespace DevsTutorialCenterAPI.Controllers;
 
 [ApiController]
 [Route("api/comments")]
-[Authorize]
+//[Authorize]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
