@@ -12,7 +12,7 @@ namespace DevsTutorialCenterAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserManagementService _userService;
@@ -26,7 +26,7 @@ namespace DevsTutorialCenterAPI.Controllers
             _signInManager = signInManager;
         }
 
-        [Authorize(Roles = "ADMIN")]
+       // [Authorize(Roles = "ADMIN")]
         [HttpGet("get-all-users")]
         public async Task<ActionResult<IEnumerable<object>>> GetAllUsers()
         {
@@ -51,7 +51,7 @@ namespace DevsTutorialCenterAPI.Controllers
             });
         }
 
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         [HttpGet("get-user-by-id/{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
@@ -79,7 +79,7 @@ namespace DevsTutorialCenterAPI.Controllers
 
 
         [HttpGet("get-read-articles-by-user")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<List<GetReadArticlesDto>>> ArticlesReadByUser()
         {
             var user = await _signInManager.UserManager.GetUserAsync(User);
@@ -111,7 +111,7 @@ namespace DevsTutorialCenterAPI.Controllers
             });
         }
 
-        [Authorize(Roles = "ADMIN")]
+       // [Authorize(Roles = "ADMIN")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -145,7 +145,7 @@ namespace DevsTutorialCenterAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "ADMIN")]
+       // [Authorize(Roles = "ADMIN")]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateUser(
             string id,
