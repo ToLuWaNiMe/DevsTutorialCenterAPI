@@ -20,6 +20,7 @@ public class MessengerService : IMessengerService
     {
         try
         {
+            
             string GmailAccount = _config["SenderEmail"];
             string GmailPassword = _config["AppPassword"];
             IList<string> ToEmails = message.To;
@@ -44,8 +45,8 @@ public class MessengerService : IMessengerService
             }
 
             SmtpClient smtpClient = new( _config["Host"], int.Parse(_config["Port"]) );
-            //smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = true;
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(GmailAccount, GmailPassword);
             smtpClient.Send(appMail);
 
@@ -56,4 +57,7 @@ public class MessengerService : IMessengerService
             return "error: " + e.Message;
         }
     }
+
+
+
 }

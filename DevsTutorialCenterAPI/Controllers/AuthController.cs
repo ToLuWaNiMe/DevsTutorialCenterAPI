@@ -45,12 +45,7 @@ public class AuthController : ControllerBase
 
         //Add Token to verify the email
         var user = _mapper.Map<AppUser>(registerResult.Data);
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmatiionLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token, email = user.Email }, Request.Scheme);
-        var message = new Message("Confirmation email link", new List<string>() { user.Email }, $"<a href=\"{confirmatiionLink}\">Click to confirm Confirmation email</a>");
-
-        _messengerService.Send(message);
-       
+        var confirmationEmailSent = await _authService.SendConfirmationEmailAsync2(user, nameof(ConfirmEmail), Request.Scheme);
         return Ok(ResponseDto<object>.Success(registerResult.Data));
     }
 
@@ -161,15 +156,9 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new { error = "Email does not exist" });
         }
+        var passwordResetEmailSent = await _authService.SendPasswordResetEmailAsync(user, nameof(ResetPassword), Request.Scheme);
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var link = Url.Action(nameof(ResetPassword), "Auth", new { token, model.Email }, Request.Scheme);
-        var sender = _config.GetSection("EmailSettings")["SenderEmail"];
-        var message = new Message("Reset Password link", new List<string>() { model.Email }, $"<a href=\"{link}\">Reset password</a>");
-
-        var messageStatus = _messengerService.Send(message);
-
-        if(messageStatus == "")
+        if (passwordResetEmailSent)
         {
              return Ok(new
         {
