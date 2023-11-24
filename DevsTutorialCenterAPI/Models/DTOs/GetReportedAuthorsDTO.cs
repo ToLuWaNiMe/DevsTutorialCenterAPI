@@ -9,5 +9,6 @@
         public int NoOfArticles { get; set; }
 
         public int NoOfReports { get; set; }
+        public string? ImageUrl { get;  set; }
     }
 }

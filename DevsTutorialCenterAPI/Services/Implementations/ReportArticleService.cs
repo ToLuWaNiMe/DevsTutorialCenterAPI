@@ -93,6 +93,7 @@ public class ReportArticleService : IReportArticleService
             var reportedAuthor = new GetReportedAuthorsDTO
             {
                 Name = $"{author.FirstName} {author.LastName}",
+                ImageUrl = author.ImageUrl,
                 Stack = author.Stack,
                 NoOfArticles = articlesByAuthor.Count(),
                 NoOfReports = reportedAuthorTimes.Count()
