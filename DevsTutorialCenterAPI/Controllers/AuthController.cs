@@ -40,8 +40,7 @@ public class AuthController : ControllerBase
         //Add Token to verify the email
         var user = _mapper.Map<AppUser>(registerResult.Data);
         var confirmEmailEndpoint = $"{_appUrl}/confirmemail";
-        var confirmationEmailSent =
-            await _authService.SendConfirmationEmailAsync2(user, confirmEmailEndpoint);
+        var confirmationEmailSent = await _authService.SendConfirmationEmailAsync2(user, confirmEmailEndpoint);
         return Ok(ResponseDto<object>.Success(registerResult.Data));
     }
 
@@ -89,17 +88,12 @@ public class AuthController : ControllerBase
 
         if (result == null)
         {
-           
-
             return BadRequest(new ResponseDto<object>
             {
                 Data = null,
                 Code = 400,
                 Error = "No roles found",
                 Message = "Error"
-                
-
-                
             });
         }
 
