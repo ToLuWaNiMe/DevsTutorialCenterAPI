@@ -1,5 +1,6 @@
 ﻿using DevsTutorialCenterAPI.Data;
 using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
@@ -13,17 +14,19 @@ public class AuthService : IAuthService
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IJwtTokenGeneratorService _jwtTokenGenerator;
-
+    private readonly IMessengerService _messengerService;
     public AuthService(
         DevsTutorialCenterAPIContext devs,
         UserManager<AppUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        IJwtTokenGeneratorService jwtTokenGenerator)
+        IJwtTokenGeneratorService jwtTokenGenerator,
+        IMessengerService messengerService)
     {
         _devs = devs;
         _userManager = userManager;
         _roleManager = roleManager;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _messengerService = messengerService;
     }
 
     public async Task<bool> AssignRole(string email, string roleName)
@@ -202,5 +205,48 @@ public class AuthService : IAuthService
         if (roles == null) throw new Exception("You have no roles created yet");
 
         return roles;
+    }
+
+    public async Task<bool> SendConfirmationEmailAsync(AppUser user, string confirmEmailAddress)
+    {
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationLink = $"{confirmEmailAddress}?token={token}&email={user.Email}";
+        var message = new Message("Confirmation email link", new List<string>() { user.Email },
+            $"<a href=\"{confirmationLink}\">Click to confirm Confirmation email</a>");
+
+        return await _messengerService.Send(message);
+    }
+
+    public async Task<bool> SendConfirmationEmailAsync2(AppUser user, string confirmEmailAddress)
+    {
+        try
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = $"{confirmEmailAddress}?token={token}&email={user.Email}";
+
+            var message = new Message(
+                "Email Confirmation",
+                new List<string> { user.Email },
+                $"Dear {user.UserName},\n\nThank you for registering. Please confirm your email by clicking on the link: {confirmationLink}"
+            );
+
+            var sendResult = await _messengerService.Send(message);
+
+            return sendResult;
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception as needed
+            return false;
+        }
+    }
+    
+    public async Task<bool> SendPasswordResetEmailAsync(AppUser user, string resetPasswordAddress)
+    {
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var link = $"{resetPasswordAddress}?token={token}&email={user.Email}";
+        var message = new Message("Reset Password link", new List<string>() { user.Email }, $"<a href=\"{link}\">Reset password</a>");
+
+        return await _messengerService.Send(message);
     }
 }
