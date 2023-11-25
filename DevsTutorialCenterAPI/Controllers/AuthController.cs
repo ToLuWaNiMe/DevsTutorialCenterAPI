@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using DevsTutorialCenterAPI.Data.Entities;
-using DevsTutorialCenterAPI.Models;
 using DevsTutorialCenterAPI.Models.DTOs;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using DevsTutorialCenterAPI.Services.Implementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,20 +16,16 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMapper _mapper;
-    private readonly IConfiguration _config;
-    private readonly IMessengerService _messengerService;
+    private readonly string _appUrl;
 
 
-    public AuthController(IAuthService authService, UserManager<AppUser> userManager, IConfiguration config, IMessengerService messengerService, IMapper mapper)
+    public AuthController(IAuthService authService, UserManager<AppUser> userManager, IMapper mapper)
     {
-
         _mapper = mapper;
         _userManager = userManager;
-        _config = config;
-        _messengerService = messengerService;
         _authService = authService;
+        _appUrl = $"{Request.Scheme}://{Request.Host}";
     }
-
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO model)
@@ -45,7 +39,9 @@ public class AuthController : ControllerBase
 
         //Add Token to verify the email
         var user = _mapper.Map<AppUser>(registerResult.Data);
-        var confirmationEmailSent = await _authService.SendConfirmationEmailAsync2(user, nameof(ConfirmEmail), Request.Scheme);
+        var confirmEmailEndpoint = $"{_appUrl}/confirmemail";
+        var confirmationEmailSent =
+            await _authService.SendConfirmationEmailAsync2(user, confirmEmailEndpoint);
         return Ok(ResponseDto<object>.Success(registerResult.Data));
     }
 
@@ -119,7 +115,8 @@ public class AuthController : ControllerBase
         // if email or token is null, end the process
         if (email == null || token == null)
         {
-            return BadRequest(new { errorTitle = "Invalid Email or Token", errorMessage = "Email or token cannot be null" });
+            return BadRequest(new
+                { errorTitle = "Invalid Email or Token", errorMessage = "Email or token cannot be null" });
         }
 
         // ensure that user exists
@@ -143,7 +140,6 @@ public class AuthController : ControllerBase
     [HttpPost("ForgotPassword")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
     {
-
         if (!ModelState.IsValid)
         {
             var errors = ModelState.SelectMany(x => x.Value.Errors.Select(xx => xx.ErrorMessage));
@@ -156,21 +152,23 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new { error = "Email does not exist" });
         }
-        var passwordResetEmailSent = await _authService.SendPasswordResetEmailAsync(user, nameof(ResetPassword), Request.Scheme);
+
+        var passwordResetEndpoint = $"{_appUrl}/confirmemail";
+        var passwordResetEmailSent =
+            await _authService.SendPasswordResetEmailAsync(user, passwordResetEndpoint);
 
         if (passwordResetEmailSent)
         {
-             return Ok(new
-        {
-            message = 
-                 "A reset password link has been sent to the email provided. Please go to your inbox and click on the link to reset your password"
-        });
-
+            return Ok(new
+            {
+                message =
+                    "A reset password link has been sent to the email provided. Please go to your inbox and click on the link to reset your password"
+            });
         }
-      
+
         return BadRequest(new
         {
-            message = "Failed to send a reset password link. Please try again" 
+            message = "Failed to send a reset password link. Please try again"
         });
     }
 
@@ -193,7 +191,6 @@ public class AuthController : ControllerBase
 
         return Ok(viewModel);
     }
-
 
 
     [HttpPost("ResetPassword")]
@@ -269,5 +266,4 @@ public class AuthController : ControllerBase
             return BadRequest(response);
         }
     }
-
 }
