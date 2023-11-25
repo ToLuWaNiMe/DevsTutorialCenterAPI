@@ -407,5 +407,5 @@ DevsTutorialCenterAPI/devstutorialcenter.db
 DevsTutorialCenterAPI/devstutorialcenter.db-shm
 DevsTutorialCenterAPI/devstutorialcenter.db-wal
 
-DevsTutorialCenterAPI/appsettings.Development.json
-/DevsTutorialCenterAPI/appsettings.json
+**/appsettings.Development.json
+**/appsettings.json
