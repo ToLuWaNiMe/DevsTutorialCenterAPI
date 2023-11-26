@@ -16,7 +16,6 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMapper _mapper;
-    private readonly string _appUrl;
 
 
     public AuthController(IAuthService authService, UserManager<AppUser> userManager, IMapper mapper)
@@ -24,7 +23,6 @@ public class AuthController : ControllerBase
         _mapper = mapper;
         _userManager = userManager;
         _authService = authService;
-        _appUrl = $"{Request.Scheme}://{Request.Host}";
     }
 
     [HttpPost("register")]
@@ -39,7 +37,8 @@ public class AuthController : ControllerBase
 
         //Add Token to verify the email
         var user = _mapper.Map<AppUser>(registerResult.Data);
-        var confirmEmailEndpoint = $"{_appUrl}/confirmemail";
+        var appUrl =  $"{Request.Scheme}://{Request.Host}";
+        var confirmEmailEndpoint = $"{appUrl}/confirmemail";
         var confirmationEmailSent = await _authService.SendConfirmationEmailAsync2(user, confirmEmailEndpoint);
         return Ok(ResponseDto<object>.Success(registerResult.Data));
     }
@@ -152,7 +151,8 @@ public class AuthController : ControllerBase
             return BadRequest(new { error = "Email does not exist" });
         }
 
-        var passwordResetEndpoint = $"{_appUrl}/confirmemail";
+        var appUrl =  $"{Request.Scheme}://{Request.Host}";
+        var passwordResetEndpoint = $"{appUrl}/confirmemail";
         var passwordResetEmailSent =
             await _authService.SendPasswordResetEmailAsync(user, passwordResetEndpoint);
 
