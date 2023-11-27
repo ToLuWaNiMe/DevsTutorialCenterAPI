@@ -30,31 +30,31 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             return articleApproval;
         }
 
-        public async Task<ArticleApproval>ApprovalArticleById(string articleId)
-        {
-            var article = await _repository.GetByIdAsync<Article>(articleId);
+        //public async Task<ArticleApproval>ApprovalArticleById(string articleId)
+        //{
+        //    var article = await _repository.GetByIdAsync<Article>(articleId);
 
-            if (article == null)
-            {
-                throw new Exception("Article not found");
-            }
+        //    if (article == null)
+        //    {
+        //        throw new Exception("Article not found");
+        //    }
 
-            var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id);
-            if (articleApproval == null)
-            {
-                throw new Exception("Article cannot be approved yet");
-            }
+        //    var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id);
+        //    if (articleApproval == null)
+        //    {
+        //        throw new Exception("Article cannot be approved yet");
+        //    }
 
-            if (articleApproval.Status == SD.in_review)
-            {
-                articleApproval.Status = SD.is_approved;
-            }
+        //    if (articleApproval.Status == SD.in_review)
+        //    {
+        //        articleApproval.Status = SD.is_approved;
+        //    }
             
 
-            await _repository.UpdateAsync<ArticleApproval>(articleApproval);
+        //    await _repository.UpdateAsync<ArticleApproval>(articleApproval);
 
-            return articleApproval;
-        }
+        //    return articleApproval;
+        //}
 
 
 
@@ -73,9 +73,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article cannot be published yet");
             }
 
-            if(articleApproval.Status != SD.is_approved)
+            if(articleApproval.Status != SD.in_review)
             {
-                throw new Exception("Please Approve Article First");
+                throw new Exception("Please review Article First");
             }
             articleApproval.Status = SD.is_published;
 
@@ -102,11 +102,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             }
 
             var reviewedApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
-                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == SD.is_approved);
+                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == SD.is_published);
 
             if (reviewedApproval != null)
             {
-                throw new Exception("Article has already been reviewed successfully");
+                throw new Exception("Article has already been published successfully");
             }
 
             var newApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
@@ -137,6 +137,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article has already been rejected");
             }
 
+            if (articleApproval.Status == SD.is_published)
+            {
+                throw new Exception("Article has already been published");
+            }
+
             if (articleApproval.Status == SD.in_review)
             {
                 articleApproval.Status = SD.is_rejected;
@@ -153,9 +158,9 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         {
             var articleApproval = await _repository.GetAllAsync2<ArticleApproval>();
 
-            if (number is not 4 && number is not 5)
+            if (number is not 3 && number is not 4)
             {
-                throw new Exception("Number must either be 4 or 5");
+                throw new Exception("Number must either be 3 or 4");
             }
 
             var result = new List<GetSingleArticleDto>();
@@ -166,7 +171,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 var rejectedarticles = new List<GetSingleArticleDto>();
                 foreach (var article in articleApproval)
                 {
-                    if(number == 4 && article.Status == number)
+                    if(number == 3 && article.Status == number)
                     {
                         var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
 
@@ -188,7 +193,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                         result = publishedarticles;
                     }
 
-                    if (number == 5 && article.Status == number)
+                    if (number == 4 && article.Status == number)
                     {
                         var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
 
