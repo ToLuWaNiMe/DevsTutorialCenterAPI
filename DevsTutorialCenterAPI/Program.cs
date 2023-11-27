@@ -60,7 +60,7 @@ builder.Services.AddDbContext<DevsTutorialCenterAPIContext>(
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DevsTutorialCenterAPIContext>()
     .AddDefaultTokenProviders();
-
+builder.Services.AddTransient<IMessengerService, MailgunMessengerService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRepository, Repository>();
@@ -76,6 +76,8 @@ builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication(options =>
 {
