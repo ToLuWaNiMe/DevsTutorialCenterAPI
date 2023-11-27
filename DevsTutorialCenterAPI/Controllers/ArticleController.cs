@@ -491,34 +491,34 @@ public class ArticleController : ControllerBase
     //}
 
     //[Authorize(Roles = "EDITOR")]
-    [HttpPost("approve-article/{articleId}")]
-    public async Task<IActionResult> ApproveArticle(string articleId)
-    {
+    //[HttpPost("approve-article/{articleId}")]
+    //public async Task<IActionResult> ApproveArticle(string articleId)
+    //{
 
-        var result = await _articleApprovalService.ApprovalArticleById(articleId);
+    //    var result = await _articleApprovalService.ApprovalArticleById(articleId);
 
-        if (result != null)
-        {
-            return Ok(new ResponseDto<ArticleApproval>
-            {
-                Data = result,
-                Code = 200,
-                Message = "Article Approved Successfully",
-                Error = string.Empty,
-                IsSuccessful = true
-            });
-        }
-        else
-        {
-            return BadRequest(new ResponseDto<ArticleApproval>
-            {
-                Data = null,
-                Code = 400,
-                Message = "Failed to Meet Approval Requirement",
-                Error = string.Empty
-            });
-        }
-    }
+    //    if (result != null)
+    //    {
+    //        return Ok(new ResponseDto<ArticleApproval>
+    //        {
+    //            Data = result,
+    //            Code = 200,
+    //            Message = "Article Approved Successfully",
+    //            Error = string.Empty,
+    //            IsSuccessful = true
+    //        });
+    //    }
+    //    else
+    //    {
+    //        return BadRequest(new ResponseDto<ArticleApproval>
+    //        {
+    //            Data = null,
+    //            Code = 400,
+    //            Message = "Failed to Meet Approval Requirement",
+    //            Error = string.Empty
+    //        });
+    //    }
+    //}
 
     //[Authorize(Roles = "EDITOR")]
     [HttpPost("publish-article/{articleId}")]
@@ -698,6 +698,35 @@ public class ArticleController : ControllerBase
 
     }
 
+    [HttpPost("report-article")]
+    public async Task<IActionResult> ReportArticle([FromBody] CreateReportDTO createReportDTO)
+    {
+        var user = await _signInManager.UserManager.GetUserAsync(User);
+
+        var result = await _reportArticleService.ReportArticle(createReportDTO, user.Id);
+
+        if (result != null)
+        {
+            return Ok(new ResponseDto<ReportedArticle>
+            {
+                Data = result,
+                Code = 200,
+                Message = "Article reported  successfully",
+                Error = string.Empty,
+                IsSuccessful = true
+            });
+        }
+        else
+        {
+            return BadRequest(new ResponseDto<ReportedArticle>
+            {
+                Data = null,
+                Code = 400,
+                Message = "Failed to report article",
+                Error = string.Empty
+            });
+        }
+    }
 
 
 }

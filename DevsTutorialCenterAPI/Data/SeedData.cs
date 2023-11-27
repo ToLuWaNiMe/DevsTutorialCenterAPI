@@ -28,7 +28,7 @@ public class SeedData
             await _context.ArticleApprovals.AddAsync(new ArticleApproval
             {
                 ArticleId = article.Id,
-                Status = SD.is_approved
+                Status = SD.pending
             });
         }
 

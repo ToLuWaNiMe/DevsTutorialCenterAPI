@@ -1,4 +1,5 @@
-﻿using DevsTutorialCenterAPI.Models.DTOs;
+﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Models.DTOs;
 
 namespace DevsTutorialCenterAPI.Services.Abstractions;
 
@@ -8,4 +9,6 @@ public interface IReportArticleService
 
     Task<List<GetReportedArticleDTO>> GetReportedArticlesAsync();
     Task<List<GetReportedAuthorsDTO>> GetReportedAuthorsAsync();
+
+    Task<ReportedArticle>ReportArticle (CreateReportDTO createReportDTO, string userId);
 }

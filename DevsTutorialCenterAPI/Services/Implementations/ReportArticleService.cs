@@ -2,6 +2,7 @@
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Data.Repositories;
 using DevsTutorialCenterAPI.Models.DTOs;
+using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ public class ReportArticleService : IReportArticleService
 
     public async Task<List<GetReportedArticleDTO>> GetReportedArticlesAsync()
     {
-        var reportedArticles = await _repository.GetAllAsync<ReportedArticle>();
+        var reportedArticles = await _repository.GetAllAsync2<ReportedArticle>();
 
         if(reportedArticles.Count() == 0) { throw new Exception("No reported articles found");}
 
@@ -66,7 +67,7 @@ public class ReportArticleService : IReportArticleService
 
     public async Task<List<GetReportedAuthorsDTO>> GetReportedAuthorsAsync()
     {
-        var reportedArticles = await _repository.GetAllAsync<ReportedArticle>();
+        var reportedArticles = await _repository.GetAllAsync2<ReportedArticle>();
 
         if (reportedArticles.Count() == 0) { throw new Exception("No reported articles found"); }
 
@@ -103,6 +104,45 @@ public class ReportArticleService : IReportArticleService
         }
 
         return getReportedAuthors;
+    }
+
+    public async Task<ReportedArticle> ReportArticle(CreateReportDTO createReportDTO, string userId)
+    {
+        var article = await _repository.GetByIdAsync<Article>(createReportDTO.ArticleId);
+
+        if(article == null)
+        {
+            throw new Exception("This article cannot be found");
+        }
+
+        var user = await _repository.GetByIdAsync<AppUser>(userId);
+
+        if(user == null)
+        {
+            throw new Exception("This user record not found");
+        }
+
+        var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id);
+        if (articleApproval == null) throw new Exception("Not in approval list");
+        if (articleApproval.Status != SD.is_published)
+        {
+            throw new Exception("This article has not been published yet");
+        }
+            
+
+        var reportedArticle = new ReportedArticle
+        {
+            ArticleId = article.Id,
+            ReportText = createReportDTO.Text,
+            ReportedBy = $"{user.FirstName} {user.LastName}",
+            CreatedOn = DateTime.Now,
+            UpdatedOn = DateTime.Now
+
+        };
+
+        await _repository.AddAsync<ReportedArticle>(reportedArticle);
+
+        return reportedArticle;
     }
 
     //public async Task<object> AddArticleReportAsync(ReportArticleRequestDto request, string articleId)
