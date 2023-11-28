@@ -135,8 +135,8 @@ public class ReportArticleService : IReportArticleService
             ArticleId = article.Id,
             ReportText = createReportDTO.Text,
             ReportedBy = $"{user.FirstName} {user.LastName}",
-            CreatedOn = DateTime.Now,
-            UpdatedOn = DateTime.Now
+            CreatedOn = DateTime.UtcNow,
+            UpdatedOn = DateTime.UtcNow
 
         };
 
