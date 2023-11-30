@@ -158,7 +158,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
         {
             var articleApproval = await _repository.GetAllAsync2<ArticleApproval>();
 
-            if (number is not 3 && number is not 4)
+            if (number is not 1 && number is not 3 && number is not 4)
             {
                 throw new Exception("Number must either be 3 or 4");
             }
@@ -169,9 +169,33 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             {
                 var publishedarticles = new List<GetSingleArticleDto>();
                 var rejectedarticles = new List<GetSingleArticleDto>();
+                var pendingarticles = new List<GetSingleArticleDto>();
                 foreach (var article in articleApproval)
                 {
-                    if(number == 3 && article.Status == number)
+                    if (number == 1 && article.Status == number)
+                    {
+                        var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
+
+                        var getPArticle = new GetSingleArticleDto
+                        {
+                            Id = pArticle.Id,
+                            Title = pArticle.Title,
+                            TagId = pArticle.TagId,
+                            ImageUrl = pArticle.ImageUrl,
+                            AuthorId = pArticle.AuthorId,
+                            CreatedOn = pArticle.CreatedOn,
+                            PublicId = pArticle.PublicId,
+                            ReadCount = pArticle.ReadCount,
+                            ReadTime = pArticle.ReadTime,
+                            Text = pArticle.Text,
+
+                        };
+                        pendingarticles.Add(getPArticle);
+                        result = pendingarticles;
+                    }
+
+
+                    if (number == 3 && article.Status == number)
                     {
                         var pArticle = await _repository.GetByIdAsync<Article>(article.ArticleId); if (pArticle == null) continue;
 
