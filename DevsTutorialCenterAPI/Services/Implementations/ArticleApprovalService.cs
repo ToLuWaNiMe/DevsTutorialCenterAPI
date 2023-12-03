@@ -73,10 +73,10 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article cannot be published yet");
             }
 
-            if(articleApproval.Status != ApprovalStatusConstant.InReview)
-            {
-                throw new Exception("Please review Article First");
-            }
+            // if(articleApproval.Status != ApprovalStatusConstant.InReview)
+            // {
+            //     throw new Exception("Please review Article First");
+            // }
             articleApproval.Status = ApprovalStatusConstant.IsPublished;
 
             await _repository.UpdateAsync<ArticleApproval>(articleApproval);
