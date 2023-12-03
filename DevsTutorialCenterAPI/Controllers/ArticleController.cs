@@ -1,12 +1,8 @@
 ﻿using System.Net;
 using System.Security.Claims;
-using System.Xml.Linq;
 using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.DTOs;
-using DevsTutorialCenterAPI.Models.Enums;
 using DevsTutorialCenterAPI.Services.Abstractions;
-using DevsTutorialCenterAPI.Services.Implementations;
-using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +21,8 @@ public class ArticleController : ControllerBase
     private readonly IArticleApprovalService _articleApprovalService;
 
     public ArticleController(IReportArticleService reportArticleService, IArticleService articleService,
-        ILogger<ArticleController> logger, SignInManager<AppUser> signInManager, IArticleApprovalService articleApprovalService)
+        ILogger<ArticleController> logger, SignInManager<AppUser> signInManager,
+        IArticleApprovalService articleApprovalService)
     {
         _articleService = articleService;
         _logger = logger;
@@ -33,56 +30,7 @@ public class ArticleController : ControllerBase
         _reportArticleService = reportArticleService;
         _articleApprovalService = articleApprovalService;
     }
-
-
-
-    ////DONE
-    //[HttpPost("create-article")]
-    //public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto model)
-    //{
-
-
-    //    //string[] allowedTags = { "JAVA", ".NET", "NODE" };
-    //    //if (!allowedTags.Contains(model.TagId, StringComparer.OrdinalIgnoreCase))
-    //    //    return BadRequest(new ResponseDto<CreateArticleDto>
-    //    //    {
-    //    //        Data = null,
-    //    //        Code = 500,
-    //    //        Message = "Artcile Creation failed",
-    //    //        Error = "Invalid tag. Tag must either one of: JAVA, .NET, NODE."
-    //    //    });
-
-    //    if (!ModelState.IsValid) return BadRequest (new ResponseDto<CreateArticleDto>
-    //    {
-    //        Data = null,
-    //        Code = 500,
-    //        Message = "Artcile Creation failed",
-    //        Error = "Invalid Data"
-    //    });
-
-    //    if (string.IsNullOrWhiteSpace(model.TagId))
-    //    {
-    //        //ModelState.AddModelError("Tag", "Article must have at least one tag.");
-    //        return BadRequest(new ResponseDto<CreateArticleDto>
-    //        {
-    //            Data = null,
-    //            Code = 500,
-    //            Message = "Artcile Creation failed",
-    //            Error = "Article must have at least one tag"
-    //        });
-    //    }
-
-    //    var createdArticle = await _articleService.CreateArticleAsync(model);
-
-    //    return Ok(new ResponseDto<CreateArticleDto>
-    //    {
-    //        Data = createdArticle,
-    //        Code = 200,
-    //        Message = "OK",
-    //        Error = ""
-    //    });
-
-    //}
+    
     //[Authorize]
     [HttpPost("create-article")]
     public async Task<IActionResult> CreateArticle2([FromBody] CreateArticleDto2 model)
@@ -95,7 +43,6 @@ public class ArticleController : ControllerBase
                 Code = 500,
                 Message = "Article Creation failed",
                 Error = "Invalid Data",
-                
             });
         }
 
@@ -112,9 +59,6 @@ public class ArticleController : ControllerBase
 
         try
         {
-            
-
-           
             var createdArticle = await _articleService.CreateArticleAsync2(model);
 
             return Ok(new ResponseDto<CreateArticleDtoReturn>
@@ -159,7 +103,7 @@ public class ArticleController : ControllerBase
         }
     }
 
-   // [AllowAnonymous]
+    // [AllowAnonymous]
     [HttpGet("get-bookmarked-articles")]
     //[Authorize]
     public async Task<ActionResult> GetBookmarkedArticles([FromQuery] string userId)
@@ -190,7 +134,7 @@ public class ArticleController : ControllerBase
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticle()
     {
         var articles = await _articleService.GetAllArticle();
-        if(articles == null)
+        if (articles == null)
         {
             return BadRequest(new ResponseDto<IEnumerable<Article>>
             {
@@ -198,20 +142,16 @@ public class ArticleController : ControllerBase
                 Data = null,
                 Message = "Articles not retrieved",
                 Error = "Failed"
-
-
-
-            }); 
+            });
         }
 
         return Ok(new ResponseDto<IEnumerable<Article>>
         {
-            Code=200,
+            Code = 200,
             Data = articles,
             Message = "Articles successfully retrieved",
             Error = "",
             IsSuccessful = true
-
         });
     }
 
@@ -220,7 +160,6 @@ public class ArticleController : ControllerBase
     [HttpGet("{articleId}/is-bookmarked")]
     public async Task<ActionResult<bool>> IsArticleBookmarked(string articleId)
     {
-
         string currentUserId = GetCurrentUserId();
 
 
@@ -229,25 +168,18 @@ public class ArticleController : ControllerBase
         return Ok(isBookmarked);
     }
 
-    
     private string GetCurrentUserId()
-
     {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return userId;
     }
 
-
-    //DONE
     [AllowAnonymous]
     [HttpGet("get-single-article/{articleId}")]
     //[Authorize]
     public async Task<ActionResult<ResponseDto<GetSingleArticleDto>>> GetSingleArticle(string articleId)
     {
         var user = await _signInManager.UserManager.GetUserAsync(User);
-
-        
-
 
         if (string.IsNullOrEmpty(articleId))
         {
@@ -260,7 +192,7 @@ public class ArticleController : ControllerBase
             });
         }
 
-        var article = await _articleService.GetSingleArticle(articleId, user.Id);
+        var article = await _articleService.GetSingleArticle(articleId, user?.Id);
 
         if (article == null)
         {
@@ -324,76 +256,45 @@ public class ArticleController : ControllerBase
 
 
     [HttpDelete("delete-article/{articleId}")]
-   // [Authorize(Roles = "ADMIN")]
+    // [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> DeleteArticle(string articleId)
+    {
+        try
         {
-            try
+            var result = await _articleService.SoftDeleteArticle(articleId);
+
+            if (result != null)
             {
-                var result = await _articleService.SoftDeleteArticle(articleId);
-
-                if (result != null)
+                var response = new ResponseDto<object>
                 {
-                    var response = new ResponseDto<object>
-                    {
-                        Code = 200,
-                        Data = result,
-                        Message = "Article Deleted Successfully",
-                        Error = string.Empty,
-                        IsSuccessful = true
-                    };
+                    Code = 200,
+                    Data = result,
+                    Message = "Article Deleted Successfully",
+                    Error = string.Empty,
+                    IsSuccessful = true
+                };
 
-                    return Ok(response); 
-                }
-                else
-                {
-                    var response = new ResponseDto<object>
-                    {
-                        Code = (int)HttpStatusCode.BadRequest,
-                        Data = null,
-                        Message = "Failed to Delete Article",
-                        Error = "Failed",
-                        
-                        
-                    };
-
-                    return BadRequest(response);
-                }
+                return Ok(response);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError($"Error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+                var response = new ResponseDto<object>
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Data = null,
+                    Message = "Failed to Delete Article",
+                    Error = "Failed",
+                };
+
+                return BadRequest(response);
             }
         }
-
-
-    //[HttpPost("{articleId}/report-article")]
-    //public async Task<ActionResult<ResponseDto<object>>> ReportArticle([FromBody] ReportArticleRequestDto request,
-    //    string articleId)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(new ResponseDto<object>
-    //        {
-    //            Data = null,
-    //            Message = "Validation failed",
-    //            Code = 500
-    //        });
-
-
-    //    var response = await _reportArticleService.AddArticleReportAsync(request, articleId);
-
-    //    return Ok(new ResponseDto<object>
-    //    {
-    //        Data = response,
-    //        Code = 200,
-    //        Message = "Ok",
-    //        Error = ""
-    //    });
-
-
-       
-    //}
-
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        }
+    }
 
     [HttpPatch("{articleId}/report-status")]
     public async Task<IActionResult> SetReportStatus(string articleId, [FromQuery] string status)
@@ -420,9 +321,8 @@ public class ArticleController : ControllerBase
                 Message = "Status failed",
                 Error = "Set report status failed"
             });
-
         }
-        
+
         catch (Exception ex)
         {
             return BadRequest(new ResponseDto<object>
@@ -435,96 +335,10 @@ public class ArticleController : ControllerBase
         }
     }
 
-    //[HttpGet("{articleId}/get-likes")]
-    //public async Task<IActionResult> GetLikesByArticleAsync([FromRoute] string articleId)
-    //{
-    //    var response = new ResponseDto<List<LikesByArticleDto>>();
-
-    //    try
-    //    {
-    //        var likes = await _articleService.GetLikesByArticleAsync(articleId);
-    //        if (!likes.Any())
-    //        {
-    //            response.Code = 404;
-    //            response.Message = "Not Found";
-    //            response.Data = likes;
-    //            response.Error = " ";
-    //            return NotFound(response);
-    //        }
-
-    //        response.Code = 200;
-    //        response.Message = "OK";
-    //        response.Data = likes;
-    //        response.Error = " ";
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        response.Code = 500;
-    //        response.Message = "Internal Server Error";
-    //        response.Data = null;
-    //        response.Error = ex.Message;
-    //        return BadRequest(response);
-    //    }
-
-    //    return Ok(response);
-    //}
-
-    //[HttpPost("fetch-authors-stats")]
-    //public async Task<IActionResult> GetAuthorsStats([FromBody] FetchAuthorsStatsDto fetchAuthorsStatsDto)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(new ResponseDto<object>
-    //        {
-    //            Error = ModelState.GetError(),
-    //            Message = "author list empty",
-    //            Code = 400,
-    //        });
-
-    //    var result = await _articleService.GetAuthorStatsAsync(fetchAuthorsStatsDto);
-
-    //    return Ok(new ResponseDto<AuthorsStatsDto>
-    //    {
-    //        Code = 200,
-    //        Data = result,
-    //        Message = "Successful"
-    //    });
-    //}
-
-    //[Authorize(Roles = "EDITOR")]
-    //[HttpPost("approve-article/{articleId}")]
-    //public async Task<IActionResult> ApproveArticle(string articleId)
-    //{
-
-    //    var result = await _articleApprovalService.ApprovalArticleById(articleId);
-
-    //    if (result != null)
-    //    {
-    //        return Ok(new ResponseDto<ArticleApproval>
-    //        {
-    //            Data = result,
-    //            Code = 200,
-    //            Message = "Article Approved Successfully",
-    //            Error = string.Empty,
-    //            IsSuccessful = true
-    //        });
-    //    }
-    //    else
-    //    {
-    //        return BadRequest(new ResponseDto<ArticleApproval>
-    //        {
-    //            Data = null,
-    //            Code = 400,
-    //            Message = "Failed to Meet Approval Requirement",
-    //            Error = string.Empty
-    //        });
-    //    }
-    //}
-
     //[Authorize(Roles = "EDITOR")]
     [HttpPost("publish-article/{articleId}")]
     public async Task<IActionResult> PublishArticle(string articleId)
     {
-       
         var result = await _articleApprovalService.PublishedArticle(articleId);
 
         if (result != null)
@@ -606,8 +420,6 @@ public class ArticleController : ControllerBase
                 Error = string.Empty
             });
         }
-        
-
     }
 
     [HttpGet("get-reported-articles")]
@@ -695,7 +507,6 @@ public class ArticleController : ControllerBase
                 Error = string.Empty
             });
         }
-
     }
 
     [HttpPost("report-article")]
@@ -727,6 +538,4 @@ public class ArticleController : ControllerBase
             });
         }
     }
-
-
 }

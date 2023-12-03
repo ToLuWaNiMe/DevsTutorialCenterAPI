@@ -73,11 +73,11 @@ namespace DevsTutorialCenterAPI.Services.Implementations
                 throw new Exception("Article cannot be published yet");
             }
 
-            if(articleApproval.Status != SD.in_review)
+            if(articleApproval.Status != ApprovalStatusConstant.InReview)
             {
                 throw new Exception("Please review Article First");
             }
-            articleApproval.Status = SD.is_published;
+            articleApproval.Status = ApprovalStatusConstant.IsPublished;
 
             await _repository.UpdateAsync<ArticleApproval>(articleApproval);
 
@@ -94,7 +94,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             }
 
             var existingApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
-                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == SD.in_review);
+                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == ApprovalStatusConstant.InReview);
 
             if (existingApproval != null)
             {
@@ -102,7 +102,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             }
 
             var reviewedApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
-                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == SD.is_published);
+                .FirstOrDefaultAsync(a => a.ArticleId == article.Id && a.Status == ApprovalStatusConstant.IsPublished);
 
             if (reviewedApproval != null)
             {
@@ -112,7 +112,7 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             var newApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
                 .FirstOrDefaultAsync(a => a.ArticleId == article.Id);
 
-            newApproval.Status = SD.in_review;
+            newApproval.Status = ApprovalStatusConstant.InReview;
 
             await _repository.UpdateAsync<ArticleApproval>(newApproval);
 
@@ -132,19 +132,19 @@ namespace DevsTutorialCenterAPI.Services.Implementations
             var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals
                 .FirstOrDefaultAsync(a => a.ArticleId == articleId);
 
-            if(articleApproval.Status == SD.is_rejected)
+            if(articleApproval.Status == ApprovalStatusConstant.IsRejected)
             {
                 throw new Exception("Article has already been rejected");
             }
 
-            if (articleApproval.Status == SD.is_published)
+            if (articleApproval.Status == ApprovalStatusConstant.IsPublished)
             {
                 throw new Exception("Article has already been published");
             }
 
-            if (articleApproval.Status == SD.in_review)
+            if (articleApproval.Status == ApprovalStatusConstant.InReview)
             {
-                articleApproval.Status = SD.is_rejected;
+                articleApproval.Status = ApprovalStatusConstant.IsRejected;
             }
 
                 

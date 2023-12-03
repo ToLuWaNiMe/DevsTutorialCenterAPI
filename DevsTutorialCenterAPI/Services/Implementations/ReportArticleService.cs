@@ -124,7 +124,7 @@ public class ReportArticleService : IReportArticleService
 
         var articleApproval = await _devsTutorialCenterAPIContext.ArticleApprovals.FirstOrDefaultAsync(a => a.ArticleId == article.Id);
         if (articleApproval == null) throw new Exception("Not in approval list");
-        if (articleApproval.Status != SD.is_published)
+        if (articleApproval.Status != ApprovalStatusConstant.IsPublished)
         {
             throw new Exception("This article has not been published yet");
         }

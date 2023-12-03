@@ -1,4 +1,5 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
+using DevsTutorialCenterAPI.Data.Seed;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevsTutorialCenterAPI.Data;

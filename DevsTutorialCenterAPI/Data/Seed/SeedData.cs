@@ -1,7 +1,7 @@
 ﻿using DevsTutorialCenterAPI.Data.Entities;
 using DevsTutorialCenterAPI.Models.Enums;
 
-namespace DevsTutorialCenterAPI.Data;
+namespace DevsTutorialCenterAPI.Data.Seed;
 
 public class SeedData
 {
@@ -14,23 +14,32 @@ public class SeedData
         
     public async Task Run()
     {
-        await _context.AppUsers.AddRangeAsync(Authors);
-        await _context.Tags.AddRangeAsync(ArticleTags);
-        foreach (var article in Articles)
-        {
-            var randomAuthorId = Authors.GetRandomItem().Id;
-            var randomTagId = ArticleTags.GetRandomItem().Id;
-
-            article.AuthorId = randomAuthorId;
-            article.TagId = randomTagId;
-            await _context.Articles.AddAsync(article);
-
-            await _context.ArticleApprovals.AddAsync(new ArticleApproval
-            {
-                ArticleId = article.Id,
-                Status = SD.pending
-            });
-        }
+        var dataGenerator = new DataGenerator();
+        
+        await _context.AppUsers.AddRangeAsync(dataGenerator.Users);
+        await _context.Tags.AddRangeAsync(dataGenerator.Tags);
+        await _context.Articles.AddRangeAsync(dataGenerator.Articles);
+        await _context.ArticleApprovals.AddRangeAsync(dataGenerator.ArticleApprovals);
+        await _context.Comments.AddRangeAsync(dataGenerator.Comments);
+        await _context.ArticlesLikes.AddRangeAsync(dataGenerator.ArticleLikes);
+        await _context.ArticleReads.AddRangeAsync(dataGenerator.ArticleReads);
+        await _context.ReportedArticles.AddRangeAsync(dataGenerator.ReportedArticles);
+        
+        // foreach (var article in Articles)
+        // {
+        //     var randomAuthorId = Authors.GetRandomItem().Id;
+        //     var randomTagId = ArticleTags.GetRandomItem().Id;
+        //
+        //     article.AuthorId = randomAuthorId;
+        //     article.TagId = randomTagId;
+        //     await _context.Articles.AddAsync(article);
+        //
+        //     await _context.ArticleApprovals.AddAsync(new ArticleApproval
+        //     {
+        //         ArticleId = article.Id,
+        //         Status = ApprovalStatusConstant.Pending
+        //     });
+        // }
 
         await _context.SaveChangesAsync();
     }

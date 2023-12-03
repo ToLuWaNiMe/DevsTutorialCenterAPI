@@ -7,8 +7,6 @@ using DevsTutorialCenterAPI.Services.Abstractions;
 using DevsTutorialCenterAPI.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DevsTutorialCenterAPI.Services.Implementations;
 
@@ -20,7 +18,8 @@ public class ArticleService : IArticleService
     private readonly DevsTutorialCenterAPIContext _db;
     private readonly SignInManager<AppUser> _signInManager;
 
-    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService, ITagService tagService, DevsTutorialCenterAPIContext db, SignInManager<AppUser> signInManager)
+    public ArticleService(IRepository repository, IArticleApprovalService articleApprovalService,
+        ITagService tagService, DevsTutorialCenterAPIContext db, SignInManager<AppUser> signInManager)
     {
         _signInManager = signInManager;
         _repository = repository;
@@ -38,7 +37,6 @@ public class ArticleService : IArticleService
     //DONE
     public async Task<UpdateArticleDto> UpdateArticleAsync(string articleId, UpdateArticleDto updatedArticle)
     {
-
         var existingArticle = await _repository.GetByIdAsync<Article>(articleId);
 
         if (existingArticle == null)
@@ -63,7 +61,6 @@ public class ArticleService : IArticleService
         };
 
         return updatedArticleDto;
-
     }
 
     //DONE (GOES WITH GETSINGLE ARTICLE)
@@ -72,10 +69,11 @@ public class ArticleService : IArticleService
         var getArticleByArticleId = await _repository.GetByIdAsync<Article>(articleId);
 
 
-        if(getArticleByArticleId == null)
+        if (getArticleByArticleId == null)
         {
             throw new Exception("Article not found");
         }
+
         var articleRead = new ArticleRead
         {
             UserId = userId,
@@ -89,17 +87,21 @@ public class ArticleService : IArticleService
         await _repository.UpdateAsync<Article>(getArticleByArticleId);
     }
 
-    public async Task<GetSingleArticleDto> GetSingleArticle(string articleId, string userId)
+    public async Task<GetSingleArticleDto?> GetSingleArticle(string articleId, string? userId = null)
     {
         var article = await _repository.GetByIdAsync<Article>(articleId);
 
-        if (article == null) throw new Exception($"Article with ID {articleId} not found.");
+        if (article == null)
+            return null;
 
-        var user = await _repository.GetByIdAsync<AppUser>(userId);
+        if (userId is not null)
+        {
+            var user = await _repository.GetByIdAsync<AppUser>(userId);
+            if (user == null) throw new Exception($"User with ID {userId} not found.");
+            await LogArticleReadAsync(article.Id, user.Id);
+        }
 
-        if (user == null) throw new Exception($"User with ID {userId} not found.");
-
-        await LogArticleReadAsync(article.Id, user.Id);
+        var tag = await _repository.GetByIdAsync<ArticleTag>(article.TagId);
 
         var articleDto = new GetSingleArticleDto
         {
@@ -108,12 +110,12 @@ public class ArticleService : IArticleService
             AuthorId = article.AuthorId,
             Title = article.Title,
             TagId = article.TagId,
+            TagName = tag?.Name,
             Text = article.Text,
             ImageUrl = article.ImageUrl,
             ReadCount = article.ReadCount,
             ReadTime = article.ReadTime,
             CreatedOn = article.CreatedOn,
-
         };
 
         return articleDto;
@@ -123,9 +125,7 @@ public class ArticleService : IArticleService
     //DONE
     public async Task<CreateArticleDto> CreateArticleAsync(CreateArticleDto model)
     {
-
         //var readtimeresult = Helper.CalculateReadingTime(model.Text);
-
 
 
         var tag = await _tagService.GetByIdAsync<ArticleTag>(model.TagId);
@@ -141,7 +141,6 @@ public class ArticleService : IArticleService
             TagId = tag.Id,
             Text = model.Text,
             ImageUrl = model.ImageUrl,
-
         };
 
 
@@ -149,7 +148,7 @@ public class ArticleService : IArticleService
         var articleApproval = new ArticleApproval
         {
             ArticleId = newArticle.Id,
-            Status = SD.pending
+            Status = ApprovalStatusConstant.Pending
         };
 
         await _articleApprovalService.ApproveAsync(articleApproval);
@@ -175,6 +174,7 @@ public class ArticleService : IArticleService
         {
             throw new Exception("Tag  not found.");
         }
+
         var userId = _signInManager.UserManager.GetUserId(_signInManager.Context.User);
 
         var newArticle = new Article
@@ -184,13 +184,9 @@ public class ArticleService : IArticleService
             Text = model.Text,
             ImageUrl = model.ImageUrl,
             AuthorId = userId,
-            ReadCount  = 0,
-            PublicId= model.PublicId,
+            ReadCount = 0,
+            PublicId = model.PublicId,
             ReadTime = readtimeresult.ToString(),
-            
-            
-            
-
         };
 
 
@@ -200,7 +196,7 @@ public class ArticleService : IArticleService
         var articleApproval = new ArticleApproval
         {
             ArticleId = newArticle.Id,
-            Status = SD.pending
+            Status = ApprovalStatusConstant.Pending
         };
 
         await _articleApprovalService.ApproveAsync(articleApproval);
@@ -215,70 +211,74 @@ public class ArticleService : IArticleService
             PublicId = newArticle.PublicId,
             ReadCount = newArticle.ReadCount,
             ReadTime = newArticle.ReadTime
-            
         };
 
         return newArticleData;
     }
 
     public async Task<PaginatorResponseDto<IEnumerable<GetAllArticlesDto>>> GetAllArticles(FilterArticleDto filters)
-{
-    var articles = await _repository.GetAllAsync<Article>();
-
-    if (!string.IsNullOrEmpty(filters.AuthorId))
     {
-        articles = articles.Where(a => a.AuthorId == filters.AuthorId);
+        var articles = await _repository.GetAllAsync<Article>();
+
+        if (!string.IsNullOrEmpty(filters.AuthorId))
+        {
+            articles = articles.Where(a => a.AuthorId == filters.AuthorId);
+        }
+
+        if (!string.IsNullOrEmpty(filters.TagId))
+        {
+            articles = articles.Where(a => a.TagId == filters.TagId);
+        }
+
+
+        if (filters.IsRecentlyAdded.GetValueOrDefault())
+        {
+            articles = articles.OrderByDescending(a => a.CreatedOn);
+        }
+        else if (filters.IsTopRead.GetValueOrDefault())
+        {
+            articles = articles.OrderByDescending(a => a.ReadCount);
+        }
+
+        var articlesDto = articles
+            .Include(a => a.Tag)
+            .Include(a => a.Author)
+            .Select(a => new GetAllArticlesDto
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Text = a.Text,
+                AuthorId = a.AuthorId,
+                AuthorImage = a.Author.ImageUrl,
+                AuthorName = a.Author.FirstName + " " + a.Author.LastName,
+                TagId = a.TagId,
+                TagName = a.Tag.Name,
+                ReadCount = a.ReadCount,
+                ImageUrl = a.ImageUrl,
+                PublicId = a.PublicId,
+                ReadTime = a.ReadTime,
+                IsDeleted = a.IsDeleted,
+                CreatedOn = a.CreatedOn,
+                IsRecentlyAdded = filters.IsRecentlyAdded.GetValueOrDefault(),
+                IsTopRead = filters.IsTopRead.GetValueOrDefault(),
+            });
+
+        var pageNum = filters.Page ?? 1;
+        var pageSize = filters.Size ?? 10;
+
+        var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
+
+        return paginatorResponse;
     }
-
-    if (!string.IsNullOrEmpty(filters.TagId))
-    {
-        articles = articles.Where(a => a.TagId == filters.TagId);
-    }
-
-    
-    if (filters.IsRecentlyAdded.GetValueOrDefault())
-    {
-        articles = articles.OrderByDescending(a => a.CreatedOn);
-    }
-    else if (filters.IsTopRead.GetValueOrDefault())
-    {
-        articles = articles.OrderByDescending(a => a.ReadCount);
-    }
-
-    var articlesDto = articles.Select(a => new GetAllArticlesDto
-    {
-        Id = a.Id,
-        Title = a.Title,
-        Text = a.Text,
-        AuthorId = a.AuthorId,
-        TagId = a.TagId,
-        ReadCount = a.ReadCount,
-        ImageUrl = a.ImageUrl,
-        PublicId = a.PublicId,
-        ReadTime = a.ReadTime,
-        IsDeleted = a.IsDeleted,
-        CreatedOn = a.CreatedOn,
-        IsRecentlyAdded = filters.IsRecentlyAdded.GetValueOrDefault(),
-        IsTopRead = filters.IsTopRead.GetValueOrDefault(),
-    });
-
-    var pageNum = filters.Page ?? 1;
-    var pageSize = filters.Size ?? 10;
-
-    var paginatorResponse = Helper.Paginate(articlesDto, pageNum, pageSize);
-
-    return paginatorResponse;
-}
 
     public async Task<IEnumerable<GetAllArticlesDto>> GetBookmarkedArticles(string userId)
     {
-       
         var bookmarkedArticleIds = await (await _repository.GetAllAsync<ArticleBookMark>())
             .Where(b => b.UserId == userId)
             .Select(b => b.ArticleId)
             .ToListAsync();
 
-       
+
         var bookmarkedArticles = await (await _repository.GetAllAsync<Article>())
             .Where(a => bookmarkedArticleIds.Contains(a.Id))
             .ToListAsync();
@@ -302,13 +302,13 @@ public class ArticleService : IArticleService
     }
 
 
-
     public async Task<bool> SetArticleReportStatus(string articleId, string status)
+    {
+        if (status != ArticleStatusReportEnum.Approved.ToString().ToLower() &&
+            status != ArticleStatusReportEnum.Declined.ToString().ToLower())
         {
-            if (status != ArticleStatusReportEnum.Approved.ToString().ToLower() && status != ArticleStatusReportEnum.Declined.ToString().ToLower())
-            {
-                throw new Exception("Invalid status provided");
-            }
+            throw new Exception("Invalid status provided");
+        }
 
         var article = await _repository.GetByIdAsync<Article>(articleId);
 
@@ -400,13 +400,15 @@ public class ArticleService : IArticleService
 
     public async Task<IEnumerable<Article>> GetAllArticle()
     {
-        var articles = await _repository.GetAllAsync<Article>();
+        var articles = (await _repository.GetAllAsync<Article>())
+            .Include(a => a.Tag)
+            .Include(a => a.Author);
+
         return articles;
     }
 
     public async Task<bool> IsArticleBookmarkedByUser(string articleId, string userId)
     {
-
         var bookmarkedArticle = await _repository.GetAllAsync<ArticleBookMark>();
 
         bool isBookmarked = bookmarkedArticle.Any(b => b.ArticleId == articleId && b.UserId == userId);
@@ -456,7 +458,7 @@ public class ArticleService : IArticleService
 
         await _repository.UpdateAsync<Article>(article);
 
-        return new {deletedAt =  article.DeletedAt};
+        return new { deletedAt = article.DeletedAt };
     }
 
     public async Task<List<AuthorDTO>> GetAuthorStats()
@@ -465,7 +467,7 @@ public class ArticleService : IArticleService
 
         var authors = new List<AuthorDTO>();
 
-        foreach(var art in articles)
+        foreach (var art in articles)
         {
             var user = await _repository.GetByIdAsync<AppUser>(art.AuthorId);
 
@@ -491,5 +493,32 @@ public class ArticleService : IArticleService
         }
 
         return authors;
+    }
+
+    public async Task<IEnumerable<GetAllArticlesDto>> GetAuthorArticles(string authorId)
+    {
+        var articles = (await _repository.GetAllAsync<Article>())
+            .Where(a => a.AuthorId == authorId)
+            .Include(a => a.Tag)
+            .Include(a => a.Author)
+            .Select(a => new GetAllArticlesDto
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Text = a.Text,
+                AuthorId = a.AuthorId,
+                AuthorImage = a.Author.ImageUrl,
+                AuthorName = a.Author.FirstName + " " + a.Author.LastName,
+                TagId = a.TagId,
+                TagName = a.Tag.Name,
+                ReadCount = a.ReadCount,
+                ImageUrl = a.ImageUrl,
+                PublicId = a.PublicId,
+                ReadTime = a.ReadTime,
+                IsDeleted = a.IsDeleted,
+                CreatedOn = a.CreatedOn,
+            });
+
+        return articles;
     }
 }
