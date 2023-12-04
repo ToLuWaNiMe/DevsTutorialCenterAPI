@@ -33,7 +33,7 @@ Get Started:
 1. Clone the repository:
 
 Bash
-git clone https://github.com/your-username/DevsTutorialCenterAPI.git
+git clone https://github.com/ToLuWaNiMe/DevsTutorialCenterAPI.git
 Use code with caution. Learn more
 2. Set up the development environment:
 
